@@ -54,15 +54,16 @@ public class Range {
     не пересекаются, если:
     range1.to <= range2.from || range2.to <= range1.from
     (если диапазоны пересекаются только по 1 концу - пересечения нет)
-     */
 
-    public static Range getIntersection(Range range1, Range range2) {
-        if (range1.to <= range2.from || range2.to <= range1.from) {
+    В объекте есть метод встретить второй объект и родить новый объект.
+     */
+    public Range getIntersection(Range range2) {
+        if (this.to <= range2.from || range2.to <= this.from) {
             return null;
         }
 
-        double from = Math.max(range1.from, range2.from);
-        double to = Math.min(range1.to, range2.to);
+        double from = Math.max(this.from, range2.from);
+        double to = Math.min(this.to, range2.to);
 
         return new Range(from, to);
     }
