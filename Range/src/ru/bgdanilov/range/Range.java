@@ -44,4 +44,26 @@ public class Range {
 
         return number - from >= -epsilon && to - number >= -epsilon;
     }
+
+    // Пересечение двух интервалов.
+    /*
+    Два интервала
+    range1.from----range1.to . range2.from-----range2.to
+    range2.from----range2.to . range1.from-----range1.to
+
+    не пересекаются, если:
+    range1.to <= range2.from || range2.to <= range1.from
+    (если диапазоны пересекаются только по 1 концу - пересечения нет)
+     */
+
+    public static Range getIntersection(Range range1, Range range2) {
+        if (range1.to <= range2.from || range2.to <= range1.from) {
+            return null;
+        }
+
+        double from = Math.max(range1.from, range2.from);
+        double to = Math.min(range1.to, range2.to);
+
+        return new Range(from, to);
+    }
 }
