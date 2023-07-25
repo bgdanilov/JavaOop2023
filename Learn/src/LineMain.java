@@ -5,5 +5,9 @@ public class LineMain {
         System.out.println(line.getLength());
 
         System.out.println(line.getAnotherLength());
+
+        line.printSomeVar();
+        // Обращение к static переменной, минуя объект, сразу из класса.
+        System.out.println(Line.someVar);
     }
 }
