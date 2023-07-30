@@ -28,4 +28,13 @@ public class Rectangle implements Shape {
     public double getArea() {
         return sideALength * sideBLength;
     }
+
+    // Переопределение toString.
+    @Override
+    public String toString() {
+        // По-сути  - имя класса.
+        String shapeType = getClass().getSimpleName();
+
+        return shapeType + ", размер "+ sideALength + " * " + sideBLength;
+    }
 }

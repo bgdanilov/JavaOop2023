@@ -10,6 +10,13 @@ public class ShapeMainArraysSort {
         Rectangle rectangle1 = new Rectangle(2, 4);
         Circle circle1 = new Circle(1);
 
+        // Выводим информацию о фигурах переопределенным toString()
+        // Почему, достаточно просто circle1, а circle1.toString ?
+        System.out.println(circle1);
+        System.out.println(rectangle1);
+        System.out.println(square1);
+        System.out.println(triangle1);
+
         // Добавим объекты в Массив.
         Shape[] shapes = new Shape[] {square1, triangle1, rectangle1, circle1};
 
@@ -22,6 +29,5 @@ public class ShapeMainArraysSort {
         Arrays.sort(shapes, new ShapeComparatorByPerimeter());
         System.out.println("Второй по величине периметр среди массива фигур равен "
                 + shapes[1].getPerimeter());
-
     }
 }

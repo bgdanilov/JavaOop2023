@@ -26,4 +26,13 @@ public class Circle implements Shape {
     public double getArea() {
         return Math.PI * Math.pow(radius, 2);
     }
+
+    // Переопределение toString.
+    @Override
+    public String toString() {
+        // По-сути  - имя класса.
+        String shapeType = getClass().getSimpleName();
+
+        return shapeType + ", R = " + radius;
+    }
 }

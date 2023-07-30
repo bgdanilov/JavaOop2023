@@ -34,4 +34,12 @@ public class Square implements Shape {
     public double getArea() {
         return sideLength * sideLength;
     }
+
+    @Override
+    public String toString() {
+        // По-сути  - имя класса.
+        String shapeType = getClass().getSimpleName();
+
+        return shapeType + ", сторона = "+ sideLength;
+    }
 }

@@ -56,4 +56,12 @@ public class Triangle implements Shape {
         return Math.sqrt(halfPerimeter
                 * (halfPerimeter - sideALength) * (halfPerimeter - sideBLength) * (halfPerimeter - sideCLength));
     }
+
+    @Override
+    public String toString() {
+        // По-сути  - имя класса.
+        String shapeType = getClass().getSimpleName();
+
+        return shapeType + ", площадь ="+ getArea();
+    }
 }
