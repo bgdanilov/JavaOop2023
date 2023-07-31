@@ -81,7 +81,7 @@ public class Vector {
             this.components = Arrays.copyOf(additionalVector.components, additionalVectorSize);
         }
 
-        for (int i = 0; i < sourceVectorSize; i++) {
+        for (int i = 0; i < additionalVectorSize; i++) {
             this.components[i] += additionalVector.components[i];
         }
     }
@@ -92,11 +92,11 @@ public class Vector {
         int sourceVectorSize = this.getSize();
 
         // Добавочный вектор дополним нулями до размерности исходного.
-        if (deductedVectorSize < sourceVectorSize) {
-            deductedVector.components = Arrays.copyOf(deductedVector.components, sourceVectorSize);
+        if (deductedVectorSize > sourceVectorSize) {
+            this.components = Arrays.copyOf(deductedVector.components, deductedVectorSize);
         }
 
-        for (int i = 0; i < sourceVectorSize; i++) {
+        for (int i = 0; i < deductedVectorSize; i++) {
             this.components[i] -= deductedVector.components[i];
         }
     }
@@ -115,13 +115,14 @@ public class Vector {
         this.multiplicationByScalar(-1);
     }
 
-    // 4.e. Получение длины веектора.
+    // 4.e. Получение длины вектора.
     public double getLength() {
         int size = this.getSize();
         double sqrtExpression = 0;
 
         for (int i = 0; i < size; i++) {
-            sqrtExpression += Math.pow(this.components[i], 2);
+            // Умножение дешевле возведения в степень.
+            sqrtExpression += this.components[i] * this.components[i];
         }
 
         return Math.sqrt(sqrtExpression);
@@ -163,11 +164,6 @@ public class Vector {
 
         return dotProduct;
     }
-
-    // Метод. Задание компонент существующего вектора вручную.
-    public void setComponents(double[] components) {
-        this.components = components;
-    }
 }
 
 /*  Описание класса:
@@ -180,12 +176,12 @@ public class Vector {
      - Если длина массива больше длины вектора, ячейки заполняются нулями.
 
     4.a. Метод "Добавить вектор к вектору".
-    - Значит к компонентам исходного вектора прибавить соответствующие компоненты добавляемого вектора.
-    - Мы движемся в цикле по добавочному вектору, потому, что его компоненты добавляем  к компонентам исходника.
+    - К компонентам исходного вектора прибавить соответствующие компоненты добавляемого вектора.
+    - Мы движемся в цикле по добавочному вектору, потому, что его компоненты добавляем к компонентам исходника.
     - Поэтому, если добавочный по размеру превышает исходник, то его компоненты все не влезут.
     - Нужно дополнить исходник до размеров добавочного.
     - А если наоборот, то меньшее всегда влезет в большее.
-    - К компонентам исходника, которые за пределами размерности бобавочного вектора, просто ничего не прибавится,
+    - К компонентам исходника, которые за пределами размерности добавочного вектора, просто ничего не прибавится,
       что равносзначно прибавлению нуля. Поэтому дополнять нулями добавочный вектор до размеров исходного необязательно.
             source:     [1, 2, 3]     или  [1, 2, 3, 4]
           + additional: [1, 2, 3, 4]  или  [1, 2, 3]
@@ -196,9 +192,9 @@ public class Vector {
 
     5.c. Метод "Скалярное произведение двух векторов".
     - Скалярным произведением двух векторов называется сумма произведений соответствующих компонент векторов.
-            vector1:    [1, 2, 3, 4]         или  [1, 2, 3]
-          + vector2:    [1, 2, 3]            или  [1, 2, 3, 4]
-          = dotProduct:  1 + 4 + 9 + 4 * 0         1 + 4 + 9
+            vector1:    [1, 2, 3, 4]          или  [1, 2, 3]
+          + vector2:    [1, 2, 3]             или  [1, 2, 3, 4]
+          = dotProduct:  1 + 4 + 9 + (4 * 0)        1 + 4 + 9
           Если число итераций цикла будет равно большей размерности из двух вектров,
           то надо дополнять меньший вектор нулями.
           а если идти итерировать по меньшей размерности, то просто четверку ни на что не умножаем,
@@ -207,5 +203,11 @@ public class Vector {
  */
 
 /* TODO
-    1. Проверить возможность реализации 4.a как в 5.c : через Math.min .
+    1. Проверить возможность реализации 4.a как в 5.c : через Math.min - нет.
+    2. Как отказаться от использования переопределенной toString ?
+    3. Что происходит с массивами?
+    4. 5.a. Сложение двух векторов.
+    5. В чем разница: ?
+        Vector vectorG = new Vector(Vector.additionVectors(vectorC, vectorF));
+        Vector vectorH = Vector.additionVectors(vectorC, vectorF);
  */
