@@ -1,4 +1,4 @@
-package ru.bgdanilov.shape;
+package ru.bgdanilov.shapes;
 
 public class Rectangle implements Shape {
     private final double sideALength;

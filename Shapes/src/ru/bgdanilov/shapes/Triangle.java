@@ -1,4 +1,4 @@
-package ru.bgdanilov.shape;
+package ru.bgdanilov.shapes;
 
 public class Triangle implements Shape {
     // Не буду делать геттеры и сеттеры - 6 координат, 12 функций!

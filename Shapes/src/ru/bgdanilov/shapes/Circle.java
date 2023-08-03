@@ -1,4 +1,4 @@
-package ru.bgdanilov.shape;
+package ru.bgdanilov.shapes;
 
 public class Circle implements Shape {
     private final double radius;

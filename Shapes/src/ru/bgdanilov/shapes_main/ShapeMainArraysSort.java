@@ -1,5 +1,5 @@
-package ru.bgdanilov.shape_main;
-import ru.bgdanilov.shape.*;
+package ru.bgdanilov.shapes_main;
+import ru.bgdanilov.shapes.*;
 import java.util.Arrays;
 
 public class ShapeMainArraysSort {

@@ -1,4 +1,4 @@
-package ru.bgdanilov.shape;
+package ru.bgdanilov.shapes;
 import java.util.Comparator;
 
 // Что значит <Shape> ?

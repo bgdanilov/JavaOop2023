@@ -1,4 +1,4 @@
-package ru.bgdanilov.shape;
+package ru.bgdanilov.shapes;
 
 public class Square implements Shape {
     private double sideLength;

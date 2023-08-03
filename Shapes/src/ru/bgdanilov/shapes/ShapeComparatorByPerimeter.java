@@ -1,4 +1,4 @@
-package ru.bgdanilov.shape;
+package ru.bgdanilov.shapes;
 import java.util.Comparator;
 /*
 Можно ли добавить в compare() третий аргумент Field, передающий
