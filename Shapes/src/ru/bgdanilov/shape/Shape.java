@@ -5,6 +5,8 @@ package ru.bgdanilov.shape;
  */
 
 // Просто изменения для ветки Shapes на пробу.
+// Изменения в ветке main на пробу.
+// Изменения - исправление ошибки в main. Ветка hotfix.
 
 public interface Shape {
     double getHeight();
