@@ -36,7 +36,7 @@ public class Triangle implements Shape {
 
     // Делаем private - значит этот метод доступен только внутри класса Triangle,
     // а нам только тут и надо.
-    private double getSideLength (double xTo, double xFrom, double yTo, double yFrom) {
+    private double getSideLength(double xTo, double xFrom, double yTo, double yFrom) {
         return Math.sqrt((xTo - xFrom) * (xTo - xFrom) + (yTo - yFrom) * (yTo - yFrom));
     }
 
@@ -68,6 +68,6 @@ public class Triangle implements Shape {
         // По-сути  - имя класса.
         String shapeType = getClass().getSimpleName();
 
-        return shapeType + ", площадь ="+ getArea();
+        return shapeType + ", площадь =" + getArea();
     }
 }

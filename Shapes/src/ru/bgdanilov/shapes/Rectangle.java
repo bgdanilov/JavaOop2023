@@ -35,7 +35,7 @@ public class Rectangle implements Shape {
         // По-сути  - имя класса.
         String shapeType = getClass().getSimpleName();
 
-        return shapeType + ", размер "+ height + " * " + width;
+        return shapeType + ", размер " + height + " * " + width;
     }
 }
 
