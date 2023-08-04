@@ -1,33 +1,44 @@
 package ru.bgdanilov.shapes_main;
+
 import ru.bgdanilov.shapes.*;
+import ru.bgdanilov.shapes_comparators.ShapesAreaComparator;
+import ru.bgdanilov.shapes_comparators.ShapesPerimeterComparator;
+
 import java.util.Arrays;
 
 public class ShapeMainArraysSort {
     public static void main(String[] args) {
-        // Создаем объекты.
-        Square square1 = new Square(10);
-        Triangle triangle1 = new Triangle(1, 1, 4, 1, 4, 4);
-        Rectangle rectangle1 = new Rectangle(2, 4);
-        Circle circle1 = new Circle(1);
+        // Добавим объекты в Массив.
+        Shape[] shapes = {
+                new Square(10),
+                new Triangle(1, 1, 4, 1, 4, 4),
+                new Rectangle(2, 4),
+                new Circle(1)
+        };
 
         // Выводим информацию о фигурах переопределенным toString()
-        // Почему, достаточно просто circle1, а circle1.toString ?
-        System.out.println(circle1);
-        System.out.println(rectangle1);
-        System.out.println(square1);
-        System.out.println(triangle1);
-
-        // Добавим объекты в Массив.
-        Shape[] shapes = new Shape[] {square1, triangle1, rectangle1, circle1};
+        // println() автоматически вызывает toString(), поэтому не надо ее писать.
+        for (Shape shape : shapes) {
+            System.out.println(Arrays.toString(new Shape[]{shape}));
+        }
 
         // Сортируем массив по убыванию площади.
-        Arrays.sort(shapes, new ShapeComparatorByArea());
+        Arrays.sort(shapes, new ShapesAreaComparator().reversed());
         System.out.println("Максимальная площадь среди массива фигур равна "
                 + shapes[0].getArea());
 
         // Сортируем массив по убыванию периметра.
-        Arrays.sort(shapes, new ShapeComparatorByPerimeter());
+        Arrays.sort(shapes, new ShapesPerimeterComparator().reversed());
         System.out.println("Второй по величине периметр среди массива фигур равен "
                 + shapes[1].getPerimeter());
     }
 }
+
+/* TODO
+    1. Повторить почему можно не писать "new Shape[]" ?
+    Shape[] shapes = new Shape[] {square1, triangle1, rectangle1, circle1};
+    что-то связано с невозможностью использования массива в return.
+    2. Что тут происходит?
+    System.out.println(Arrays.toString(new Shape[] {e}));
+
+ */

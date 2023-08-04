@@ -1,32 +1,32 @@
 package ru.bgdanilov.shapes;
 
 public class Rectangle implements Shape {
-    private final double sideALength;
-    private final double sideBLength;
+    private final double height;
+    private final double width;
 
-    public Rectangle(double sideALength, double sideBLength) {
-        this.sideALength = sideALength;
-        this.sideBLength = sideBLength;
+    public Rectangle(double height, double width) {
+        this.height = height;
+        this.width = width;
     }
 
     @Override
     public double getHeight() {
-        return sideALength;
+        return height;
     }
 
     @Override
     public double getWidth() {
-        return sideBLength;
+        return width;
     }
 
     @Override
     public double getPerimeter() {
-        return (sideALength + sideBLength) * 2;
+        return (height + width) * 2;
     }
 
     @Override
     public double getArea() {
-        return sideALength * sideBLength;
+        return height * width;
     }
 
     // Переопределение toString.
@@ -35,6 +35,11 @@ public class Rectangle implements Shape {
         // По-сути  - имя класса.
         String shapeType = getClass().getSimpleName();
 
-        return shapeType + ", размер "+ sideALength + " * " + sideBLength;
+        return shapeType + ", размер " + height + " * " + width;
     }
 }
+
+/* TODO
+    1. IDE мне пишет, что данный класс может быть "a record"
+    - почитать, что это такое и в чем разница.
+ */

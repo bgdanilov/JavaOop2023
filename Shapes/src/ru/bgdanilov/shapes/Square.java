@@ -40,6 +40,6 @@ public class Square implements Shape {
         // По-сути  - имя класса.
         String shapeType = getClass().getSimpleName();
 
-        return shapeType + ", сторона = "+ sideLength;
+        return shapeType + ", сторона = " + sideLength;
     }
 }

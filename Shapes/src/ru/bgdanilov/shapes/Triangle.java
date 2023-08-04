@@ -10,9 +10,9 @@ public class Triangle implements Shape {
     private final double y2;
     private final double x3;
     private final double y3;
-    private final double sideALength;
-    private final double sideBLength;
-    private final double sideCLength;
+    private final double side1;
+    private final double side2;
+    private final double side3;
 
     // Переменные объявленные в методе - недоступны нигде кроме этого метода.
     // Что бы переменная стала доступна другим методам ее нужно объявить в классе.
@@ -29,9 +29,15 @@ public class Triangle implements Shape {
         this.x3 = x3;
         this.y3 = y3;
 
-        sideALength = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-        sideBLength = Math.sqrt(Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2));
-        sideCLength = Math.sqrt(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2));
+        side1 = getSideLength(x2, x1, y2, y1);
+        side2 = getSideLength(x3, x2, y3, y2);
+        side3 = getSideLength(x3, x1, y3, y1);
+    }
+
+    // Делаем private - значит этот метод доступен только внутри класса Triangle,
+    // а нам только тут и надо.
+    private double getSideLength(double xTo, double xFrom, double yTo, double yFrom) {
+        return Math.sqrt((xTo - xFrom) * (xTo - xFrom) + (yTo - yFrom) * (yTo - yFrom));
     }
 
     @Override
@@ -46,7 +52,7 @@ public class Triangle implements Shape {
 
     @Override
     public double getPerimeter() {
-        return sideALength + sideBLength + sideCLength;
+        return side1 + side2 + side3;
     }
 
     @Override
@@ -54,7 +60,7 @@ public class Triangle implements Shape {
         double halfPerimeter = getPerimeter() / 2;
 
         return Math.sqrt(halfPerimeter
-                * (halfPerimeter - sideALength) * (halfPerimeter - sideBLength) * (halfPerimeter - sideCLength));
+                * (halfPerimeter - side1) * (halfPerimeter - side2) * (halfPerimeter - side3));
     }
 
     @Override
@@ -62,6 +68,6 @@ public class Triangle implements Shape {
         // По-сути  - имя класса.
         String shapeType = getClass().getSimpleName();
 
-        return shapeType + ", площадь ="+ getArea();
+        return shapeType + ", площадь =" + getArea();
     }
 }
