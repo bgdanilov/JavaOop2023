@@ -58,6 +58,24 @@ public class VectorMain {
         System.out.println("4.f. Устанавливаем компоненту 99 на место 1. Вектор F: " + vectorF);
         System.out.println("4.f. Установленная компонента Вектора F с индекском 1: " + vectorF.getComponent(1));
 
+        // 4.g. Переопределение equals() и hashCode().
+        System.out.println("4.g. Равен ли Вектор {1, 2, 3} Вектору {1, 2, 3} ?: "
+                + new Vector(3, new double[]{1, 2, 3}).equals(new Vector(3, new double[]{1, 2, 3}))
+        );
+        System.out.println("4.g. Равен ли Вектор {0, 2, 3} Вектору {1, 2, 3} ?: "
+                + new Vector(3, new double[]{0, 2, 3}).equals(new Vector(3, new double[]{1, 2, 3}))
+        );
+        System.out.println("4.g. Равен ли Вектор {2, 3} Вектору {1, 2, 3} ?: "
+                + new Vector(2, new double[]{2, 3}).equals(new Vector(2, new double[]{1, 2, 3}))
+        );
+
+        // 4.g. Переопределение hashCode().
+        System.out.println("4.g. Хэш вектора {1, 2, 3} равен: "
+                + new Vector(3, new double[]{1, 2, 3}).hashCode());
+        System.out.println("4.g. Хэш еще одного вектора {1, 2, 3} равен: "
+                + new Vector(3, new double[]{1, 2, 3}).hashCode());
+
+
         // 5. Реализовать  статические методы:
         // --------------------------------------
         System.out.println();

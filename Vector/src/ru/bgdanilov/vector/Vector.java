@@ -5,20 +5,15 @@ import java.util.Arrays;
 public class Vector {
     private double[] components;
 
-    // 1.a. Конструктор - создание пустого вектора размерностью n.
+    // 1.a. Конструктор - создание пустого вектора размерностью size.
     public Vector(int size) {
-        try {
-            // Если n < 0 - бросаем исключение.
-            if (size <= 0) {
-                throw new IllegalArgumentException();
-            }
-            // Код, выполняемый в отсутствии исключения.
-            this.components = new double[size];
+        // Если size < 0 - бросаем исключение.
+        if (size <= 0) {
+            throw new IllegalArgumentException("Размерность вектора должна быть больше нуля!");
         }
-        // Обрабатываем исключение.
-        catch (IllegalArgumentException e) {
-            System.out.println("n must be > 0");
-        }
+
+        // Код, выполняемый в отсутствии исключения.
+        this.components = new double[size];
     }
 
     // 1.b. Конструктор - копирование из другого вектора.
@@ -29,29 +24,21 @@ public class Vector {
 
     // 1.c. Конструктор - заполнение вектора значениями из массива.
     public Vector(double[] components) {
-        try {
-            if (components.length == 0) {
-                throw new IllegalArgumentException();
-            }
-
-            this.components = components;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Массив не может иметь нулевую длину!");
+        if (components.length == 0) {
+            throw new IllegalArgumentException("Размерность вектора должна быть больше нуля!");
         }
+
+        this.components = components;
     }
 
     // 1.d. Конструктор - заполнение вектора значениями из массива.
-    // Если длина массива меньше n, то считать что в остальных компонентах 0.
+    // Если длина массива меньше size, то считать что в остальных компонентах 0.
     public Vector(int size, double[] array) {
-        try {
-            if (size <= 0 || array.length == 0) {
-                throw new IllegalArgumentException();
-            }
-
-            this.components = Arrays.copyOf(array, size);
-        } catch (IllegalArgumentException e) {
-            System.out.println("n must be > 0");
+        if (size <= 0 || array.length == 0) {
+            throw new IllegalArgumentException("Размерность вектора должна быть больше нуля!");
         }
+
+        this.components = Arrays.copyOf(array, size);
     }
 
     // 2. Метод. Получение размерности вектора - по-сути длину массива компонент.
@@ -137,6 +124,45 @@ public class Vector {
         this.components[index] = component;
     }
 
+    // 4.g. Переопределение equals() и hashCode().
+    @Override
+    public boolean equals(Object someVector) {
+        // Передан ли сам объект.
+        if (this == someVector) {
+            return true;
+        }
+
+        // Проверка на пустой объект, на отличный от Vector класс.
+        if (someVector == null || this.getClass() != someVector.getClass()) {
+            return false;
+        }
+
+        // Если все-таки это объект класса Vector,
+        // нужно проверить длину и равенство компонент,
+        // Для доступа к полям-компонентам, нужно привести Object к Vector.
+        Vector vector = (Vector) someVector;
+
+        if (this.getSize() != vector.getSize()) {
+            return false;
+        }
+
+        int size = this.getSize();
+
+        for (int i = 0; i < size; i++) {
+            if (this.components[i] != vector.components[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Берем готовый метод получения Хэш массива.
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(this.components);
+    }
+
     // 5.a. Сложение двух векторов.
     public static Vector additionVectors(Vector vector1, Vector vector2) {
         Vector resultVector = new Vector(vector1);
@@ -170,6 +196,9 @@ public class Vector {
     ===============================
     - У вектора есть единственное поле - массив его компонент.
     - Конструкторы - функции с перегрузкой.
+    - Здесь мы только бросаем исключения.Обработки нет.
+      Обработка должна быть в main. Т.е. тут мы бросаем, а в маин ловим.
+      Но блок try-catch по условию не требуется.
 
     1.d. Конструктор - заполнение вектора значениями из массива.
      - Если компоненты не поместились (длина меньше длины существующего вектора), то лишние значения игнорируются.
@@ -205,6 +234,7 @@ public class Vector {
 /* TODO
     1. Проверить возможность реализации 4.a как в 5.c : через Math.min - нет.
     2. Как отказаться от использования переопределенной toString ?
+        -- никак.
     3. Что происходит с массивами?
     4. 5.a. Сложение двух векторов.
     5. В чем разница: ?
