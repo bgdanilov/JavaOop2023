@@ -26,7 +26,7 @@ public class MyEquals {
         private final int x;
         private final B y;
 
-        public A (int x, B y) {
+        public A(int x, B y) {
             this.x = x;
             this.y = y;
         }
@@ -69,7 +69,7 @@ public class MyEquals {
     public static class B {
         private final int y;
 
-        public B (int y) {
+        public B(int y) {
             this.y = y;
         }
     }
@@ -79,11 +79,11 @@ public class MyEquals {
  * 1. Рефлексивность: Объект должен равняться себе самому.
  * 2. Симметричность: если a.equals(b) возвращает true, то b.equals(a) должен тоже вернуть true.
  * 3. Транзитивность: если a.equals(b) возвращает true и b.equals(c) тоже возвращает true,
- *    то c.equals(a) тоже должен возвращать true.
+ * то c.equals(a) тоже должен возвращать true.
  * 4. Согласованность: повторный вызов метода equals() должен возвращать
- *    одно и тоже значение до тех пор, пока какое-либо значение свойств объекта не будет изменено.
- *    То есть, если два объекта равны в Java, то они будут равны пока их свойства остаются неизменными.
+ * одно и тоже значение до тех пор, пока какое-либо значение свойств объекта не будет изменено.
+ * То есть, если два объекта равны в Java, то они будут равны пока их свойства остаются неизменными.
  * 5. Сравнение null: объект должны быть проверен на null.
- *    Если объект равен null, то метод должен вернуть false, а не NullPointerException.
- *    Например, a.equals(null) должен вернуть false.
+ * Если объект равен null, то метод должен вернуть false, а не NullPointerException.
+ * Например, a.equals(null) должен вернуть false.
  */

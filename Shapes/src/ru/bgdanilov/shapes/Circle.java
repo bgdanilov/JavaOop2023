@@ -49,4 +49,9 @@ public record Circle(double radius) implements Shape {
         Circle circle = (Circle) shape;
         return this.radius == circle.radius;
     }
+
+    @Override
+    public int hashCode() {
+        return Double.hashCode(this.radius);
+    }
 }

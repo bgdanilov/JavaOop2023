@@ -126,6 +126,21 @@ public class Triangle implements Shape {
                 && this.y2 == triangle.y2
                 && this.y3 == triangle.y3;
     }
+
+    @Override
+    public int hashCode() {
+        final int salt = 37;
+        int hash = 1;
+
+        hash = salt * hash + Double.hashCode(this.x1);
+        hash = salt * hash + Double.hashCode(this.x2);
+        hash = salt * hash + Double.hashCode(this.x3);
+        hash = salt * hash + Double.hashCode(this.y1);
+        hash = salt * hash + Double.hashCode(this.y2);
+        hash = salt * hash + Double.hashCode(this.y3);
+
+        return hash;
+    }
 }
 
 /* TODO

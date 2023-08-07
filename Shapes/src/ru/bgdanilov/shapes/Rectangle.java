@@ -55,6 +55,17 @@ public class Rectangle implements Shape {
         Rectangle rectangle = (Rectangle) shape;
         return this.height == rectangle.height && this.width == rectangle.width;
     }
+
+    @Override
+    public int hashCode() {
+        final int salt = 37;
+        int hash = 1;
+
+        hash = salt * hash + Double.hashCode(this.height);
+        hash = salt * hash + Double.hashCode(this.width);
+
+        return hash;
+    }
 }
 
 /* TODO

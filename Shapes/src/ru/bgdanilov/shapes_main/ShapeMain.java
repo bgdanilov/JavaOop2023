@@ -57,6 +57,15 @@ public class ShapeMain {
         System.out.println("4. Проверим треугольники:");
         System.out.println(new Triangle(1, 1, 4, 1, 4, 4).equals(shapes.get(2)));
         System.out.println(new Triangle(0, 1, 4, 1, 4, 4).equals(shapes.get(2)));
+
+        System.out.println("5. Проверим Хэш разных окружностей:");
+        // Разные объекты не равны.
+        System.out.println(circleR1.hashCode());
+        System.out.println(circleR2.hashCode());
+
+        // Разные объекты равны.
+        System.out.println(circleR2.hashCode());
+        System.out.println(new Circle(2).hashCode());
     }
 }
 

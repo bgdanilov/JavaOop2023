@@ -48,4 +48,14 @@ public record Square(double sideLength) implements Shape {
         Square square = (Square) shape;
         return this.sideLength == square.sideLength;
     }
+
+    @Override
+    public int hashCode() {
+        return Double.hashCode(this.sideLength);
+    }
 }
+
+/* TODO
+    1. Я понимаю так, что для простого класса с одним полем, можно не переопределять hashCode()?
+    Или пререопределить на как Double.hashCode() т.к. нам нужен int ?
+ */
