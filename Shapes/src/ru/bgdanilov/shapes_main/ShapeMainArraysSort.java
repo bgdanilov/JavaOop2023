@@ -31,6 +31,29 @@ public class ShapeMainArraysSort {
         Arrays.sort(shapes, new ShapesPerimeterComparator().reversed());
         System.out.println("Второй по величине периметр среди массива фигур равен "
                 + shapes[1].getPerimeter());
+
+        // Проверим equals.
+        Circle circleR1 = new Circle(1); // Новый объект окружность R = 1.
+        Circle circleR2 = new Circle(2); // Новый объект окружность R = 2.
+
+        System.out.println("1. Проверим, что в массиве тоже окружность R = 1:");
+        System.out.println(shapes[3]);
+        System.out.println(circleR1.equals(shapes[3])); // true.
+        System.out.println();
+
+        System.out.println("2. Радиусы разные:");
+        System.out.println(circleR2.equals(shapes[3])); // false.
+        System.out.println();
+
+        System.out.println("3. Проверим, что в массиве треугольник:");
+        System.out.println(shapes[2]);
+        System.out.println("Окружность circleR1 = треугольнику?");
+        System.out.println(circleR1.equals(shapes[2])); // false.
+        System.out.println();
+
+        System.out.println("4. Проверим треугольники:");
+        System.out.println(new Triangle(1, 1, 4, 1, 4, 4).equals(shapes[2]));
+        System.out.println(new Triangle(0, 1, 4, 1, 4, 4).equals(shapes[2]));
     }
 }
 
@@ -40,5 +63,4 @@ public class ShapeMainArraysSort {
     что-то связано с невозможностью использования массива в return.
     2. Что тут происходит?
     System.out.println(Arrays.toString(new Shape[] {e}));
-
  */

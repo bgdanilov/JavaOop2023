@@ -1,11 +1,8 @@
 package ru.bgdanilov.shapes;
 
-public class Circle implements Shape {
-    private final double radius;
-
-    public Circle(double radius) {
-        this.radius = radius;
-    }
+// Сделаем Square классом-record, как просит IDE.
+// record - это класс с неизменными (final) полями и отсутствующими сеттерами.
+public record Circle(double radius) implements Shape {
 
     @Override
     public double getHeight() {
@@ -34,5 +31,22 @@ public class Circle implements Shape {
         String shapeType = getClass().getSimpleName();
 
         return shapeType + ", R = " + radius;
+    }
+
+    @Override
+    public boolean equals(Object shape) {
+        // Передали объект (сам себе равен).
+        if (this == shape) {
+            return true;
+        }
+
+        // Объект передали пустой или класса, отличного от сравниваемого.
+        if (shape == null || this.getClass() != shape.getClass()) {
+            return false;
+        }
+
+        // Приводим Object к Circle для сравнения полей.
+        Circle circle = (Circle) shape;
+        return this.radius == circle.radius;
     }
 }

@@ -34,11 +34,33 @@ public class ShapeMain {
         // Соответственно, элемент 1 - это второй по-убыванию.
         System.out.println("Второй по величине периметр среди списка фигур равен: "
                 + shapes.get(1).getPerimeter());
+
+        // Проверим equals.
+        Circle circleR1 = new Circle(1); // Новый объект окружность R = 1.
+        Circle circleR2 = new Circle(2); // Новый объект окружность R = 2.
+
+        System.out.println("1. Проверим, что в массиве тоже окружность R = 1:");
+        System.out.println(shapes.get(3));
+        System.out.println(circleR1.equals(shapes.get(3))); // true.
+        System.out.println();
+
+        System.out.println("2. Радиусы разные:");
+        System.out.println(circleR2.equals(shapes.get(3))); // false.
+        System.out.println();
+
+        System.out.println("3. Проверим, что в массиве треугольник:");
+        System.out.println(shapes.get(2));
+        System.out.println("Окружность circleR1 = треугольнику?");
+        System.out.println(circleR1.equals(shapes.get(2))); // false.
+        System.out.println();
+
+        System.out.println("4. Проверим треугольники:");
+        System.out.println(new Triangle(1, 1, 4, 1, 4, 4).equals(shapes.get(2)));
+        System.out.println(new Triangle(0, 1, 4, 1, 4, 4).equals(shapes.get(2)));
     }
 }
 
 /* TODO
     1. здесь можно использовать Arrays.asList - сделать когда пройдем теорию.
     2. Тут foreach так же работает со списком, как с обычным массивом?
-
  */

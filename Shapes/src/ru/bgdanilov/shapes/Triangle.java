@@ -1,8 +1,6 @@
 package ru.bgdanilov.shapes;
 
 public class Triangle implements Shape {
-    // Не буду делать геттеры и сеттеры - 6 координат, 12 функций!
-    // Будем считать, что как родили треугольник, так и нечего его менять.
     // Делаем поля final, т.к. нет сеттеров и это константы по смыслу тогда.
     private final double x1;
     private final double y1;
@@ -32,6 +30,42 @@ public class Triangle implements Shape {
         side1 = getSideLength(x2, x1, y2, y1);
         side2 = getSideLength(x3, x2, y3, y2);
         side3 = getSideLength(x3, x1, y3, y1);
+    }
+
+    public double getX1() {
+        return this.x1;
+    }
+
+    public double getX2() {
+        return this.x2;
+    }
+
+    public double getX3() {
+        return this.x3;
+    }
+
+    public double getY1() {
+        return this.y1;
+    }
+
+    public double getY2() {
+        return this.y2;
+    }
+
+    public double getY3() {
+        return this.y3;
+    }
+
+    public double getSide1() {
+        return this.side1;
+    }
+
+    public double getSide2() {
+        return this.side2;
+    }
+
+    public double getSide3() {
+        return this.side3;
     }
 
     // Делаем private - значит этот метод доступен только внутри класса Triangle,
@@ -68,6 +102,34 @@ public class Triangle implements Shape {
         // По-сути  - имя класса.
         String shapeType = getClass().getSimpleName();
 
-        return shapeType + ", площадь =" + getArea();
+        return shapeType + ", площадь = " + getArea();
+    }
+
+    @Override
+    public boolean equals(Object shape) {
+        // Передали объект (сам себе равен).
+        if (this == shape) {
+            return true;
+        }
+
+        // Объект передали пустой или класса, отличного от сравниваемого.
+        if (shape == null || this.getClass() != shape.getClass()) {
+            return false;
+        }
+
+        // Приводим Object к Triangle для сравнения полей.
+        Triangle triangle = (Triangle) shape;
+        return this.x1 == triangle.x1
+                && this.x2 == triangle.x2
+                && this.x3 == triangle.x3
+                && this.y1 == triangle.y1
+                && this.y2 == triangle.y2
+                && this.y3 == triangle.y3;
     }
 }
+
+/* TODO
+    1. Почему этот клас не предлагается сделать record ?
+    Вроде поля final, сеттеров нет...
+        -- Наверное, потому, что у нас конструктор переписан, кастомный?
+ */
