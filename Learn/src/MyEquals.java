@@ -1,7 +1,7 @@
 import java.util.Objects;
 
 public class MyEquals {
-    public void main(String[] args) {
+    public static void main(String[] args) {
         // 1. По умолчанию, в классе Object, метод
         // equals(Object o) просто проверяет равенство ссылок при помощи ==
         // 2. Многие стандартные классы, такие как String, переопределяют метод equals,
@@ -9,22 +9,19 @@ public class MyEquals {
         // 3. Поэтому в своих классах, если мы хотим сравнивать их объекты,
         // нужно переопределить метод equals
 
-        B b = new B(1);
-        A a = new A(2, new B(1));
+        B b1 = new B(1);
+        B b2 = new B(1);
 
+        A a1 = new A(2, b1);
+        A a2 = new A(2, b1);
+        A a3 = new A(2, b2);
 
-        System.out.println(a.equals(b));
+        System.out.println(a1.equals(a2)); // true
+        System.out.println(a1.equals(a3)); // false поля одинаковы, но b1 != b2.
 
     }
 
-    public static class B {
-        private final int y;
-
-        public B (int y) {
-            this.y = y;
-        }
-    }
-
+    // Некий класс A, полем которого является объект класса B.
     public static class A {
         private final int x;
         private final B y;
@@ -53,6 +50,10 @@ public class MyEquals {
             }
             // 3.
             // 3.1 Приводим объект к типу A. Что это значит?
+            // Т.к. в equals мы передаем o - объект класса Objects,
+            // а мы хотим сравнить с объектом класса A,
+            // то нужно явно привести объект o класса к классу A, чтобы его передать в метод.
+            // Это мы можем сделать, т.е. A наследован от Objects.
             A pair = (A) o;
             // 3.2. Сравниваем поля.
             // y может быть null. Надо учесть.
@@ -63,4 +64,26 @@ public class MyEquals {
             return this.x == pair.x && Objects.equals(this.y, pair.y);
         }
     }
+
+    // Некий класс B, объект которого является полем класса A.
+    public static class B {
+        private final int y;
+
+        public B (int y) {
+            this.y = y;
+        }
+    }
 }
+
+/**
+ * 1. Рефлексивность: Объект должен равняться себе самому.
+ * 2. Симметричность: если a.equals(b) возвращает true, то b.equals(a) должен тоже вернуть true.
+ * 3. Транзитивность: если a.equals(b) возвращает true и b.equals(c) тоже возвращает true,
+ *    то c.equals(a) тоже должен возвращать true.
+ * 4. Согласованность: повторный вызов метода equals() должен возвращать
+ *    одно и тоже значение до тех пор, пока какое-либо значение свойств объекта не будет изменено.
+ *    То есть, если два объекта равны в Java, то они будут равны пока их свойства остаются неизменными.
+ * 5. Сравнение null: объект должны быть проверен на null.
+ *    Если объект равен null, то метод должен вернуть false, а не NullPointerException.
+ *    Например, a.equals(null) должен вернуть false.
+ */
