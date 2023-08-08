@@ -1,8 +1,39 @@
 package ru.bgdanilov.deminer_main;
 
+import ru.bgdanilov.deminer.Cell;
+import ru.bgdanilov.deminer.Game;
+import ru.bgdanilov.deminer.MineField;
+
 public class DeminerMain {
     public static void main(String[] args) {
+        // Создаем мины.
+        //Cell mine1 = new Cell(0,0, "m");
+        //Cell mine2 = new Cell(2,2, "m");
+        //Cell mine3 = new Cell(2,3, "m");
+        //Cell[] cells = {mine1, mine2, mine3};
 
+        // Это массив объектов клеток.
+        Cell[][] field = new Cell[7][5];
+
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 5; j++) {
+                field[i][j] = new Cell(0, 0, "e"); // e - empty (пусто).
+            }
+        }
+
+        // Расставляем мины вручную.
+        field[1][4].setName("m"); // m - mine (мина).
+        field[2][2].setName("m");
+        field[2][3].setName("m");
+
+        // Печатаем минное поле.
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 5; j++) {
+                System.out.print(field[i][j].getName() + " ");
+            }
+
+            System.out.println();
+        }
     }
 }
 
