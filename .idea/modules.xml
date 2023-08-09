@@ -3,8 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Deminer/Deminer.iml" filepath="$PROJECT_DIR$/Deminer/Deminer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Deniner/Deniner.iml" filepath="$PROJECT_DIR$/Deniner/Deniner.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/JavaOop2023.iml" filepath="$PROJECT_DIR$/.idea/JavaOop2023.iml" />
       <module fileurl="file://$PROJECT_DIR$/Learn/Learn.iml" filepath="$PROJECT_DIR$/Learn/Learn.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Matrix/Matrix.iml" filepath="$PROJECT_DIR$/Matrix/Matrix.iml" />
       <module fileurl="file://$PROJECT_DIR$/Range/Range.iml" filepath="$PROJECT_DIR$/Range/Range.iml" />
       <module fileurl="file://$PROJECT_DIR$/Shapes/Shapes.iml" filepath="$PROJECT_DIR$/Shapes/Shapes.iml" />
       <module fileurl="file://$PROJECT_DIR$/Vector/Vector.iml" filepath="$PROJECT_DIR$/Vector/Vector.iml" />
