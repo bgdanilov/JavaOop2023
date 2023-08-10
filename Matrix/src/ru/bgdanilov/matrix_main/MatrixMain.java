@@ -14,6 +14,8 @@ public class MatrixMain {
         System.out.println(new Matrix(matrix2));
 
         // 1.d. Конструктор	Matrix(Vector[]) – из массива векторов-строк.
-        Vector[] vectors = new Vector[]{new Vector(3), new Vector(3)};
+        Vector[] vectors = new Vector[]{new Vector(2), new Vector(4)};
+        Matrix matrix3 = new Matrix(vectors);
+        System.out.println(matrix3);
     }
 }

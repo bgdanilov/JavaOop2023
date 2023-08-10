@@ -46,6 +46,11 @@ public class Vector {
         return this.components.length;
     }
 
+    // Нужно в Matrix
+    public double[] getComponents() {
+        return components;
+    }
+
     // 3. Метод. toString(), чтобы выдавал информацию о векторе в  формате { значения компонент через запятую }
     @Override
     public String toString() {

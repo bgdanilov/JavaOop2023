@@ -2,6 +2,8 @@ package ru.bgdanilov.matrix;
 
 import ru.bgdanilov.vector.Vector;
 
+import java.util.Arrays;
+
 public class Matrix {
     private final Vector[] matrix;
 
@@ -51,10 +53,25 @@ public class Matrix {
     }
 
     // 1.d. Конструктор	Matrix(Vector[]) – из массива векторов-строк.
-    //public Matrix(Vector[] vectors) {
-    //    int n = vectors.length;
-    //}
+    public Matrix(Vector[] sourceVectors) {
+        //int n = vectors.length;
+        int size = 1;
 
+        // Ищем максимальный размер среди векторов массива.
+        for (Vector vector : sourceVectors) {
+            if (vector.getSize() > size) {
+                size = vector.getSize();
+            }
+        }
+
+        // Добиваем нулями векторы исходного массива.
+        for (Vector vector : sourceVectors) {
+            improveSize(vector, size);
+        }
+
+        // Терзают меня сомнения. Слишком просто.
+        this.matrix = sourceVectors;
+    }
 
     public int getRowsAmount() {
         return matrix.length; // n
@@ -77,6 +94,14 @@ public class Matrix {
 
         return sb.append(" }").toString();
     }
+
+    // Дополнение нулями короткого вектора до размера size, если надо.
+    private void improveSize(Vector vector, int size) {
+        if (vector.getSize() < size) {
+            Vector additionalVector = new Vector(size);
+            vector.addVector(additionalVector);
+        }
+    }
 }
 
 /*
@@ -95,4 +120,12 @@ public class Matrix {
 
     n - число строк.
     m - число колонок.
+ */
+
+/* TODO
+    1. Сделать проверку-добивку нулями в отдельную функцию.
+    - сделано: improveSize.
+    2. Конструктор 1.d: проверить this.matrix = vectors;
+    - это у нас просто ссылка копируется или новый объект создается как положено?
+    - вообще, разобраться с ссылочными данными и как они копируются, создаются, где хранятся.
  */
