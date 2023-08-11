@@ -14,7 +14,7 @@ public class MineField {
     public void setField() {
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.columns; j++) {
-                field[i][j] = new Cell(i, j, "0", true, false, CellType.EMPTY);
+                field[i][j] = new Cell(i, j, "0", true, false, new CellType());
             }
         }
     }
