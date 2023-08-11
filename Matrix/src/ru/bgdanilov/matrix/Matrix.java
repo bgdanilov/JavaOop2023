@@ -108,12 +108,55 @@ public class Matrix {
         }
     }
 
+    // 2.a. Метод. Получение размеров матрицы.
     public int getRowsAmount() {
         return matrix.length; // n
     }
 
     public int getColumnsAmount() {
         return matrix[0].getSize(); // m
+    }
+
+    // 2.b. Метод. Получение и задание вектора-строки по индексу.
+    public Vector getRow(int index) {
+        int n = this.getRowsAmount();
+
+        if (index < 0 || index > n - 1) {
+            throw new IllegalArgumentException("Неверный индекс.");
+        }
+
+        return new Vector(this.matrix[index]);
+    }
+
+    public void setRow(Vector sourceVector, int index) {
+        int n = this.getRowsAmount();
+        int m = this.getColumnsAmount();
+
+        // index считается от 0, а n - от 1.
+        if (sourceVector.getSize() > m || (index < 0 || index > n - 1 )) {
+            throw new IllegalArgumentException("Векторы не совпадают по размеру или неверный индекс.");
+        }
+
+        for (int i = 0; i < m; i++) {
+            this.matrix[index].setComponent(i, sourceVector.getComponent(i));
+        }
+    }
+
+    // 2.c. Метод. Получение вектора-столбца по индексу.
+    public Vector getColumn(int index) {
+        int n = this.getRowsAmount();
+
+        if (index < 0 || index > n - 1) {
+            throw new IllegalArgumentException("Неверный индекс.");
+        }
+
+        Vector outputVector = new Vector(n);
+
+        for (int i = 0; i < n; i++) {
+            outputVector.setComponent(i, this.matrix[i].getComponent(index));
+        }
+
+        return outputVector;
     }
 
     // 2.g.	Метод toString определить так,
@@ -134,10 +177,16 @@ public class Matrix {
 /*
     Описание класса:
     ===============================
-    1. toString()
-    - используется toString() из Vector для вывода внутренних векторов.
+
 
     1.d. Конструктор Matrix(Vector[]) – из массива векторов-строк.
+
+    2.a. Метод. Получение размеров матрицы.
+    - getColumnsAmount(). Будем считать, что в процессе создания матрицы не моут получится
+      строки разной длины, поэтому длину берем из первой строки.
+
+    2.g. Метод toString().
+    - используется toString() из Vector для вывода внутренних векторов.
 
 
     Вопросы:
@@ -154,6 +203,8 @@ public class Matrix {
     3. Конструктор 1.d. А может не стоит тут проверять размерность передаваемого вектора?
        Мы же вектор через конструктор создаем, и размером ноль конструктор нам не даст сделать.
        Аналогично Конструктор 1.b.
+
+
 
     n - число строк.
     m - число колонок.

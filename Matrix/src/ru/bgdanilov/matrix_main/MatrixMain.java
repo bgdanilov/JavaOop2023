@@ -22,5 +22,17 @@ public class MatrixMain {
         Vector[] vectors = new Vector[]{new Vector(2), new Vector(4)};
         Matrix matrix1d = new Matrix(vectors);
         System.out.println("matrix1d : " + matrix1d);
+
+        // 2.b. Метод. Получение и задание вектора-строки по индексу.
+        Vector vector2b2 = matrix1b.getRow(2);
+        System.out.println("vector2b2 : " + vector2b2);
+
+        Vector sourceVector = new Vector(new double[] {9, 10, 11});
+        matrix1a.setRow(sourceVector, 1);
+        System.out.println("matrix1a[0] <-- {9, 10, 11} : " + matrix1a);
+
+        // 2.c. Метод. Получение вектора-столбца по индексу.
+        Vector vector2c = matrix1a.getColumn(1);
+        System.out.println(vector2c);
     }
 }
