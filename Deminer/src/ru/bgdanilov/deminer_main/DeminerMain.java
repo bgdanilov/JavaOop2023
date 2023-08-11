@@ -1,38 +1,71 @@
 package ru.bgdanilov.deminer_main;
 
-import ru.bgdanilov.deminer.Cell;
-import ru.bgdanilov.deminer.Game;
+import ru.bgdanilov.deminer.CellType;
 import ru.bgdanilov.deminer.MineField;
+
+import java.util.Scanner;
 
 public class DeminerMain {
     public static void main(String[] args) {
-        // Создаем мины.
-        //Cell mine1 = new Cell(0,0, "m");
-        //Cell mine2 = new Cell(2,2, "m");
-        //Cell mine3 = new Cell(2,3, "m");
-        //Cell[] cells = {mine1, mine2, mine3};
+        // Создаем новое поле.
+        MineField field = new MineField(7, 5);
+        // Заполняем созданное поле пустыми объектами-клетками *.
+        field.setField();
 
-        // Это массив объектов клеток.
-        Cell[][] field = new Cell[7][5];
+        // Назначаем мины на поле.
+        // TODO потом сделать автоматическое заполнение.
+        field.getCell(1, 4).setType(CellType.MINE);
+        field.getCell(2, 2).setType(CellType.MINE);
+        // Назначение типа клетки цифра.
+        field.getCell(0, 3).setType(CellType.DIGIT);
+        field.getCell(0, 4).setType(CellType.DIGIT);
+        field.getCell(1, 2).setType(CellType.DIGIT);
+        field.getCell(1, 3).setType(CellType.DIGIT);
+        field.getCell(2, 2).setType(CellType.DIGIT);
+        field.getCell(2, 4).setType(CellType.DIGIT);
+        field.getCell(3, 2).setType(CellType.DIGIT);
+        field.getCell(3, 3).setType(CellType.DIGIT);
+        field.getCell(3, 4).setType(CellType.DIGIT);
+        // Назначаем цифры-подсказки на поле.
+        field.getCell(0, 3).setName("1");
+        field.getCell(0, 4).setName("1");
+        field.getCell(1, 2).setName("1");
+        field.getCell(1, 3).setName("2");
+        field.getCell(2, 2).setName("1");
+        field.getCell(2, 4).setName("2");
+        field.getCell(3, 2).setName("1");
+        field.getCell(3, 3).setName("1");
+        field.getCell(3, 4).setName("1");
 
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 5; j++) {
-                field[i][j] = new Cell(i, j, "e"); // e - empty (пусто).
+        // Выводим поле.
+        field.printField();
+
+        while (true) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Введите целое число i: ");
+            int i = scanner.nextInt();
+
+            System.out.println("Введите целое число j: ");
+            int j = scanner.nextInt();
+
+            System.out.println("Введите целое код: 1 - открыть, 2 - отметить, 0 - выход");
+            int action = scanner.nextInt();
+
+            if (action == 1) {
+                field.getCell(i, j).setIsHidden(false);
             }
-        }
 
-        // Расставляем мины вручную.
-        field[1][4].setName("m"); // m - mine (мина).
-        field[2][2].setName("m");
-        field[2][3].setName("m");
-
-        // Печатаем минное поле.
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 5; j++) {
-                System.out.print(field[i][j].getName() + " ");
+            if (action == 2) {
+                field.getCell(i, j).setIsMarked(true);
             }
 
-            System.out.println();
+            if (action == 0) {
+                break;
+            }
+
+            System.out.print("\033[H\033[J");
+            // Выводим поле.
+            field.printField();
         }
     }
 }

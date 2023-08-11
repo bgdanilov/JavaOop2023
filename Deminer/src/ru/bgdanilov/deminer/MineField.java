@@ -1,27 +1,52 @@
 package ru.bgdanilov.deminer;
 
 public class MineField {
-    private int rowsNumber; // Число строк.
-    private int colsNumber; // Число столбцов.
+    private final Cell[][] field;
+    private final int rows;
+    private final int columns;
 
-    public MineField(int rows, int cols) {
-        this.rowsNumber = rows;
-        this.colsNumber = cols;
+    public MineField(int rows, int columns) {
+        this.rows = rows;
+        this.columns = columns;
+        this.field = new Cell[this.rows][this.columns];
     }
 
-    public int getColsNumber() {
-        return colsNumber;
+    public void setField() {
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.columns; j++) {
+                field[i][j] = new Cell(i, j, "0", true, false, CellType.EMPTY);
+            }
+        }
     }
 
-    public int getRowsNumber() {
-        return rowsNumber;
+    public Cell getCell (int i, int j) {
+        return field[i][j];
     }
 
-    public void setColsNumber(int colsNumber) {
-        this.colsNumber = colsNumber;
-    }
+    public void printField() {
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.columns; j++) {
+                // Если клетка скрыта - рисуем * .
+                if(field[i][j].getIsHidden()) {
+                    // Скрыта и помечера - рисуем f .
+                    if(field[i][j].getIsMarked()) {
+                        System.out.print("f ");
+                    } else {
+                        System.out.print("* ");
+                    }
+                // Остальные случаи - клетка открыта.
+                } else {
+                    if(field[i][j].type == CellType.EMPTY) {
+                        System.out.print("e ");
+                    } else if (field[i][j].type == CellType.MINE) {
+                        System.out.print("m ");
+                    } else if (field[i][j].type == CellType.DIGIT) {
+                        System.out.print(field[i][j].getName() + " ");
+                    }
+                }
+            }
 
-    public void setRowsNumber(int rowsNumber) {
-        this.rowsNumber = rowsNumber;
+            System.out.println();
+        }
     }
 }
