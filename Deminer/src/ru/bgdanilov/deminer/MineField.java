@@ -37,11 +37,13 @@ public class MineField {
                 // Остальные случаи - клетка открыта.
                 } else {
                     if(field[i][j].type == CellType.EMPTY) {
-                        System.out.print("e ");
+                        //System.out.print("e ");
+                        System.out.print(field[i][j].type.getName() + " ");
                     } else if (field[i][j].type == CellType.MINE) {
-                        System.out.print("m ");
+                        //System.out.print("m ");
+                        System.out.print(field[i][j].type.getName() + " ");
                     } else if (field[i][j].type == CellType.DIGIT) {
-                        System.out.print(field[i][j].getName() + " ");
+                        System.out.print(field[i][j].type.getNumber() + " ");
                     }
                 }
             }
