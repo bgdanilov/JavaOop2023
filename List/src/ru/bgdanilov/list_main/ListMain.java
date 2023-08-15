@@ -14,10 +14,18 @@ public class ListMain {
         // 3. Добавляем другие элементы, просто  просто записывая в next.
         strings.addItem("One");
         strings.addItem("Two");
+        strings.addItem("Three");
+        strings.addItem("Four");
 
         System.out.println(strings);
 
         System.out.println(strings.getCount());
+        System.out.println(strings.getItemByIndex(3));
+
+        // Как сюда добавить, чтобы String из <T> бралось?
+        String oldListItem = strings.change2ItemByIndex(2, "Три");
+        System.out.println("Старое значение было: " + oldListItem);
+        System.out.println(strings);
 
         List<String> sss = new List<>();
         System.out.println(sss);
