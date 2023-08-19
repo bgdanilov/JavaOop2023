@@ -13,6 +13,10 @@ public class ListItem<T> {
         return this.data;
     }
 
+    public void setData (T data) {
+        this.data = data;
+    }
+
     public void setData (int index, T data) {
         this.data = data;
     }
