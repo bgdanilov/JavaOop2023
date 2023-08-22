@@ -55,13 +55,13 @@ public class Vector {
     @Override
     public String toString() {
         int size = this.getSize();
-        StringBuilder sb = new StringBuilder().append("{ ").append(components[0]);
+        StringBuilder sb = new StringBuilder().append("{").append(components[0]);
 
         for (int i = 1; i < size; i++) {
             sb.append(", ").append(components[i]);
         }
 
-        return sb.append(" }").toString();
+        return sb.append("}").toString();
     }
 
     // 4.a. Добавить вектор к вектору.
@@ -94,7 +94,7 @@ public class Vector {
     }
 
     // 4.c. Умножение вектора на скаляр.
-    public void multiplicationByScalar(double scalar) {
+    public void multiplyByScalar(double scalar) {
         int vectorSize = getSize();
 
         for (int i = 0; i < vectorSize; i++) {
@@ -103,21 +103,19 @@ public class Vector {
     }
 
     // 4.d. Разворот вектора. Умножение на -1.
-    public void reverseVector() {
-        multiplicationByScalar(-1);
+    public void reverse() {
+        multiplyByScalar(-1);
     }
 
     // 4.e. Получение длины вектора.
     public double getLength() {
-        int size = getSize();
-        double sqrtExpression = 0;
+        double sum = 0;
 
-        for (int i = 0; i < size; i++) {
-            // Умножение дешевле возведения в степень.
-            sqrtExpression += components[i] * components[i];
+        for (double component : components) {
+            sum += component * component;
         }
 
-        return Math.sqrt(sqrtExpression);
+        return Math.sqrt(sum);
     }
 
     // 4.f. Получение и установка компоненты вектора по индексу.
@@ -131,22 +129,24 @@ public class Vector {
 
     // 4.g. Переопределение equals() и hashCode().
     @Override
-    public boolean equals(Object someVector) {
+    public boolean equals(Object object) {
         // Передан ли сам объект.
-        if (this == someVector) {
+        if (this == object) {
             return true;
         }
 
         // Проверка на пустой объект, на отличный от Vector класс.
-        if (someVector == null || getClass() != someVector.getClass()) {
+        if (object == null || getClass() != object.getClass()) {
             return false;
         }
 
         // Если все-таки это объект класса Vector,
         // нужно проверить длину и равенство компонент,
         // Для доступа к полям-компонентам, нужно привести Object к Vector.
-        Vector vector = (Vector) someVector;
+        Vector vector = (Vector) object;
 
+        return Arrays.equals(components, vector.getComponents());
+/*
         if (getSize() != vector.getSize()) {
             return false;
         }
@@ -158,8 +158,7 @@ public class Vector {
                 return false;
             }
         }
-
-        return true;
+*/
     }
 
     // Берем готовый метод получения Хэш массива.
@@ -169,7 +168,7 @@ public class Vector {
     }
 
     // 5.a. Сложение двух векторов.
-    public static Vector additionVectors(Vector vector1, Vector vector2) {
+    public static Vector getSum(Vector vector1, Vector vector2) {
         Vector resultVector = new Vector(vector1);
         resultVector.addVector(vector2);
 
@@ -177,7 +176,7 @@ public class Vector {
     }
 
     // 5.b. Вычитание двух векторов.
-    public static Vector subtractionVectors(Vector vector1, Vector vector2) {
+    public static Vector getDifference(Vector vector1, Vector vector2) {
         Vector resultVector = new Vector(vector1);
         resultVector.subtractVector(vector2);
 
@@ -185,11 +184,11 @@ public class Vector {
     }
 
     // 5.c. Скалярное произведение двух векторов.
-    public static double dotProductVectors(Vector vector1, Vector vector2) {
-        int size = Math.min(vector1.getSize(), vector2.getSize());
+    public static double getDotProduct(Vector vector1, Vector vector2) {
+        int smallerSize = Math.min(vector1.getSize(), vector2.getSize());
         double dotProduct = 0;
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < smallerSize; i++) {
             dotProduct += vector1.components[i] * vector2.components[i];
         }
 

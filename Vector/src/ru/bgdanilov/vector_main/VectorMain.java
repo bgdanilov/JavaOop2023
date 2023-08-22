@@ -40,11 +40,11 @@ public class VectorMain {
         System.out.println("4.b. Из Вектора D вычитаем Вектор B: " + vectorD);
 
         // 4.c. Умножение вектора на скаляр.
-        vectorC.multiplicationByScalar(10);
+        vectorC.multiplyByScalar(10);
         System.out.println("4.c. Умножаем Вектор C на 10: " + vectorC);
 
         // 4.d. Разворот вектора. Умножение на -1.
-        vectorC.reverseVector();
+        vectorC.reverse();
         System.out.println("4.d. Разворот Вектора C: " + vectorC);
 
         // 4.e. Получение длины вектора.
@@ -83,18 +83,18 @@ public class VectorMain {
         // 5.a. Сложение двух векторов.
 
         // Это по-сути Конструктор "с".
-        Vector vectorG = new Vector(Vector.additionVectors(vectorC, vectorF));
+        Vector vectorG = new Vector(Vector.getSum(vectorC, vectorF));
         // А можно так - вызываем статический метод просто из класса...
-        Vector vectorH = Vector.additionVectors(vectorC, vectorF);
+        Vector vectorH = Vector.getSum(vectorC, vectorF);
         // ... но почему не нужно слово  "new" ?
         System.out.println("5.a. Результат сложения векторов C и F = Вектор G: " + vectorG);
 
         // 5.b. Вычитание двух векторов.
-        Vector vectorI = Vector.subtractionVectors(vectorG, vectorF);
+        Vector vectorI = Vector.getDifference(vectorG, vectorF);
         System.out.println("5.b. Результат разности векторов G и F = Вектор I: " + vectorI);
 
         // 5.c. Скалярное произведение двух векторов.
-        double dotProduct = Vector.dotProductVectors(vectorA, vectorF);
+        double dotProduct = Vector.getDotProduct(vectorA, vectorF);
         System.out.printf("5.c. Результат скалярного произведения веторов A и F (должно быть 0) = %.2f%n", dotProduct);
     }
 }
