@@ -31,24 +31,24 @@ public record Circle(double radius) implements Shape {
     }
 
     @Override
-    public boolean equals(Object shape) {
+    public boolean equals(Object object) {
         // Передали объект (сам себе равен).
-        if (this == shape) {
+        if (this == object) {
             return true;
         }
 
         // Объект передали пустой или класса, отличного от сравниваемого.
-        if (shape == null || this.getClass() != shape.getClass()) {
+        if (object == null || this.getClass() != object.getClass()) {
             return false;
         }
 
         // Приводим Object к Circle для сравнения полей.
-        Circle circle = (Circle) shape;
-        return this.radius == circle.radius;
+        Circle circle = (Circle) object;
+        return radius == circle.radius;
     }
 
     @Override
     public int hashCode() {
-        return Double.hashCode(this.radius);
+        return Double.hashCode(radius);
     }
 }

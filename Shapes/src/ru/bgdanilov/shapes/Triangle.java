@@ -104,38 +104,38 @@ public class Triangle implements Shape {
     }
 
     @Override
-    public boolean equals(Object shape) {
+    public boolean equals(Object object) {
         // Передали объект (сам себе равен).
-        if (this == shape) {
+        if (this == object) {
             return true;
         }
 
         // Объект передали пустой или класса, отличного от сравниваемого.
-        if (shape == null || this.getClass() != shape.getClass()) {
+        if (object == null || this.getClass() != object.getClass()) {
             return false;
         }
 
         // Приводим Object к Triangle для сравнения полей.
-        Triangle triangle = (Triangle) shape;
-        return this.x1 == triangle.x1
-                && this.x2 == triangle.x2
-                && this.x3 == triangle.x3
-                && this.y1 == triangle.y1
-                && this.y2 == triangle.y2
-                && this.y3 == triangle.y3;
+        Triangle triangle = (Triangle) object;
+        return x1 == triangle.x1
+                && x2 == triangle.x2
+                && x3 == triangle.x3
+                && y1 == triangle.y1
+                && y2 == triangle.y2
+                && y3 == triangle.y3;
     }
 
     @Override
     public int hashCode() {
-        final int salt = 37;
+        final int prime = 37;
         int hash = 1;
 
-        hash = salt * hash + Double.hashCode(this.x1);
-        hash = salt * hash + Double.hashCode(this.x2);
-        hash = salt * hash + Double.hashCode(this.x3);
-        hash = salt * hash + Double.hashCode(this.y1);
-        hash = salt * hash + Double.hashCode(this.y2);
-        hash = salt * hash + Double.hashCode(this.y3);
+        hash = prime * hash + Double.hashCode(x1);
+        hash = prime * hash + Double.hashCode(x2);
+        hash = prime * hash + Double.hashCode(x3);
+        hash = prime * hash + Double.hashCode(y1);
+        hash = prime * hash + Double.hashCode(y2);
+        hash = prime * hash + Double.hashCode(y3);
 
         return hash;
     }

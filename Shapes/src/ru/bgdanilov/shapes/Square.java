@@ -30,25 +30,25 @@ public record Square(double sideLength) implements Shape {
     }
 
     @Override
-    public boolean equals(Object shape) {
+    public boolean equals(Object object) {
         // Передали объект (сам себе равен).
-        if (this == shape) {
+        if (this == object) {
             return true;
         }
 
         // Объект передали пустой или класса, отличного от сравниваемого.
-        if (shape == null || this.getClass() != shape.getClass()) {
+        if (object == null || this.getClass() != object.getClass()) {
             return false;
         }
 
         // Приводим Object к Square для сравнения полей.
-        Square square = (Square) shape;
-        return this.sideLength == square.sideLength;
+        Square square = (Square) object;
+        return sideLength == square.sideLength;
     }
 
     @Override
     public int hashCode() {
-        return Double.hashCode(this.sideLength);
+        return Double.hashCode(sideLength);
     }
 }
 
