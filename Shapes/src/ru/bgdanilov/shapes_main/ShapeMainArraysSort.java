@@ -22,6 +22,8 @@ public class ShapeMainArraysSort {
             System.out.println(shape);
         }
 
+        System.out.println();
+
         // Сортируем массив по убыванию площади.
         Arrays.sort(shapes, new ShapeAreaComparator().reversed());
         System.out.println("Максимальная площадь среди массива фигур равна "
@@ -31,6 +33,7 @@ public class ShapeMainArraysSort {
         Arrays.sort(shapes, new ShapePerimeterComparator().reversed());
         System.out.println("Второй по величине периметр среди массива фигур равен "
                 + shapes[1].getPerimeter());
+        System.out.println();
 
         // Проверим equals.
         Circle circleR1 = new Circle(1); // Новый объект окружность R = 1.

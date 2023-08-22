@@ -10,16 +10,18 @@ import java.util.List;
 public class ShapeMain {
     public static void main(String[] args) {
         // Создаем объекты, одновременно добавляя в безразмерный массив-список.
-        List<Shape> shapes = new ArrayList<>();
-        shapes.add(new Square(10));
-        shapes.add(new Triangle(1, 1, 4, 1, 4, 4));
-        shapes.add(new Rectangle(2, 4));
-        shapes.add(new Circle(1));
+        List<Shape> shapes = new ArrayList<>(Arrays.asList(
+                new Square(10),
+                new Triangle(1, 1, 4, 1, 4, 4),
+                new Rectangle(2, 4),
+                new Circle(1)));
 
         // Выводим информацию о фигурах.
         for (Shape shape : shapes) {
             System.out.println(shape);
         }
+
+        System.out.println();
 
         // Сравниваем по площади.
         // Сортируем по площади, по возрастанию (по умолчанию).
@@ -34,6 +36,7 @@ public class ShapeMain {
         // Соответственно, элемент 1 - это второй по-убыванию.
         System.out.println("Второй по величине периметр среди списка фигур равен: "
                 + shapes.get(1).getPerimeter());
+        System.out.println();
 
         // Проверим equals.
         Circle circleR1 = new Circle(1); // Новый объект окружность R = 1.
@@ -57,6 +60,7 @@ public class ShapeMain {
         System.out.println("4. Проверим треугольники:");
         System.out.println(new Triangle(1, 1, 4, 1, 4, 4).equals(shapes.get(2)));
         System.out.println(new Triangle(0, 1, 4, 1, 4, 4).equals(shapes.get(2)));
+        System.out.println();
 
         System.out.println("5. Проверим Хэш разных окружностей:");
         // Разные объекты не равны.
@@ -68,7 +72,3 @@ public class ShapeMain {
         System.out.println(new Circle(2).hashCode());
     }
 }
-
-/* TODO
-    1. здесь можно использовать Arrays.asList - сделать когда пройдем теорию.
- */
