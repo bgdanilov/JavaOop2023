@@ -68,42 +68,40 @@ public class Vector {
     }
 
     // 4.a. Добавить вектор к вектору.
-    public void addVector(Vector additionalVector) {
-        int sourceVectorSize = components.length;
-        int additionalVectorSize = additionalVector.components.length;
+    public void add(Vector vector) {
+        int size = components.length;
+        int vectorSize = vector.components.length;
 
-        if (additionalVectorSize > sourceVectorSize) {
-            components = Arrays.copyOf(additionalVector.components, additionalVectorSize);
+        if (vectorSize > size) {
+            components = Arrays.copyOf(components, vectorSize);
         }
 
-        for (int i = 0; i < additionalVectorSize; i++) {
-            this.components[i] += additionalVector.components[i];
+        for (int i = 0; i < vectorSize; i++) {
+            this.components[i] += vector.components[i];
         }
     }
 
     // 4.b. Вычесть вектор из вектора.
-    public void subtractVector(Vector deductedVector) {
-        int deductedVectorSize = deductedVector.components.length;
-        int sourceVectorSize = components.length;
+    public void subtract(Vector vector) {
+        int size = components.length;
+        int vectorSize = vector.components.length;
 
-        // Добавочный вектор дополним нулями до размерности исходного.
-        if (deductedVectorSize > sourceVectorSize) {
-            components = Arrays.copyOf(deductedVector.components, deductedVectorSize);
+        // Исходный вектор дополним нулями до размерности добавочного.
+        // Если добавочный больше.
+        if (vectorSize > size) {
+            components = Arrays.copyOf(components, vectorSize);
         }
 
-        for (int i = 0; i < deductedVectorSize; i++) {
-            components[i] -= deductedVector.components[i];
+        for (int i = 0; i < vectorSize; i++) {
+            components[i] -= vector.components[i];
         }
     }
 
     // 4.c. Умножение вектора на скаляр.
     public void multiplyByScalar(double scalar) {
-        for (double component : components) {
-            component = component * scalar;
-        }
-        /*for (int i = 0; i < components.length; i++) {
+        for (int i = 0; i < components.length; i++) {
             components[i] *= scalar;
-        }*/
+        }
     }
 
     // 4.d. Разворот вектора. Умножение на -1.
@@ -161,7 +159,7 @@ public class Vector {
     // 5.a. Сложение двух векторов.
     public static Vector getSum(Vector vector1, Vector vector2) {
         Vector resultVector = new Vector(vector1);
-        resultVector.addVector(vector2);
+        resultVector.add(vector2);
 
         return resultVector;
     }
@@ -169,7 +167,7 @@ public class Vector {
     // 5.b. Вычитание двух векторов.
     public static Vector getDifference(Vector vector1, Vector vector2) {
         Vector resultVector = new Vector(vector1);
-        resultVector.subtractVector(vector2);
+        resultVector.subtract(vector2);
 
         return resultVector;
     }

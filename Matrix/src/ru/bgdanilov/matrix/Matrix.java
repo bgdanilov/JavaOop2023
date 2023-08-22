@@ -103,7 +103,7 @@ public class Matrix {
             // Проверяем на совпадение с максимальным размером, при необходимости
             // дополняем нулями при помощи дополнения временного нового вектора размера size.
             if (this.matrix[i].getSize() < size) {
-                this.matrix[i].addVector(new Vector(size));
+                this.matrix[i].add(new Vector(size));
             }
         }
     }

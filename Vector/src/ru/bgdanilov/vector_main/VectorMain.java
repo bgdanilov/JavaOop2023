@@ -32,11 +32,11 @@ public class VectorMain {
         // ---------------------------------------
         System.out.println("4. Реализовать нестатические методы:");
         // 4.a. Прибавление к вектору другого вектора.
-        vectorB.addVector(vectorD);
+        vectorB.add(vectorD);
         System.out.println("4.a. К Вектору B добавляем Вектор D: " + vectorB);
 
         // 4.b. Вычесть вектор из вектора.
-        vectorD.subtractVector(vectorB);
+        vectorD.subtract(vectorB);
         System.out.println("4.b. Из Вектора D вычитаем Вектор B: " + vectorD);
 
         // 4.c. Умножение вектора на скаляр.
