@@ -18,8 +18,8 @@ public class Vector {
 
     // 1.b. Конструктор - копирование из другого вектора.
     public Vector(Vector vector) {
-        int size = vector.getSize(); // Размер вектора-источника.
-        components = Arrays.copyOf(vector.components, size);
+        // vector.components.length - размер вектора-источника.
+        components = Arrays.copyOf(vector.components, vector.components.length);
     }
 
     // 1.c. Конструктор - заполнение вектора значениями из массива.
@@ -54,23 +54,26 @@ public class Vector {
     // 3. Метод. toString(), чтобы выдавал информацию о векторе в  формате { значения компонент через запятую }
     @Override
     public String toString() {
-        int size = this.getSize();
         StringBuilder sb = new StringBuilder().append("{").append(components[0]);
 
-        for (int i = 1; i < size; i++) {
-            sb.append(", ").append(components[i]);
+        for (double component : components) {
+            sb.append(", ").append(component);
         }
+        /*
+        for (int i = 1; i < components.length; i++) {
+
+        }*/
 
         return sb.append("}").toString();
     }
 
     // 4.a. Добавить вектор к вектору.
     public void addVector(Vector additionalVector) {
-        int sourceVectorSize = getSize();
-        int additionalVectorSize = additionalVector.getSize();
+        int sourceVectorSize = components.length;
+        int additionalVectorSize = additionalVector.components.length;
 
         if (additionalVectorSize > sourceVectorSize) {
-            this.components = Arrays.copyOf(additionalVector.components, additionalVectorSize);
+            components = Arrays.copyOf(additionalVector.components, additionalVectorSize);
         }
 
         for (int i = 0; i < additionalVectorSize; i++) {
@@ -80,8 +83,8 @@ public class Vector {
 
     // 4.b. Вычесть вектор из вектора.
     public void subtractVector(Vector deductedVector) {
-        int deductedVectorSize = deductedVector.getSize();
-        int sourceVectorSize = getSize();
+        int deductedVectorSize = deductedVector.components.length;
+        int sourceVectorSize = components.length;
 
         // Добавочный вектор дополним нулями до размерности исходного.
         if (deductedVectorSize > sourceVectorSize) {
@@ -95,11 +98,12 @@ public class Vector {
 
     // 4.c. Умножение вектора на скаляр.
     public void multiplyByScalar(double scalar) {
-        int vectorSize = getSize();
-
-        for (int i = 0; i < vectorSize; i++) {
-            components[i] *= scalar;
+        for (double component : components) {
+            component = component * scalar;
         }
+        /*for (int i = 0; i < components.length; i++) {
+            components[i] *= scalar;
+        }*/
     }
 
     // 4.d. Разворот вектора. Умножение на -1.
@@ -146,19 +150,6 @@ public class Vector {
         Vector vector = (Vector) object;
 
         return Arrays.equals(components, vector.getComponents());
-/*
-        if (getSize() != vector.getSize()) {
-            return false;
-        }
-
-        int size = getSize();
-
-        for (int i = 0; i < size; i++) {
-            if (components[i] != vector.components[i]) {
-                return false;
-            }
-        }
-*/
     }
 
     // Берем готовый метод получения Хэш массива.
