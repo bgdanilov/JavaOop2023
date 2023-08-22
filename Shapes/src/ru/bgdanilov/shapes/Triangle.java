@@ -101,10 +101,10 @@ public class Triangle implements Shape {
     @Override
     public String toString() {
         // По-сути  - имя класса.
-        return getClass().getSimpleName()
-                + "(" + x1 + ";" + y2 + "), "
-                + "(" + x2 + ";" + y2 + "), "
-                + "(" + x3 + ";" + y2 + ")";
+        return getClass().getSimpleName() + ", "
+                + "(" + x1 + "; " + y2 + "), "
+                + "(" + x2 + "; " + y2 + "), "
+                + "(" + x3 + "; " + y2 + ")";
     }
 
     @Override

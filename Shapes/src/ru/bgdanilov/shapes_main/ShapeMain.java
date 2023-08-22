@@ -18,7 +18,7 @@ public class ShapeMain {
 
         // Выводим информацию о фигурах.
         for (Shape shape : shapes) {
-            System.out.println(Arrays.toString(new Shape[]{shape}));
+            System.out.println(shape);
         }
 
         // Сравниваем по площади.
@@ -39,7 +39,7 @@ public class ShapeMain {
         Circle circleR1 = new Circle(1); // Новый объект окружность R = 1.
         Circle circleR2 = new Circle(2); // Новый объект окружность R = 2.
 
-        System.out.println("1. Проверим, что в массиве тоже окружность R = 1:");
+        System.out.println("1. Проверим, что в массиве тоже окружность радиусом = 1:");
         System.out.println(shapes.get(3));
         System.out.println(circleR1.equals(shapes.get(3))); // true.
         System.out.println();

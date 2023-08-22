@@ -19,7 +19,7 @@ public class ShapeMainArraysSort {
         // Выводим информацию о фигурах переопределенным toString()
         // println() автоматически вызывает toString(), поэтому не надо ее писать.
         for (Shape shape : shapes) {
-            System.out.println(Arrays.toString(new Shape[]{shape}));
+            System.out.println(shape);
         }
 
         // Сортируем массив по убыванию площади.
