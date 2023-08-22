@@ -9,7 +9,7 @@ public class Vector {
     public Vector(int size) {
         // Если size < 0 - бросаем исключение.
         if (size <= 0) {
-            throw new IllegalArgumentException("Размерность вектора должна быть больше нуля!");
+            throw new IllegalArgumentException("size: размерность вектора должна быть больше нуля!");
         }
 
         // Код, выполняемый в отсутствии исключения.
@@ -25,7 +25,7 @@ public class Vector {
     // 1.c. Конструктор - заполнение вектора значениями из массива.
     public Vector(double[] components) {
         if (components.length == 0) {
-            throw new IllegalArgumentException("Размерность вектора должна быть больше нуля!");
+            throw new IllegalArgumentException("components.length: размерность вектора должна быть больше нуля!");
         }
 
         this.components = components;
@@ -35,7 +35,7 @@ public class Vector {
     // Если длина массива меньше size, то считать что в остальных компонентах 0.
     public Vector(int size, double[] array) {
         if (size <= 0 || array.length == 0) {
-            throw new IllegalArgumentException("Размерность вектора должна быть больше нуля!");
+            throw new IllegalArgumentException("size: размерность вектора должна быть больше нуля!");
         }
 
         components = Arrays.copyOf(array, size);
@@ -218,15 +218,4 @@ public class Vector {
           а если идти итерировать по меньшей размерности, то просто четверку ни на что не умножаем,
           и нулями заполнять не нужно.
           Можно так же, наверное, поступить в 4.a. ?
- */
-
-/* TODO
-    1. Проверить возможность реализации 4.a как в 5.c : через Math.min - нет.
-    2. Как отказаться от использования переопределенной toString ?
-        -- никак.
-    3. Что происходит с массивами?
-    4. 5.a. Сложение двух векторов.
-    5. В чем разница: ?
-        Vector vectorG = new Vector(Vector.additionVectors(vectorC, vectorF));
-        Vector vectorH = Vector.additionVectors(vectorC, vectorF);
  */
