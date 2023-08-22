@@ -3,7 +3,6 @@ package ru.bgdanilov.shapes;
 // Сделаем Square классом-record, как просит IDE.
 // record - это класс с неизменными (final) полями и отсутствующими сеттерами.
 public record Square(double sideLength) implements Shape {
-
     @Override
     public double getHeight() {
         return sideLength;
@@ -27,9 +26,7 @@ public record Square(double sideLength) implements Shape {
     @Override
     public String toString() {
         // По-сути  - имя класса.
-        String shapeType = getClass().getSimpleName();
-
-        return shapeType + ", сторона = " + sideLength;
+        return getClass().getSimpleName() + ", сторона = " + sideLength;
     }
 
     @Override

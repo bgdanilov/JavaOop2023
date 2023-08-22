@@ -100,9 +100,7 @@ public class Triangle implements Shape {
     @Override
     public String toString() {
         // По-сути  - имя класса.
-        String shapeType = getClass().getSimpleName();
-
-        return shapeType + ", площадь = " + getArea();
+        return getClass().getSimpleName() + ", площадь = " + getArea();
     }
 
     @Override
