@@ -10,7 +10,7 @@ import java.util.Comparator;
 Тогда можно было бы обойтись одним классом вроде ShapeComparatorByField.
 - нет.
  */
-public class ShapesPerimeterComparator implements Comparator<Shape> {
+public class ShapePerimeterComparator implements Comparator<Shape> {
     @Override
     public int compare(Shape shape1, Shape shape2) {
         return Double.compare(shape1.getPerimeter(), shape2.getPerimeter());

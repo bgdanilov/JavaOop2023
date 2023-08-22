@@ -1,8 +1,8 @@
 package ru.bgdanilov.shapes_main;
 
 import ru.bgdanilov.shapes.*;
-import ru.bgdanilov.shapes_comparators.ShapesAreaComparator;
-import ru.bgdanilov.shapes_comparators.ShapesPerimeterComparator;
+import ru.bgdanilov.shapes_comparators.ShapeAreaComparator;
+import ru.bgdanilov.shapes_comparators.ShapePerimeterComparator;
 
 import java.util.Arrays;
 
@@ -23,12 +23,12 @@ public class ShapeMainArraysSort {
         }
 
         // Сортируем массив по убыванию площади.
-        Arrays.sort(shapes, new ShapesAreaComparator().reversed());
+        Arrays.sort(shapes, new ShapeAreaComparator().reversed());
         System.out.println("Максимальная площадь среди массива фигур равна "
                 + shapes[0].getArea());
 
         // Сортируем массив по убыванию периметра.
-        Arrays.sort(shapes, new ShapesPerimeterComparator().reversed());
+        Arrays.sort(shapes, new ShapePerimeterComparator().reversed());
         System.out.println("Второй по величине периметр среди массива фигур равен "
                 + shapes[1].getPerimeter());
 
