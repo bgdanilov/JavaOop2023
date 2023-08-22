@@ -1,5 +1,6 @@
 package ru.bgdanilov.shapes;
 
+// Поля неизменные, поэтому этот класс - record.
 // Оставим этот класс обычным, не record, для демонстрации отличий синтаксиса.
 public class Rectangle implements Shape {
     private final double height;
@@ -65,10 +66,3 @@ public class Rectangle implements Shape {
         return hash;
     }
 }
-
-/* TODO
-    1. IDE мне пишет, что данный класс может быть "a record"
-    - почему только Rectangle предлагает сделать Record?
-        - потому, что у нас поля final - неизменяемые и нет сеттеров, соответственно,
-        а в Square есть сеттер и значения полей можно изменить.
- */

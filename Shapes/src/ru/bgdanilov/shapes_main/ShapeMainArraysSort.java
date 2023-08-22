@@ -56,11 +56,3 @@ public class ShapeMainArraysSort {
         System.out.println(new Triangle(0, 1, 4, 1, 4, 4).equals(shapes[2]));
     }
 }
-
-/* TODO
-    1. Повторить почему можно не писать "new Shape[]" ?
-    Shape[] shapes = new Shape[] {square1, triangle1, rectangle1, circle1};
-    что-то связано с невозможностью использования массива в return.
-    2. Что тут происходит?
-    System.out.println(Arrays.toString(new Shape[] {e}));
- */
