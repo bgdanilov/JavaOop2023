@@ -8,9 +8,9 @@ public class Triangle implements Shape {
     private final double y2;
     private final double x3;
     private final double y3;
-    private final double side1;
-    private final double side2;
-    private final double side3;
+    private final double side1Length;
+    private final double side2Length;
+    private final double side3Length;
 
     // Переменные объявленные в методе - недоступны нигде кроме этого метода.
     // Что бы переменная стала доступна другим методам ее нужно объявить в классе.
@@ -27,9 +27,9 @@ public class Triangle implements Shape {
         this.x3 = x3;
         this.y3 = y3;
 
-        side1 = getSideLength(x2, x1, y2, y1);
-        side2 = getSideLength(x3, x2, y3, y2);
-        side3 = getSideLength(x3, x1, y3, y1);
+        side1Length = getSideLength(x2, x1, y2, y1);
+        side2Length = getSideLength(x3, x2, y3, y2);
+        side3Length = getSideLength(x3, x1, y3, y1);
     }
 
     public double getX1() {
@@ -57,21 +57,22 @@ public class Triangle implements Shape {
     }
 
     public double getSide1() {
-        return this.side1;
+        return this.side1Length;
     }
 
     public double getSide2() {
-        return this.side2;
+        return this.side2Length;
     }
 
     public double getSide3() {
-        return this.side3;
+        return this.side3Length;
     }
 
     // Делаем private - значит этот метод доступен только внутри класса Triangle,
     // а нам только тут и надо.
-    private double getSideLength(double xTo, double xFrom, double yTo, double yFrom) {
-        return Math.sqrt((xTo - xFrom) * (xTo - xFrom) + (yTo - yFrom) * (yTo - yFrom));
+    // Делаем static, т.к. не используется за пределами данного класса.
+    private static double getSideLength(double x2, double x1, double y2, double y1) {
+        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     }
 
     @Override
@@ -86,7 +87,7 @@ public class Triangle implements Shape {
 
     @Override
     public double getPerimeter() {
-        return side1 + side2 + side3;
+        return side1Length + side2Length + side3Length;
     }
 
     @Override
@@ -94,13 +95,16 @@ public class Triangle implements Shape {
         double halfPerimeter = getPerimeter() / 2;
 
         return Math.sqrt(halfPerimeter
-                * (halfPerimeter - side1) * (halfPerimeter - side2) * (halfPerimeter - side3));
+                * (halfPerimeter - side1Length) * (halfPerimeter - side2Length) * (halfPerimeter - side3Length));
     }
 
     @Override
     public String toString() {
         // По-сути  - имя класса.
-        return getClass().getSimpleName() + ", площадь = " + getArea();
+        return getClass().getSimpleName()
+                + "(" + x1 + ";" + y2 + "), "
+                + "(" + x2 + ";" + y2 + "), "
+                + "(" + x3 + ";" + y2 + ")";
     }
 
     @Override
