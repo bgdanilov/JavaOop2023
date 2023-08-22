@@ -27,7 +27,7 @@ public record Circle(double radius) implements Shape {
     @Override
     public String toString() {
         // По-сути  - имя класса.
-        return getClass().getSimpleName() + ", R = " + radius;
+        return getClass().getSimpleName() + ",  радиус = " + radius;
     }
 
     @Override

@@ -34,7 +34,7 @@ public class Rectangle implements Shape {
     @Override
     public String toString() {
         // По-сути  - имя класса.
-        return getClass().getSimpleName() + ", размер " + height + " * " + width;
+        return getClass().getSimpleName() + ", высота = " + height + ", ширина = " + width;
     }
 
     @Override
