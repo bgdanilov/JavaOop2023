@@ -7,56 +7,64 @@ public class VectorMain {
         // 1. Конструкторы.
         // -------------------------
         // 1.a. Создаем нулевой вектор размерностью 10.
-        Vector vectorA = new Vector(10);
-        System.out.println("Вектор A: " + vectorA);
+        System.out.println("1.a. Создаем нулевой вектор размерностью 10.");
+        Vector vector1 = new Vector(10);
+        System.out.println("     Вектор 1: " + vector1);
 
         // 1.c. Создаем вектор из значений массива.
-        Vector vectorC = new Vector(new double[]{1, 2, 3, 4, 5});
-        System.out.println("Вектор C: " + vectorC);
+        System.out.println("1.c. Создаем вектор из значений массива.");
+        Vector vector3 = new Vector(new double[]{1, 2, 3, 4, 5});
+        System.out.println("     Вектор 3: " + vector3);
 
         // 1.b. Создаем вектор копированием из другого вектора.
-        Vector vectorB = new Vector(vectorC);
-        System.out.println("Вектор B: " + vectorB);
+        System.out.println("1.b. Создаем Вектор 2 копированием из другого Вектора 3.");
+        Vector vector2 = new Vector(vector3);
+        System.out.println("     Вектор 2: " + vector2);
 
         // 1.d. Создаем вектор и производим заполнение вектора значениями из массива.
-        Vector vectorD = new Vector(10, new double[]{1, 2, 3, 4, 5});
-        System.out.println("Вектор D: " + vectorD.toString());
+        System.out.println("1.d. Создаем вектор размерностью 10 и производим заполнение значениями из массива.");
+        Vector vector4 = new Vector(10, new double[]{1, 2, 3, 4, 5});
+        System.out.println("     Вектор 4: " + vector4);
+        System.out.println();
 
-        // 2. Метод getSize() для получения размерности вектора
-        System.out.println("Размер вектора D: " + vectorD.getSize());
+        // 2. Метод getSize() для получения размерности вектора.
+        System.out.println("2. Метод getSize() для получения размерности вектора.");
+        System.out.println("   Размер вектора 4: " + vector4.getSize());
+        System.out.println();
 
         // 3. Реализовать метод toString() - проверено выше.
+        System.out.println("3. Реализовать метод toString() - проверено выше.");
         System.out.println();
 
         // 4. Реализовать  нестатические методы:
         // ---------------------------------------
         System.out.println("4. Реализовать нестатические методы:");
         // 4.a. Прибавление к вектору другого вектора.
-        vectorB.add(vectorD);
-        System.out.println("4.a. К Вектору B добавляем Вектор D: " + vectorB);
+        vector2.add(vector4);
+        System.out.println("4.a. К Вектору 2 добавляем Вектор 4: " + vector2);
 
         // 4.b. Вычесть вектор из вектора.
-        vectorD.subtract(vectorB);
-        System.out.println("4.b. Из Вектора D вычитаем Вектор B: " + vectorD);
+        vector4.subtract(vector2);
+        System.out.println("4.b. Из Вектора 4 вычитаем Вектор 2: " + vector4);
 
         // 4.c. Умножение вектора на скаляр.
-        vectorC.multiplyByScalar(10);
-        System.out.println("4.c. Умножаем Вектор C на 10: " + vectorC);
+        vector3.multiplyByScalar(10);
+        System.out.println("4.c. Умножаем Вектор 3 на 10: " + vector3);
 
         // 4.d. Разворот вектора. Умножение на -1.
-        vectorC.reverse();
-        System.out.println("4.d. Разворот Вектора C: " + vectorC);
+        vector3.reverse();
+        System.out.println("4.d. Разворот Вектора 3: " + vector3);
 
         // 4.e. Получение длины вектора.
-        System.out.printf("4.e. Получение длины Вектора C: %.2f%n", vectorC.getLength());
+        System.out.printf("4.e. Получение длины Вектора 3: %.2f%n", vector3.getLength());
 
         // 4.f. Получение и установка компоненты вектора по индексу.
-        // Создадим новый нулевой Вектор F.
-        Vector vectorF = new Vector(3);
+        // Создадим новый нулевой Вектор 5.
+        Vector vector5 = new Vector(3);
         // Зададим компоненту.
-        vectorF.setComponent(1, 99);
-        System.out.println("4.f. Устанавливаем компоненту 99 на место 1. Вектор F: " + vectorF);
-        System.out.println("4.f. Установленная компонента Вектора F с индекском 1: " + vectorF.getComponent(1));
+        vector5.setComponent(1, 99);
+        System.out.println("4.f. Устанавливаем компоненту 99 на место 1. Вектор 5: " + vector5);
+        System.out.println("4.f. Установленная компонента Вектора 5 с индексом 1: " + vector5.getComponent(1));
 
         // 4.g. Переопределение equals() и hashCode().
         System.out.println("4.g. Равен ли Вектор {1, 2, 3} Вектору {1, 2, 3} ?: "
@@ -76,25 +84,35 @@ public class VectorMain {
                 + new Vector(3, new double[]{1, 2, 3}).hashCode());
 
 
-        // 5. Реализовать  статические методы:
+        // 5. Реализовать статические методы:
         // --------------------------------------
         System.out.println();
+
         System.out.println("5. Реализовать статические методы:");
         // 5.a. Сложение двух векторов.
-
         // Это по-сути Конструктор "с".
-        Vector vectorG = new Vector(Vector.getSum(vectorC, vectorF));
+        Vector vector6 = new Vector(Vector.getSum(vector3, vector5));
         // А можно так - вызываем статический метод просто из класса...
-        Vector vectorH = Vector.getSum(vectorC, vectorF);
-        // ... но почему не нужно слово  "new" ?
-        System.out.println("5.a. Результат сложения векторов C и F = Вектор G: " + vectorG);
+        Vector vector7 = Vector.getSum(vector3, vector5);
+        // ... но почему не нужно слово "new" ?
+        System.out.println("5.a. Результат сложения векторов 3 и 5 = Вектор 6: " + vector6);
+        System.out.println("5.a. Тоже самое, только вызов метода не от объекта = Вектор 7: " + vector7);
+        System.out.println("     Для справки vector3: " + vector3);
+        System.out.println("     Для справки vector5: " + vector5);
+        System.out.println();
 
         // 5.b. Вычитание двух векторов.
-        Vector vectorI = Vector.getDifference(vectorG, vectorF);
-        System.out.println("5.b. Результат разности векторов G и F = Вектор I: " + vectorI);
+        Vector vector8 = Vector.getDifference(vector6, vector5);
+        System.out.println("5.b. Результат разности векторов 6 и 5 = Вектор 8: " + vector8);
+        System.out.println("     Для справки vector6: " + vector6);
+        System.out.println("     Для справки vector5: " + vector5);
+        System.out.println();
 
         // 5.c. Скалярное произведение двух векторов.
-        double dotProduct = Vector.getDotProduct(vectorA, vectorF);
-        System.out.printf("5.c. Результат скалярного произведения веторов A и F (должно быть 0) = %.2f%n", dotProduct);
+        double dotProduct = Vector.getDotProduct(vector1, vector5);
+        System.out.printf("5.c. Результат скалярного произведения векторов 1 и 5 (должно быть 0) = %.2f%n", dotProduct);
+        System.out.println("     Для справки vector1: " + vector1);
+        System.out.println("     Для справки vector5: " + vector5);
+        System.out.println();
     }
 }

@@ -59,10 +59,6 @@ public class Vector {
         for (double component : components) {
             sb.append(", ").append(component);
         }
-        /*
-        for (int i = 1; i < components.length; i++) {
-
-        }*/
 
         return sb.append("}").toString();
     }
