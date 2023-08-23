@@ -33,7 +33,7 @@ public class List<T> {
     // 1.2. Получение значения первого элемента.
     public T getFirstItem() {
         if (head == null) {
-            throw new IllegalArgumentException("У пустого списка не может быть первого элемента!");
+            throw new IllegalArgumentException("1.2. getFirstItem() head == 0: у пустого списка не может быть первого элемента!");
         }
 
         return head.getData();
@@ -43,7 +43,7 @@ public class List<T> {
     // Получение.
     public T getItemByIndex(int index) {
         if (index < 0 || index > length - 1) {
-            throw new IllegalArgumentException("Индекс выходит за границы списка.");
+            throw new IllegalArgumentException("1.3. getItemByIndex() index: индекс выходит за границы списка.");
         }
 
         ListItem<T> currentItem = head;
@@ -58,7 +58,7 @@ public class List<T> {
     // Изменение с выдачей старого значения.
     public T changeItemByIndex(int index, T data) {
         if (index < 0 || index > length - 1) {
-            throw new IllegalArgumentException("Индекс выходит за границы списка.");
+            throw new IllegalArgumentException("1.3. changeItemByIndex() index: индекс выходит за границы списка.");
         }
 
         ListItem<T> currentItem = head;
@@ -76,7 +76,7 @@ public class List<T> {
     // 1.4. Удаление элемента по индексу, пусть выдает значение элемента.
     public T deleteItemByIndex(int index) {
         if (index < 0 || index > length - 1) {
-            throw new IllegalArgumentException("Индекс выходит за границы списка.");
+            throw new IllegalArgumentException("1.4. deleteItemByIndex() index: индекс выходит за границы списка.");
         }
 
         ListItem<T> currentItem = head;
@@ -103,11 +103,11 @@ public class List<T> {
     }
 
     // 1.5. Вставка элемента в начало.
-    public void addFirst(T data) {
+    public void addFirstItem(T data) {
         ListItem<T> currentListItem = head;
 
         // В голову записываем новый созданный элемент.
-        head = new ListItem<T>(data);
+        head = new ListItem<>(data);
 
         // Если список был не пуст, то в next новой головы записываем
         // бывший головной элемент.
@@ -122,12 +122,12 @@ public class List<T> {
     // 1.6. Вставка элемента по индексу.
     public void addItemByIndex(int index, T data) {
         if (index < 0 || index > length) {
-            throw new IllegalArgumentException("Индекс выходит за границы списка.");
+            throw new IllegalArgumentException("1.6. addItemByIndex() index: индекс выходит за границы списка.");
         }
 
         // Индекс равен нулю. Значит в начало вставить.
         if (index == 0) {
-            addFirst(data);
+            addFirstItem(data);
         } else {
             ListItem<T> currentItem = head;
             ListItem<T> previousItem = head;
@@ -146,7 +146,7 @@ public class List<T> {
     }
 
     // 1.7. Удаление узла по значению, пусть выдает true, если элемент был удален.
-    public boolean deleteByData(T data) {
+    public boolean deleteItemByData(T data) {
         boolean isItemDeleted = false;
 
         // Начинаем с головы, пока не дойдем до конца.
@@ -173,7 +173,7 @@ public class List<T> {
     }
 
     // 1.8. Удаление первого элемента, пусть выдает значение элемента.
-    public T deteteFirst() {
+    public T deleteFirstItem() {
         return this.deleteItemByIndex(0);
     }
 
@@ -183,9 +183,9 @@ public class List<T> {
         ListItem<T> currentItem = head; // адрес элемента в памяти.
         ListItem<T> previousItem = null;
 
-        for (ListItem<T> temp = currentItem.getNext();
-             temp != null;
-             previousItem = currentItem, currentItem = temp, temp = temp.getNext()) {
+        for (ListItem<T> nextCurrent = currentItem.getNext();
+             nextCurrent != null;
+             previousItem = currentItem, currentItem = nextCurrent, nextCurrent = nextCurrent.getNext()) {
             currentItem.setNext(previousItem);
         }
 
