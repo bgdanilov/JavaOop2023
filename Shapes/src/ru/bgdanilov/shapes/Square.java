@@ -3,7 +3,6 @@ package ru.bgdanilov.shapes;
 // Сделаем Square классом-record, как просит IDE.
 // record - это класс с неизменными (final) полями и отсутствующими сеттерами.
 public record Square(double sideLength) implements Shape {
-
     @Override
     public double getHeight() {
         return sideLength;
@@ -27,35 +26,36 @@ public record Square(double sideLength) implements Shape {
     @Override
     public String toString() {
         // По-сути  - имя класса.
-        String shapeType = getClass().getSimpleName();
-
-        return shapeType + ", сторона = " + sideLength;
+        return getClass().getSimpleName() + ", сторона = " + sideLength;
     }
 
     @Override
-    public boolean equals(Object shape) {
+    public boolean equals(Object object) {
         // Передали объект (сам себе равен).
-        if (this == shape) {
+        if (this == object) {
             return true;
         }
 
         // Объект передали пустой или класса, отличного от сравниваемого.
-        if (shape == null || this.getClass() != shape.getClass()) {
+        if (object == null || this.getClass() != object.getClass()) {
             return false;
         }
 
         // Приводим Object к Square для сравнения полей.
-        Square square = (Square) shape;
-        return this.sideLength == square.sideLength;
+        Square square = (Square) object;
+        return sideLength == square.sideLength;
     }
 
     @Override
     public int hashCode() {
-        return Double.hashCode(this.sideLength);
+        return Double.hashCode(sideLength);
     }
 }
 
-/* TODO
-    1. Я понимаю так, что для простого класса с одним полем, можно не переопределять hashCode()?
-    Или пререопределить на как Double.hashCode() т.к. нам нужен int ?
- */
+/**
+ *  Описание класса. Заметки.
+ *  ===================
+ *  1. Я понимаю так, что для простого класса с одним полем, можно не переопределять hashCode()?
+ *     Или пререопределить на как Double.hashCode() т.к. нам нужен int ?
+ *     - В любом случае пришлось бы явно переопределять hashCode, даже с int.
+*/

@@ -8,17 +8,10 @@ public class Triangle implements Shape {
     private final double y2;
     private final double x3;
     private final double y3;
-    private final double side1;
-    private final double side2;
-    private final double side3;
+    private final double side1Length;
+    private final double side2Length;
+    private final double side3Length;
 
-    // Переменные объявленные в методе - недоступны нигде кроме этого метода.
-    // Что бы переменная стала доступна другим методам ее нужно объявить в классе.
-    // Такая переменная называется полем класса.
-    // Значит можно инициализировать нужные поля - внутренние переменные класса в конструкторе,
-    // при этом НЕ нужно их инициализировать при создании объекта класса.
-    // В Main будет без длин сторон:
-    // Triangle triangle = new Triangle(1, 1, 4, 1, 4, 4); !!!!
     public Triangle(double x1, double y1, double x2, double y2, double x3, double y3) {
         this.x1 = x1;
         this.y1 = y1;
@@ -27,9 +20,9 @@ public class Triangle implements Shape {
         this.x3 = x3;
         this.y3 = y3;
 
-        side1 = getSideLength(x2, x1, y2, y1);
-        side2 = getSideLength(x3, x2, y3, y2);
-        side3 = getSideLength(x3, x1, y3, y1);
+        side1Length = getSideLength(x2, x1, y2, y1);
+        side2Length = getSideLength(x3, x2, y3, y2);
+        side3Length = getSideLength(x3, x1, y3, y1);
     }
 
     public double getX1() {
@@ -57,21 +50,19 @@ public class Triangle implements Shape {
     }
 
     public double getSide1() {
-        return this.side1;
+        return this.side1Length;
     }
 
     public double getSide2() {
-        return this.side2;
+        return this.side2Length;
     }
 
     public double getSide3() {
-        return this.side3;
+        return this.side3Length;
     }
 
-    // Делаем private - значит этот метод доступен только внутри класса Triangle,
-    // а нам только тут и надо.
-    private double getSideLength(double xTo, double xFrom, double yTo, double yFrom) {
-        return Math.sqrt((xTo - xFrom) * (xTo - xFrom) + (yTo - yFrom) * (yTo - yFrom));
+    private static double getSideLength(double x2, double x1, double y2, double y1) {
+        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     }
 
     @Override
@@ -86,7 +77,7 @@ public class Triangle implements Shape {
 
     @Override
     public double getPerimeter() {
-        return side1 + side2 + side3;
+        return side1Length + side2Length + side3Length;
     }
 
     @Override
@@ -94,57 +85,73 @@ public class Triangle implements Shape {
         double halfPerimeter = getPerimeter() / 2;
 
         return Math.sqrt(halfPerimeter
-                * (halfPerimeter - side1) * (halfPerimeter - side2) * (halfPerimeter - side3));
+                * (halfPerimeter - side1Length) * (halfPerimeter - side2Length) * (halfPerimeter - side3Length));
     }
 
     @Override
     public String toString() {
         // По-сути  - имя класса.
-        String shapeType = getClass().getSimpleName();
-
-        return shapeType + ", площадь = " + getArea();
+        return getClass().getSimpleName() + ", "
+                + "(" + x1 + "; " + y2 + "), "
+                + "(" + x2 + "; " + y2 + "), "
+                + "(" + x3 + "; " + y2 + ")";
     }
 
     @Override
-    public boolean equals(Object shape) {
+    public boolean equals(Object object) {
         // Передали объект (сам себе равен).
-        if (this == shape) {
+        if (this == object) {
             return true;
         }
 
         // Объект передали пустой или класса, отличного от сравниваемого.
-        if (shape == null || this.getClass() != shape.getClass()) {
+        if (object == null || this.getClass() != object.getClass()) {
             return false;
         }
 
         // Приводим Object к Triangle для сравнения полей.
-        Triangle triangle = (Triangle) shape;
-        return this.x1 == triangle.x1
-                && this.x2 == triangle.x2
-                && this.x3 == triangle.x3
-                && this.y1 == triangle.y1
-                && this.y2 == triangle.y2
-                && this.y3 == triangle.y3;
+        Triangle triangle = (Triangle) object;
+        return x1 == triangle.x1
+                && x2 == triangle.x2
+                && x3 == triangle.x3
+                && y1 == triangle.y1
+                && y2 == triangle.y2
+                && y3 == triangle.y3;
     }
 
     @Override
     public int hashCode() {
-        final int salt = 37;
+        final int prime = 37;
         int hash = 1;
 
-        hash = salt * hash + Double.hashCode(this.x1);
-        hash = salt * hash + Double.hashCode(this.x2);
-        hash = salt * hash + Double.hashCode(this.x3);
-        hash = salt * hash + Double.hashCode(this.y1);
-        hash = salt * hash + Double.hashCode(this.y2);
-        hash = salt * hash + Double.hashCode(this.y3);
+        hash = prime * hash + Double.hashCode(x1);
+        hash = prime * hash + Double.hashCode(x2);
+        hash = prime * hash + Double.hashCode(x3);
+        hash = prime * hash + Double.hashCode(y1);
+        hash = prime * hash + Double.hashCode(y2);
+        hash = prime * hash + Double.hashCode(y3);
 
         return hash;
     }
 }
 
-/* TODO
-    1. Почему этот клас не предлагается сделать record ?
-    Вроде поля final, сеттеров нет...
-        -- Наверное, потому, что у нас конструктор переписан, кастомный?
+/**
+ *  Описание класса. Заметки.
+ *  ===================
+ *  1. Почему этот клас не предлагается сделать record ? Вроде поля final, сеттеров нет...
+ *     - Конструктор записи не сможет вычислить эти значения, он может только присвоить им значения аргументов.
+ *     - Поэтому здесь не получится использовать запись.
+ *
+ *  2. getSideLength.
+ *     Делаем private - значит этот метод доступен только внутри класса Triangle,
+ *     а нам только тут и надо.
+ *     Делаем static, т.к. не используется за пределами данного класса.
+ *
+ *  3. Переменные объявленные в методе - недоступны нигде кроме этого метода.
+ *     Что бы переменная стала доступна другим методам ее нужно объявить в классе.
+ *     Такая переменная называется полем класса.
+ *     Значит можно инициализировать нужные поля - внутренние переменные класса в конструкторе,
+ *     при этом НЕ нужно их инициализировать при создании объекта класса.
+ *     В Main будет без длин сторон:
+ *     Triangle triangle = new Triangle(1, 1, 4, 1, 4, 4); !!!!
  */

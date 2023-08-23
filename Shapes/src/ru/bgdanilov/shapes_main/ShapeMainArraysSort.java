@@ -1,8 +1,8 @@
 package ru.bgdanilov.shapes_main;
 
 import ru.bgdanilov.shapes.*;
-import ru.bgdanilov.shapes_comparators.ShapesAreaComparator;
-import ru.bgdanilov.shapes_comparators.ShapesPerimeterComparator;
+import ru.bgdanilov.shapes_comparators.ShapeAreaComparator;
+import ru.bgdanilov.shapes_comparators.ShapePerimeterComparator;
 
 import java.util.Arrays;
 
@@ -19,18 +19,21 @@ public class ShapeMainArraysSort {
         // Выводим информацию о фигурах переопределенным toString()
         // println() автоматически вызывает toString(), поэтому не надо ее писать.
         for (Shape shape : shapes) {
-            System.out.println(Arrays.toString(new Shape[]{shape}));
+            System.out.println(shape);
         }
 
+        System.out.println();
+
         // Сортируем массив по убыванию площади.
-        Arrays.sort(shapes, new ShapesAreaComparator().reversed());
+        Arrays.sort(shapes, new ShapeAreaComparator().reversed());
         System.out.println("Максимальная площадь среди массива фигур равна "
                 + shapes[0].getArea());
 
         // Сортируем массив по убыванию периметра.
-        Arrays.sort(shapes, new ShapesPerimeterComparator().reversed());
+        Arrays.sort(shapes, new ShapePerimeterComparator().reversed());
         System.out.println("Второй по величине периметр среди массива фигур равен "
                 + shapes[1].getPerimeter());
+        System.out.println();
 
         // Проверим equals.
         Circle circleR1 = new Circle(1); // Новый объект окружность R = 1.
@@ -56,11 +59,3 @@ public class ShapeMainArraysSort {
         System.out.println(new Triangle(0, 1, 4, 1, 4, 4).equals(shapes[2]));
     }
 }
-
-/* TODO
-    1. Повторить почему можно не писать "new Shape[]" ?
-    Shape[] shapes = new Shape[] {square1, triangle1, rectangle1, circle1};
-    что-то связано с невозможностью использования массива в return.
-    2. Что тут происходит?
-    System.out.println(Arrays.toString(new Shape[] {e}));
- */
