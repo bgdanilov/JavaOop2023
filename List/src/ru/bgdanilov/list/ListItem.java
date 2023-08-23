@@ -1,10 +1,11 @@
 package ru.bgdanilov.list;
+
 // Это класс элемента односвязного списка.
 public class ListItem<T> {
     private T data; // содержимое элемента.
     private ListItem<T> next; // ссылка на следующий за ним элемент.
 
-    public ListItem (T data) {
+    public ListItem(T data) {
         this.data = data;
         this.next = null;
     }
@@ -13,11 +14,11 @@ public class ListItem<T> {
         return this.data;
     }
 
-    public void setData (T data) {
+    public void setData(T data) {
         this.data = data;
     }
 
-    public void setData (int index, T data) {
+    public void setData(int index, T data) {
         this.data = data;
     }
 
