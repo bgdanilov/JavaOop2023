@@ -7,7 +7,7 @@ import java.util.ArrayList;
 // 1. Прочитать в список все строки из файла.
 public class GetArrayListFromFile {
     public static void main(String[] args) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("ArrayListHome/input1.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("ArrayListHome/input.txt"))) {
             // Создаем новый объект списка типа String
             ArrayList<String> strings = new ArrayList<>();
 
@@ -24,11 +24,11 @@ public class GetArrayListFromFile {
         } catch (IOException e) {
             System.out.println("Ошибка чтения файла! " + e.getMessage());
         }
-        // finally - не нужен, т.к. reader находится в try и закроется автоматически.
     }
 }
 
 /*
-    Вопросы:
+    Вопросы, заметки:
     1. Как сымитировать IOException e ?
+    2. finally - не нужен, т.к. reader находится в try и закроется автоматически.
  */

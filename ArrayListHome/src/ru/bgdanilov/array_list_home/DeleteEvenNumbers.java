@@ -1,6 +1,7 @@
 package ru.bgdanilov.array_list_home;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 // Задача «ArrayListHome».
@@ -12,15 +13,7 @@ import java.util.Iterator;
 public class DeleteEvenNumbers {
     public static void main(String[] args) {
         // Создаем список.
-        ArrayList<Integer> integers1 = new ArrayList<>();
-
-        integers1.add(1);
-        integers1.add(2);
-        integers1.add(3);
-        integers1.add(4);
-        integers1.add(5);
-        integers1.add(6);
-
+        ArrayList<Integer> integers1 = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6));
         // 2.1. Сначала IDE ругалась, что "Suspicious 'List.remove()' in loop"
         // Просила Итератор - сделал, см. 2.2.
         ArrayList<Integer> integers2 = new ArrayList<>(integers1);
@@ -69,4 +62,6 @@ public class DeleteEvenNumbers {
     Вопросы:
     1. В п. 2.1. добавил поправку на сдвиг элементов влево, но ведь и без нее работало?
     И размер списка правильный выдает без коррекции размера integers2.trimToSize() ?
+    2. В п. 2.2. Ворнинг, я так понимаю, предлагающий более элегантное решение.
+    Можно удалить этот блок вообще?
  */
