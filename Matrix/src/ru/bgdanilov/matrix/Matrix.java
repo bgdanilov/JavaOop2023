@@ -156,6 +156,15 @@ public class Matrix {
         matrix = vector;
     }
 
+    // 2.e. Метод. Умножение на скаляр.
+    public void multiplyByScalar(double scalar) {
+        for (Vector row : matrix) {
+            row.multiplyByScalar(scalar);
+        }
+    }
+
+    // 2.f. Метод. Вычисление определителя.
+
     // 2.g.	Метод toString определить так,
     // чтобы результат получался в таком виде: {{1, 2}, {2, 3}}
     @Override
@@ -170,6 +179,34 @@ public class Matrix {
         sb.append(matrix[n - 1]).append("}");
 
         return sb.toString();
+    }
+
+    // 2.i. Метод. Сложение матриц.
+    public void add(Matrix matrix) {
+        if (this.getColumnsAmount() != matrix.getColumnsAmount()
+                && this.getRowsAmount() != matrix.getRowsAmount()) {
+            throw new IllegalArgumentException("Матрицы должны быть одинаковой размрности!");
+        }
+
+        int n = getRowsAmount();
+
+        for (int i = 0; i < n; i++) {
+            this.matrix[i].add(matrix.getRow(i));
+        }
+    }
+
+    // 2.j. Метод. Вычитание матриц.
+    public void subtract(Matrix matrix) {
+        if (this.getColumnsAmount() != matrix.getColumnsAmount()
+                && this.getRowsAmount() != matrix.getRowsAmount()) {
+            throw new IllegalArgumentException("Матрицы должны быть одинаковой размрности!");
+        }
+
+        int n = getRowsAmount();
+
+        for (int i = 0; i < n; i++) {
+            this.matrix[i].subtract(matrix.getRow(i));
+        }
     }
 }
 

@@ -71,5 +71,27 @@ public class MatrixMain {
         matrix1d.transpose();
         System.out.println("     Результат: " + matrix1d);
         System.out.println();
+
+        // 2.e. Метод. Умножение на скаляр.
+        System.out.println("2.e. Метод. Умножение на скаляр.");
+        System.out.println("     Исходная матрица matrix1d: " + matrix1d);
+        matrix1d.multiplyByScalar(10);
+        System.out.println("     Результат: " + matrix1d);
+        System.out.println();
+
+        // 2.i. Метод. Сложение матриц.
+        System.out.println("2.i. Метод. Сложение матриц.");
+        System.out.println("     Исходная матрица matrix1d: " + matrix1d);
+        Matrix matrix1e = new Matrix(matrix1d);
+        System.out.println("     Исходная матрица matrix1e: " + matrix1e);
+        matrix1d.add(matrix1e);
+        System.out.println("     Результат: матрица matrix1d: " + matrix1d);
+        System.out.println();
+
+        // 2.j. Метод. Вычитание матриц.
+        System.out.println("2.j. Метод. Вычитание матриц.");
+        matrix1d.subtract(matrix1e);
+        System.out.println("     Из matrix1d вычесть matrix1e: " + matrix1d);
+        System.out.println();
     }
 }
