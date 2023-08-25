@@ -54,13 +54,16 @@ public class Vector {
     // 3. Метод. toString(), чтобы выдавал информацию о векторе в  формате { значения компонент через запятую }
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder().append("{").append(components[0]);
+        StringBuilder sb = new StringBuilder().append("{");
+        int size = getSize();
 
-        for (double component : components) {
-            sb.append(", ").append(component);
+        for (int i = 0; i < size - 1; i++) {
+            sb.append(components[i]).append(", ");
         }
 
-        return sb.append("}").toString();
+        sb.append(components[size - 1]).append("}");
+
+        return sb.toString();
     }
 
     // 4.a. Добавить вектор к вектору.

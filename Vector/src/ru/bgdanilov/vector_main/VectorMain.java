@@ -6,9 +6,9 @@ public class VectorMain {
     public static void main(String[] args) {
         // 1. Конструкторы.
         // -------------------------
-        // 1.a. Создаем нулевой вектор размерностью 10.
-        System.out.println("1.a. Создаем нулевой вектор размерностью 10.");
-        Vector vector1 = new Vector(10);
+        // 1.a. Создаем нулевой вектор размерностью 7.
+        System.out.println("1.a. Создаем нулевой вектор размерностью 7.");
+        Vector vector1 = new Vector(7);
         System.out.println("     Вектор 1: " + vector1);
 
         // 1.c. Создаем вектор из значений массива.
@@ -61,10 +61,11 @@ public class VectorMain {
         // 4.f. Получение и установка компоненты вектора по индексу.
         // Создадим новый нулевой Вектор 5.
         Vector vector5 = new Vector(3);
+        System.out.println("4.f. Устанавливаем компоненту 99 на место 1. Вектор 5: " + vector5);
         // Зададим компоненту.
         vector5.setComponent(1, 99);
-        System.out.println("4.f. Устанавливаем компоненту 99 на место 1. Вектор 5: " + vector5);
-        System.out.println("4.f. Установленная компонента Вектора 5 с индексом 1: " + vector5.getComponent(1));
+        System.out.println("     В итоге Вектор 5: " + vector5);
+        System.out.println("4.f. Получим компоненту Вектора 5 с индексом 1: " + vector5.getComponent(1));
 
         // 4.g. Переопределение equals() и hashCode().
         System.out.println("4.g. Равен ли Вектор {1, 2, 3} Вектору {1, 2, 3} ?: "
