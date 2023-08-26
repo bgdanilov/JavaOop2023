@@ -3,7 +3,7 @@ package ru.bgdanilov.matrix;
 import ru.bgdanilov.vector.Vector;
 
 public class Matrix {
-    private Vector[] matrix;
+    private Vector[] vectors; // строки.
 
     // 1.a. Конструктор - создание пустой матрицы размера n*m.
     public Matrix(int n, int m) {
@@ -12,12 +12,12 @@ public class Matrix {
         }
 
         // Создаем строки матрицы - массив объектов Vector c n-элементами.
-        matrix = new Vector[n];
+        vectors = new Vector[n];
 
         // Теперь нужно в каждый элемент массива matrix, поместить вектор с m-элементами.
         for (int i = 0; i < n; i++) {
             // Используем создание конструктор Vector 1.a.
-            matrix[i] = new Vector(m);
+            vectors[i] = new Vector(m);
         }
     }
 
@@ -27,12 +27,12 @@ public class Matrix {
         int n = sourceMatrix.getRowsAmount();
 
         // Создаем новый массив векторов с тем же количеством элементов.
-        matrix = new Vector[n];
+        vectors = new Vector[n];
 
         // Заполняем созданный массив новыми векторами,
         // созданными из векторов матрицы переданного объекта sourceMatrix.
         for (int i = 0; i < n; i++) {
-            matrix[i] = new Vector(sourceMatrix.matrix[i]);
+            vectors[i] = new Vector(sourceMatrix.vectors[i]);
         }
     }
 
@@ -55,11 +55,11 @@ public class Matrix {
         }
 
         // Создаем новый массив векторов с тем же количеством элементов.
-        matrix = new Vector[n];
+        vectors = new Vector[n];
 
         for (int i = 0; i < n; i++) {
             // Используем 1.d. Конструктор - заполнение вектора значениями из массива.
-            matrix[i] = new Vector(m, sourceArray[i]);
+            vectors[i] = new Vector(m, sourceArray[i]);
         }
     }
 
@@ -67,7 +67,7 @@ public class Matrix {
     public Matrix(Vector[] sourceVectors) {
         int n = sourceVectors.length;  // Количество векторов в массиве.
         // Создаем новый массив векторов (матрицу) с тем же количеством элементов.
-        matrix = new Vector[n];
+        vectors = new Vector[n];
         // Ищем максимальный размер среди векторов массива.
         int size = 0;
 
@@ -81,23 +81,23 @@ public class Matrix {
 
         // Заполняем матрицу новыми векторами, созданными из исходных векторов.
         for (int i = 0; i < n; i++) {
-            matrix[i] = new Vector(sourceVectors[i]);
+            vectors[i] = new Vector(sourceVectors[i]);
 
             // Проверяем на совпадение с максимальным размером, при необходимости
             // дополняем нулями при помощи дополнения временного нового вектора размера size.
-            if (matrix[i].getSize() < size) {
-                matrix[i].add(new Vector(size));
+            if (vectors[i].getSize() < size) {
+                vectors[i].add(new Vector(size));
             }
         }
     }
 
     // 2.a. Метод. Получение размеров матрицы.
     public int getRowsAmount() {
-        return matrix.length; // n
+        return vectors.length; // n
     }
 
     public int getColumnsAmount() {
-        return matrix[0].getSize(); // m
+        return vectors[0].getSize(); // m
     }
 
     // 2.b. Метод. Получение и задание вектора-строки по индексу.
@@ -108,7 +108,7 @@ public class Matrix {
             throw new IllegalArgumentException("Неверный индекс.");
         }
 
-        return new Vector(matrix[index]);
+        return new Vector(vectors[index]);
     }
 
     public void setRow(Vector sourceVector, int index) {
@@ -121,7 +121,7 @@ public class Matrix {
         }
 
         for (int i = 0; i < m; i++) {
-            this.matrix[index].setComponent(i, sourceVector.getComponent(i));
+            this.vectors[index].setComponent(i, sourceVector.getComponent(i));
         }
     }
 
@@ -137,7 +137,7 @@ public class Matrix {
         Vector outputVector = new Vector(n);
 
         for (int i = 0; i < n; i++) {
-            outputVector.setComponent(i, matrix[i].getComponent(index));
+            outputVector.setComponent(i, vectors[i].getComponent(index));
         }
 
         return outputVector;
@@ -147,46 +147,117 @@ public class Matrix {
     public void transpose() {
         int m = getColumnsAmount(); // 3;
 
-        Vector[] vector = new Vector[m];
+        Vector[] temp = new Vector[m];
 
         for (int i = 0; i < m; i++) {
-            vector[i] = getColumn(i);
+            temp[i] = getColumn(i);
         }
 
-        matrix = vector;
+        vectors = temp;
     }
 
     // 2.e. Метод. Умножение на скаляр.
     public void multiplyByScalar(double scalar) {
-        for (Vector row : matrix) {
+        for (Vector row : vectors) {
             row.multiplyByScalar(scalar);
         }
     }
 
     // 2.f. Метод. Вычисление определителя.
-    public void triangle() {
+    public double getDeterminant() {
         int n = getRowsAmount();
+        int m = getColumnsAmount();
 
-        for (int i = 1; i < n ; i++) {
-            double mull = -(matrix[i].getComponent(0)); // множитель для первой строки.
-            Vector temp = getRow(0);
-            temp.multiplyByScalar(mull);
-            matrix[i].add(temp);
+        if (n != m) {
+            throw new IllegalArgumentException("Матрица должна быть квадратной!");
         }
+
+        int swapCount = 0;
+
+        for (int i = 0; i < m - 1; i++) { // цикл по столбцам.
+            for (int j = i + 1; j < n; j++) { //  цикл по строкам.
+                if (vectors[i].getComponent(i) == 0) {
+                    // Меняем строки местами.
+                    Vector tmp = getRow(j);  //  это новый вектор.
+                    vectors[j] = getRow(i);
+                    vectors[i] = tmp;
+                    swapCount++;
+                }
+
+                // TODO Надо менять по-другому.
+                double mull = -(vectors[j].getComponent(i)) / vectors[i].getComponent(i); // множитель для первой строки.
+                Vector temp = getRow(i);
+                temp.multiplyByScalar(mull);
+                vectors[j].add(temp);
+            }
+        }
+
+        double det = 1;
+
+        for (int i = 0, j = 0; i < m && j < n; i++, j++) {
+            det *= vectors[i].getComponent(j);
+        }
+
+        if (swapCount % 2 != 0) {
+            return -det;
+        }
+
+        return det;
     }
+    /*public double getDeterminant() {
+        int n = getRowsAmount();
+        int m = getColumnsAmount();
+
+        if (n != m) {
+            throw new IllegalArgumentException("Матрица должна быть квадратной!");
+        }
+
+        Matrix triangle = new Matrix(this.vectors);
+
+        int swapCount = 0;
+
+        for (int i = 0; i < m - 1; i++) { // цикл по столбцам.
+            for (int j = i + 1; j < n; j++) { //  цикл по строкам.
+                if (triangle.vectors[i].getComponent(i) == 0) {
+                    // Меняем строки местами.
+                    Vector tmp = triangle.getRow(j);  //  это новый вектор.
+                    triangle.vectors[j] = triangle.getRow(i);
+                    triangle.vectors[i] = tmp;
+                    swapCount++;
+                }
+
+                double mull = -(triangle.vectors[j].getComponent(i)) / triangle.vectors[i].getComponent(i); // множитель для первой строки.
+                Vector temp = triangle.getRow(i);
+                temp.multiplyByScalar(mull);
+                triangle.vectors[j].add(temp);
+            }
+        }
+
+        double det = 1;
+
+        for (int i = 0, j = 0; i < m && j < n; i++, j++) {
+            det *= triangle.vectors[i].getComponent(j);
+        }
+
+        if (swapCount % 2 != 0) {
+            return -det;
+        }
+
+        return det;
+    }*/
 
     // 2.g.	Метод toString определить так,
     // чтобы результат получался в таком виде: {{1, 2}, {2, 3}}
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder().append("{");
-        int n = matrix.length;
+        int n = vectors.length;
 
         for (int i = 0; i < n - 1; i++) {
-            sb.append(matrix[i]).append(", ");
+            sb.append(vectors[i]).append(", ");
         }
 
-        sb.append(matrix[n - 1]).append("}");
+        sb.append(vectors[n - 1]).append("}");
 
         return sb.toString();
     }
@@ -201,7 +272,7 @@ public class Matrix {
         int n = getRowsAmount();
 
         for (int i = 0; i < n; i++) {
-            this.matrix[i].add(matrix.getRow(i));
+            this.vectors[i].add(matrix.getRow(i));
         }
     }
 
@@ -215,7 +286,7 @@ public class Matrix {
         int n = getRowsAmount();
 
         for (int i = 0; i < n; i++) {
-            this.matrix[i].subtract(matrix.getRow(i));
+            this.vectors[i].subtract(matrix.getRow(i));
         }
     }
 }
@@ -266,4 +337,6 @@ public class Matrix {
         - все верно, то была ссылка на vectors, а не создание нового объекта.
         - если бы vectors, то и наша новая матрица бы поменялась. Это неправильно.
     3. Метод 2.b. задание строки: нужно ли стобы влезала строка несовпадающей размерности?
+    4. В самом классе. Поменять поле Vector[] matrix на vectors - это же массив векторов, а не матрица?
+       2.f. Метод. Вычисление определителя. плохо звучит: triangle.matrix
  */

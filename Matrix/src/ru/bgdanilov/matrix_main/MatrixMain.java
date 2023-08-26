@@ -94,8 +94,24 @@ public class MatrixMain {
         System.out.println("     Из matrix1d вычесть matrix1e: " + matrix1d);
         System.out.println();
 
-        System.out.println(matrix1b);
-        matrix1b.triangle();
-        System.out.println(matrix1b);
+        /*Vector[] vectorsD = new Vector[]{
+                new Vector(5, new double[]{0, 0, 3, 4, 5}),
+                new Vector(5, new double[]{4, 7, 8, 9, 5}),
+                new Vector(5, new double[]{10, 11, 12, 5, 5}),
+                new Vector(5, new double[]{13, 14, 15, 0, 2}),
+                new Vector(5, new double[]{13, 14, 15, 0, 12})
+        };*/
+        Vector[] vectorsD = new Vector[]{
+                new Vector(3, new double[]{1, 2, 3}),
+                new Vector(3, new double[]{1, 2, 3}),
+                new Vector(3, new double[]{1, 2, 3})
+        };
+
+        Matrix matrixD = new Matrix(vectorsD);
+
+        System.out.println(matrixD);
+        System.out.println(matrixD.getDeterminant());
+        System.out.println(matrixD);
+
     }
 }
