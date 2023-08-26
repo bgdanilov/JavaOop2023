@@ -164,6 +164,16 @@ public class Matrix {
     }
 
     // 2.f. Метод. Вычисление определителя.
+    public void triangle() {
+        int n = getRowsAmount();
+
+        for (int i = 1; i < n ; i++) {
+            double mull = -(matrix[i].getComponent(0)); // множитель для первой строки.
+            Vector temp = getRow(0);
+            temp.multiplyByScalar(mull);
+            matrix[i].add(temp);
+        }
+    }
 
     // 2.g.	Метод toString определить так,
     // чтобы результат получался в таком виде: {{1, 2}, {2, 3}}

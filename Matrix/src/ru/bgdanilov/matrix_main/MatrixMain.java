@@ -93,5 +93,9 @@ public class MatrixMain {
         matrix1d.subtract(matrix1e);
         System.out.println("     Из matrix1d вычесть matrix1e: " + matrix1d);
         System.out.println();
+
+        System.out.println(matrix1b);
+        matrix1b.triangle();
+        System.out.println(matrix1b);
     }
 }
