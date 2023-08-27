@@ -115,5 +115,19 @@ public class MatrixMain {
         matrix1d.subtract(matrix1e);
         System.out.println("     Из matrix1d вычесть matrix1e: " + matrix1d);
         System.out.println();
+
+        // 3.a. Метод. Сложение матриц.
+        System.out.println("3.a. Метод. Сложение матриц.");
+        System.out.println("     Исходная матрица matrix1d: " + matrix1d);
+        System.out.println("     Исходная матрица matrix1e: " + matrix1e);
+        System.out.println("     Результат: " + Matrix.getSum(matrix1d, matrix1e));
+        System.out.println();
+
+        // 3.b. Метод. Вычитание матриц.
+        System.out.println("3.b. Метод. Вычитание матриц.");
+        System.out.println("     Исходная матрица matrix1d: " + matrix1d);
+        System.out.println("     Исходная матрица matrix1e: " + matrix1e);
+        System.out.println("     Результат: " + Matrix.getDifference(matrix1d, matrix1e));
+        System.out.println();
     }
 }
