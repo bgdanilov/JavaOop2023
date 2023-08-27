@@ -182,9 +182,10 @@ public class Matrix {
                     vectors[j] = getRow(i);
                     vectors[i] = tmp;
                     swapCount++;
+
+                    continue;
                 }
 
-                // TODO Надо менять по-другому.
                 double mull = -(vectors[j].getComponent(i)) / vectors[i].getComponent(i); // множитель для первой строки.
                 Vector temp = getRow(i);
                 temp.multiplyByScalar(mull);

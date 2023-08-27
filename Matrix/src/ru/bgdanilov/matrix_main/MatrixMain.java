@@ -94,18 +94,23 @@ public class MatrixMain {
         System.out.println("     Из matrix1d вычесть matrix1e: " + matrix1d);
         System.out.println();
 
-        /*Vector[] vectorsD = new Vector[]{
-                new Vector(5, new double[]{0, 0, 3, 4, 5}),
-                new Vector(5, new double[]{4, 7, 8, 9, 5}),
-                new Vector(5, new double[]{10, 11, 12, 5, 5}),
-                new Vector(5, new double[]{13, 14, 15, 0, 2}),
-                new Vector(5, new double[]{13, 14, 15, 0, 12})
-        };*/
         Vector[] vectorsD = new Vector[]{
-                new Vector(3, new double[]{1, 2, 3}),
-                new Vector(3, new double[]{1, 2, 3}),
-                new Vector(3, new double[]{1, 2, 3})
+                new Vector(10, new double[]{0, 0, 3, 4, 5, 4, 7, 8, 9, 5}),
+                new Vector(10, new double[]{4, 7, 8, 9, 5, 4, 7, 8, 9, 5}),
+                new Vector(10, new double[]{0, 0, 3, 4, 5, 10, 11, 12, 5, 5}),
+                new Vector(10, new double[]{13, 3, 4, 5, 10, 11, 14, 15, 0, 2}),
+                new Vector(10, new double[]{13, 14, 8, 9, 5, 4, 7, 15, 0, 12}),
+                new Vector(10, new double[]{0, 0, 3, 45, 5, 4, 12, 8, 9, 5}),
+                new Vector(10, new double[]{4, 71, 8, 9, 5, 41, 7, 8, 9, 5}),
+                new Vector(10, new double[]{0, 0, 3, 14, 5, 10, 11, 13, 5, 5}),
+                new Vector(10, new double[]{13, 3, 0, 5, 10, 11, 1, 15, 0, 2}),
+                new Vector(10, new double[]{13, 14, 8, 9, 0, 4, 7, 15, 0, 12})
         };
+        /*Vector[] vectorsD = new Vector[]{
+                new Vector(3, new double[]{1, 2, 3}),
+                new Vector(3, new double[]{2, 4, 6}),
+                new Vector(3, new double[]{10, -2, 5})
+        };*/
 
         Matrix matrixD = new Matrix(vectorsD);
 
