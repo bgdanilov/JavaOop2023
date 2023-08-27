@@ -26,7 +26,7 @@ public class Matrix {
         // Получаем количество строк (векторов) в исходной матрице.
         int n = sourceMatrix.getRowsAmount();
 
-        // Создаем новый массив векторов с тем же количеством элементов.
+        // Создаем новый массив векторов с тем же количеством векторов.
         vectors = new Vector[n];
 
         // Заполняем созданный массив новыми векторами,
@@ -69,13 +69,13 @@ public class Matrix {
         // Создаем новый массив векторов (матрицу) с тем же количеством элементов.
         vectors = new Vector[n];
         // Ищем максимальный размер среди векторов массива.
-        int size = 0;
+        int m = 0;
 
         for (Vector vector : sourceVectors) {
             int temp = vector.getSize();
 
-            if (temp > size) {
-                size = temp;
+            if (temp > m) {
+                m = temp;
             }
         }
 
@@ -84,9 +84,9 @@ public class Matrix {
             vectors[i] = new Vector(sourceVectors[i]);
 
             // Проверяем на совпадение с максимальным размером, при необходимости
-            // дополняем нулями при помощи дополнения временного нового вектора размера size.
-            if (vectors[i].getSize() < size) {
-                vectors[i].add(new Vector(size));
+            // дополняем нулями при помощи дополнения временного нового вектора размера m.
+            if (vectors[i].getSize() < m) {
+                vectors[i].add(new Vector(m));
             }
         }
     }
@@ -102,9 +102,7 @@ public class Matrix {
 
     // 2.b. Метод. Получение и задание вектора-строки по индексу.
     public Vector getRow(int index) {
-        int n = getRowsAmount();
-
-        if (index < 0 || index > n - 1) {
+        if (index < 0 || index > getRowsAmount() - 1) {
             throw new IllegalArgumentException("Неверный индекс.");
         }
 
@@ -127,13 +125,11 @@ public class Matrix {
 
     // 2.c. Метод. Получение вектора-столбца по индексу.
     public Vector getColumn(int index) {
-        int n = getRowsAmount();
-        int m = getColumnsAmount();
-
-        if (index < 0 || index > m - 1) {
+        if (index < 0 || index > getColumnsAmount() - 1) {
             throw new IllegalArgumentException("Неверный индекс.");
         }
 
+        int n = getRowsAmount();
         Vector outputVector = new Vector(n);
 
         for (int i = 0; i < n; i++) {
@@ -145,7 +141,7 @@ public class Matrix {
 
     // 2.d. Метод. Транспонирование матрицы.
     public void transpose() {
-        int m = getColumnsAmount(); // 3;
+        int m = getColumnsAmount();
 
         Vector[] temp = new Vector[m];
 
@@ -165,87 +161,49 @@ public class Matrix {
 
     // 2.f. Метод. Вычисление определителя.
     public double getDeterminant() {
-        int n = getRowsAmount();
-        int m = getColumnsAmount();
-
-        if (n != m) {
+        if (getRowsAmount() != getColumnsAmount()) {
             throw new IllegalArgumentException("Матрица должна быть квадратной!");
         }
 
-        int swapCount = 0;
+        Matrix triangleMatrix = new Matrix(vectors);
 
-        for (int i = 0; i < m - 1; i++) { // цикл по столбцам.
-            for (int j = i + 1; j < n; j++) { //  цикл по строкам.
-                if (vectors[i].getComponent(i) == 0) {
-                    // Меняем строки местами.
-                    Vector tmp = getRow(j);  //  это новый вектор.
-                    vectors[j] = getRow(i);
-                    vectors[i] = tmp;
-                    swapCount++;
+        int matrixSize = getRowsAmount();
+        int swapsCounter = 0;
+
+        for (int i = 0; i < matrixSize - 1; i++) { // цикл по столбцам.
+            for (int j = i + 1; j < matrixSize; j++) { //  цикл по строкам.
+                // Если на диагонали ноль, то "опускаем" его вниз, меняя строку с нижеидущей.
+                if (triangleMatrix.vectors[i].getComponent(i) == 0) {
+                    // Меняем строки местами и на следующую итерацию.
+                    Vector temp = triangleMatrix.getRow(j);  //  это новый вектор.
+                    triangleMatrix.vectors[j] = triangleMatrix.getRow(i);
+                    triangleMatrix.vectors[i] = temp;
+                    swapsCounter++;
 
                     continue;
                 }
 
-                double mull = -(vectors[j].getComponent(i)) / vectors[i].getComponent(i); // множитель для первой строки.
-                Vector temp = getRow(i);
-                temp.multiplyByScalar(mull);
-                vectors[j].add(temp);
+                // Добавляем к строке вышестоящую строку, умноженую на число,
+                // чтобы получить ноль под элементом диагонали.
+                double rowMultiplier = -(triangleMatrix.vectors[j].getComponent(i)) / triangleMatrix.vectors[i].getComponent(i);
+                Vector temp = triangleMatrix.getRow(i);
+                temp.multiplyByScalar(rowMultiplier);
+                triangleMatrix.vectors[j].add(temp);
             }
         }
 
-        double det = 1;
+        double determinant = 1;
 
-        for (int i = 0, j = 0; i < m && j < n; i++, j++) {
-            det *= vectors[i].getComponent(j);
+        for (int i = 0; i < matrixSize; i++) {
+            determinant *= triangleMatrix.vectors[i].getComponent(i);
         }
 
-        if (swapCount % 2 != 0) {
-            return -det;
+        if (swapsCounter % 2 != 0) {
+            return -determinant;
         }
 
-        return det;
+        return determinant;
     }
-    /*public double getDeterminant() {
-        int n = getRowsAmount();
-        int m = getColumnsAmount();
-
-        if (n != m) {
-            throw new IllegalArgumentException("Матрица должна быть квадратной!");
-        }
-
-        Matrix triangle = new Matrix(this.vectors);
-
-        int swapCount = 0;
-
-        for (int i = 0; i < m - 1; i++) { // цикл по столбцам.
-            for (int j = i + 1; j < n; j++) { //  цикл по строкам.
-                if (triangle.vectors[i].getComponent(i) == 0) {
-                    // Меняем строки местами.
-                    Vector tmp = triangle.getRow(j);  //  это новый вектор.
-                    triangle.vectors[j] = triangle.getRow(i);
-                    triangle.vectors[i] = tmp;
-                    swapCount++;
-                }
-
-                double mull = -(triangle.vectors[j].getComponent(i)) / triangle.vectors[i].getComponent(i); // множитель для первой строки.
-                Vector temp = triangle.getRow(i);
-                temp.multiplyByScalar(mull);
-                triangle.vectors[j].add(temp);
-            }
-        }
-
-        double det = 1;
-
-        for (int i = 0, j = 0; i < m && j < n; i++, j++) {
-            det *= triangle.vectors[i].getComponent(j);
-        }
-
-        if (swapCount % 2 != 0) {
-            return -det;
-        }
-
-        return det;
-    }*/
 
     // 2.g.	Метод toString определить так,
     // чтобы результат получался в таком виде: {{1, 2}, {2, 3}}
@@ -270,9 +228,9 @@ public class Matrix {
             throw new IllegalArgumentException("Матрицы должны быть одинаковой размрности!");
         }
 
-        int n = getRowsAmount();
+        int matrixSize = getRowsAmount();
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < matrixSize; i++) {
             this.vectors[i].add(matrix.getRow(i));
         }
     }
@@ -281,12 +239,12 @@ public class Matrix {
     public void subtract(Matrix matrix) {
         if (this.getColumnsAmount() != matrix.getColumnsAmount()
                 && this.getRowsAmount() != matrix.getRowsAmount()) {
-            throw new IllegalArgumentException("Матрицы должны быть одинаковой размрности!");
+            throw new IllegalArgumentException("Матрицы должны быть одинаковой размерности!");
         }
 
-        int n = getRowsAmount();
+        int matrixSize = getRowsAmount();
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < matrixSize; i++) {
             this.vectors[i].subtract(matrix.getRow(i));
         }
     }
@@ -295,7 +253,8 @@ public class Matrix {
 /*
     Описание класса:
     ===============================
-
+    n - число строк.
+    m - число колонок.
 
     1.d. Конструктор Matrix(Vector[]) – из массива векторов-строк.
 
@@ -311,7 +270,12 @@ public class Matrix {
     2.g. Метод toString().
     - используется toString() из Vector для вывода внутренних векторов.
 
-
+    2.f. Метод. Вычисление определителя.
+    - используем метод Гаусса. Приводим матрицу к нижнему треугольному виду.
+    - определитель не изменится, если к строке добавить строку, умноженную на число.
+    - определитель - еть произведение элементов по диагонали.
+    - при перемене строк, определитель меняет знак, поэтому считаем число замен.
+    
     Вопросы:
     ===============================
     1. Изначально у меня импортировался встроенный класс Vector
@@ -324,20 +288,9 @@ public class Matrix {
        Мы же вектор через конструктор создаем, и размером ноль конструктор нам не даст сделать.
        Аналогично Конструктор 1.b.
 
-    n - число строк.
-    m - число колонок.
- */
-
-/* TODO вопросы.
-    1. Сделать проверку-добивку нулями в отдельную функцию.
-    - сделано: improveSize.
-        - удалено.
-    2. Конструктор 1.d: проверить this.matrix = vectors;
-    - это у нас просто ссылка копируется или новый объект создается как положено?
-    - вообще, разобраться с ссылочными данными и как они копируются, создаются, где хранятся.
-        - все верно, то была ссылка на vectors, а не создание нового объекта.
-        - если бы vectors, то и наша новая матрица бы поменялась. Это неправильно.
-    3. Метод 2.b. задание строки: нужно ли стобы влезала строка несовпадающей размерности?
-    4. В самом классе. Поменять поле Vector[] matrix на vectors - это же массив векторов, а не матрица?
-       2.f. Метод. Вычисление определителя. плохо звучит: triangle.matrix
+    3. 2.f. Метод. Вычисление определителя.
+       - что лучше: сделать две переменные n = getRowsAmount() и m = getColumnsAmount(),
+       или вместо них сделать одну matrixSize т.к. матрица квадратная,
+       а для проверки кватратности матрицы - один раз вызвать getRowsAmount() != getColumnsAmount(),
+       как это сделано сейчас?
  */
