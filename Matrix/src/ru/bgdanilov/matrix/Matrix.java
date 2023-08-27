@@ -274,16 +274,10 @@ public class Matrix {
 
         // Скалярное произведение строк на столбцы.
         for (int i = 0; i < resultMatrixSize; i++) {
-            Vector row = new Vector(matrix1.getRow(i)); // берем строку матрицы 1.
-            Vector resultRow = new Vector(resultMatrixSize); // создаем пустую строку для результата.
             for (int j = 0; j < resultMatrixSize; j++) {
-                Vector column = new Vector(matrix2.getColumn(j)); // берем столбец матрицы 2.
-                // Заполняем результирующую строку покомпонентно.
-                resultRow.setComponent(j, Vector.getDotProduct(row, column));
+                double resultMatrixItem = Vector.getDotProduct(matrix1.getRow(i), matrix2.getColumn(j));
+                resultMatrix.vectors[i].setComponent(j, resultMatrixItem);
             }
-
-            // Заполняем результирующими строками результирующую матрицу.
-            resultMatrix.setRow(resultRow, i);
         }
 
         return resultMatrix;
@@ -318,7 +312,7 @@ public class Matrix {
 
     3.c. Метод. Умножение матриц.
     - матрицы можно умножить только если
-    число столбцов первой равно числу строк второй.
+    число столбцов первой равно числу строк второй или наоборот.
     - произведением двух матриц есть матрица,
     у которой столько строк, сколько их у левого сомножителя,
     и столько столбцов, сколько их у правого сомножителя.
@@ -342,5 +336,6 @@ public class Matrix {
        как это сделано сейчас?
 
     4. 3.a. Метод. Сложение матриц.
-       - почему нельзя так: return resultMatrix.add(matrix2); ?
+       - почему нельзя так:
+         return resultMatrix.add(matrix2); ?
  */
