@@ -248,6 +248,20 @@ public class Matrix {
             this.vectors[i].subtract(matrix.getRow(i));
         }
     }
+
+    // 3.a. Метод. Сложение матриц.
+    public static Matrix getSum(Matrix matrix1, Matrix matrix2) {
+        Matrix resultMatrix = new Matrix(matrix1);
+        resultMatrix.add(matrix2);
+        return resultMatrix;
+    }
+
+    // 3.b. Метод. Вычитание матриц.
+    public static Matrix getDifference(Matrix matrix1, Matrix matrix2) {
+        Matrix resultMatrix = new Matrix(matrix1);
+        resultMatrix.subtract(matrix2);
+        return resultMatrix;
+    }
 }
 
 /*
@@ -293,4 +307,7 @@ public class Matrix {
        или вместо них сделать одну matrixSize т.к. матрица квадратная,
        а для проверки кватратности матрицы - один раз вызвать getRowsAmount() != getColumnsAmount(),
        как это сделано сейчас?
+
+    4. 3.a. Метод. Сложение матриц.
+       - почему нельзя так: return resultMatrix.add(matrix2); ?
  */
