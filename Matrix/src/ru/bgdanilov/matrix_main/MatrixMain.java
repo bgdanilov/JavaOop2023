@@ -129,5 +129,22 @@ public class MatrixMain {
         System.out.println("     Исходная матрица matrix1e: " + matrix1e);
         System.out.println("     Результат: " + Matrix.getDifference(matrix1d, matrix1e));
         System.out.println();
+
+        // 3.c. Метод. Умножение матриц.
+        Vector[] vectors3c1 = new Vector[]{
+                new Vector(2, new double[]{2, 1}),
+                new Vector(2, new double[]{-3, 0}),
+                new Vector(2, new double[]{4, -1})
+        };
+        Matrix matrix3c1 = new Matrix(vectors3c1);
+
+        Vector[] vectors3c2 = new Vector[]{
+                new Vector(3, new double[]{5, -1, 6}),
+                new Vector(3, new double[]{-3, 0, 7})
+        };
+        Matrix matrix3c2 = new Matrix(vectors3c2);
+
+        System.out.println(Matrix.getMultiplication(matrix3c1, matrix3c2));
+
     }
 }

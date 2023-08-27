@@ -262,6 +262,26 @@ public class Matrix {
         resultMatrix.subtract(matrix2);
         return resultMatrix;
     }
+
+    // 3.c. Метод. Умножение матриц.
+    public static Matrix getMultiplication(Matrix matrix1, Matrix matrix2) {
+        if (matrix1.getRowsAmount() != matrix2.getColumnsAmount()) {
+            throw new IllegalArgumentException("Число столбцов первой матрицы должно быть равно числу строк второй!");
+        }
+        int resultMatrixSize = matrix1.getRowsAmount();
+
+        Matrix resultMatrix = new Matrix(resultMatrixSize, resultMatrixSize);
+
+        // Скалярное произведение строк на столбцы.
+        for (int i = 0; i < resultMatrixSize; i++) {
+            for (int j = 0; j < resultMatrixSize; j++) {
+                double resultMatrixItem = Vector.getDotProduct(matrix1.getRow(i), matrix2.getColumn(j));
+                resultMatrix.vectors[i].setComponent(j, resultMatrixItem);
+            }
+        }
+
+        return resultMatrix;
+    }
 }
 
 /*
@@ -277,9 +297,9 @@ public class Matrix {
       строки разной длины, поэтому длину берем из первой строки.
 
     2.d. Метод. Транспонирование матрицы.
-     - столбцы исходной матрицы становятся строками результирующей.
-     -  для получения транспонированной матрицы достаточно каждую строку исходной матрицы
-     записать в виде столбца результирующей, соблюдая порядок следования элементов.
+    - столбцы исходной матрицы становятся строками результирующей.
+    -  для получения транспонированной матрицы достаточно каждую строку исходной матрицы
+    записать в виде столбца результирующей, соблюдая порядок следования элементов.
 
     2.g. Метод toString().
     - используется toString() из Vector для вывода внутренних векторов.
@@ -289,6 +309,13 @@ public class Matrix {
     - определитель не изменится, если к строке добавить строку, умноженную на число.
     - определитель - еть произведение элементов по диагонали.
     - при перемене строк, определитель меняет знак, поэтому считаем число замен.
+
+    3.c. Метод. Умножение матриц.
+    - матрицы можно умножить только если
+    число столбцов первой равно числу строк второй или наоборот.
+    - произведением двух матриц есть матрица,
+    у которой столько строк, сколько их у левого сомножителя,
+    и столько столбцов, сколько их у правого сомножителя.
     
     Вопросы:
     ===============================
@@ -309,5 +336,6 @@ public class Matrix {
        как это сделано сейчас?
 
     4. 3.a. Метод. Сложение матриц.
-       - почему нельзя так: return resultMatrix.add(matrix2); ?
+       - почему нельзя так:
+         return resultMatrix.add(matrix2); ?
  */
