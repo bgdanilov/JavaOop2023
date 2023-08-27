@@ -8,7 +8,7 @@ public class Matrix {
     // 1.a. Конструктор - создание пустой матрицы размера n*m.
     public Matrix(int n, int m) {
         if (n <= 0 || m <= 0) {
-            throw new IllegalArgumentException("Размерность матрицы не может быть ноль на ноль и меньше.");
+            throw new IllegalArgumentException("1.2. Matrix(int n, int m): n, m - размерность матрицы не может быть ноль на ноль и меньше.");
         }
 
         // Создаем строки матрицы - массив объектов Vector c n-элементами.
@@ -45,9 +45,12 @@ public class Matrix {
         for (double[] subArrays : sourceArray) {
             int temp = subArrays.length;
 
+            /*
+            Тут можно положиться на исключение из Vector?
             if (temp == 0) {
-                throw new IllegalArgumentException("Размер подмассива должен быть больше нуля!");
+                throw new IllegalArgumentException("1.c. Размер подмассива должен быть больше нуля!");
             }
+            */
 
             if (temp > m) {
                 m = temp;
@@ -103,7 +106,7 @@ public class Matrix {
     // 2.b. Метод. Получение и задание вектора-строки по индексу.
     public Vector getRow(int index) {
         if (index < 0 || index > getRowsAmount() - 1) {
-            throw new IllegalArgumentException("Неверный индекс.");
+            throw new IllegalArgumentException("2.b. Vector getRow(int index): index - неверный индекс.");
         }
 
         return new Vector(vectors[index]);
@@ -113,9 +116,8 @@ public class Matrix {
         int n = this.getRowsAmount();
         int m = this.getColumnsAmount();
 
-        // index считается от 0, а n - от 1.
         if (sourceVector.getSize() > m || (index < 0 || index > n - 1)) {
-            throw new IllegalArgumentException("Векторы не совпадают по размеру или неверный индекс.");
+            throw new IllegalArgumentException("2.b. setRow(Vector sourceVector, int index): index - векторы не совпадают по размеру или неверный индекс.");
         }
 
         for (int i = 0; i < m; i++) {
@@ -126,7 +128,7 @@ public class Matrix {
     // 2.c. Метод. Получение вектора-столбца по индексу.
     public Vector getColumn(int index) {
         if (index < 0 || index > getColumnsAmount() - 1) {
-            throw new IllegalArgumentException("Неверный индекс.");
+            throw new IllegalArgumentException("2.c. getColumn(int index): index - неверный индекс.");
         }
 
         int n = getRowsAmount();
@@ -162,7 +164,7 @@ public class Matrix {
     // 2.f. Метод. Вычисление определителя.
     public double getDeterminant() {
         if (getRowsAmount() != getColumnsAmount()) {
-            throw new IllegalArgumentException("Матрица должна быть квадратной!");
+            throw new IllegalArgumentException("2.f. getDeterminant(): матрица должна быть квадратной!");
         }
 
         Matrix triangleMatrix = new Matrix(vectors);
@@ -225,7 +227,7 @@ public class Matrix {
     public void add(Matrix matrix) {
         if (this.getColumnsAmount() != matrix.getColumnsAmount()
                 && this.getRowsAmount() != matrix.getRowsAmount()) {
-            throw new IllegalArgumentException("Матрицы должны быть одинаковой размрности!");
+            throw new IllegalArgumentException("2.i. add(Matrix matrix): матрицы должны быть одинаковой размрности!");
         }
 
         int matrixSize = getRowsAmount();
@@ -239,7 +241,7 @@ public class Matrix {
     public void subtract(Matrix matrix) {
         if (this.getColumnsAmount() != matrix.getColumnsAmount()
                 && this.getRowsAmount() != matrix.getRowsAmount()) {
-            throw new IllegalArgumentException("Матрицы должны быть одинаковой размерности!");
+            throw new IllegalArgumentException("2.j. subtract(Matrix matrix): матрицы должны быть одинаковой размерности!");
         }
 
         int matrixSize = getRowsAmount();
@@ -266,7 +268,7 @@ public class Matrix {
     // 3.c. Метод. Умножение матриц.
     public static Matrix getMultiplication(Matrix matrix1, Matrix matrix2) {
         if (matrix1.getRowsAmount() != matrix2.getColumnsAmount()) {
-            throw new IllegalArgumentException("Число столбцов первой матрицы должно быть равно числу строк второй!");
+            throw new IllegalArgumentException("3.c. getMultiplication(Matrix matrix1, Matrix matrix2): число столбцов первой матрицы должно быть равно числу строк второй!");
         }
         int resultMatrixSize = matrix1.getRowsAmount();
 
@@ -338,4 +340,7 @@ public class Matrix {
     4. 3.a. Метод. Сложение матриц.
        - почему нельзя так:
          return resultMatrix.add(matrix2); ?
+
+    5. MatrixMain:
+       - 2.f. Метод. Вычисление определителя. Как правильно закоментить, чтобы не было варнинга.
  */
