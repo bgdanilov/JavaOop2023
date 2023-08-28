@@ -5,27 +5,44 @@ import java.util.List;
 import java.util.ListIterator;
 
 
-public class ArrayList<E> implements List<E> {
+public class ArrayListCustom<E> implements List<E> {
+    E[] items;
+    private int size; // количество реальных элементов, не путать с вместимостью.
+    private int capacity;
+
+    // 1. Конструктор, принимающий capacity - вместимость.
+    public ArrayListCustom(int capacity) {
+        size = 0;
+        //noinspection unchecked
+        items = (E[]) new Object[capacity];
+    }
+
+    // 2. Метод. Возвращает количество элементов списка.
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
+    // 3. Метод. Пустой ли список.
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
+    // 4. Метод. Содержится ли элемент в списке?
+    // TODO: Пока непонятно.
     @Override
     public boolean contains(Object o) {
         return false;
     }
 
     @Override
+    // 5. Не надо делать по условию.
     public Iterator<E> iterator() {
         return null;
     }
 
+    // 6. Метод. Преобразует список в массив.
     @Override
     public Object[] toArray() {
         return new Object[0];
@@ -88,7 +105,7 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public void add(int i, E e) {
-
+        items[i] = e;
     }
 
     @Override
