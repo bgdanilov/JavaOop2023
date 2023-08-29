@@ -8,13 +8,32 @@ import java.util.ListIterator;
 public class ArrayListCustom<E> implements List<E> {
     E[] items;
     private int size; // количество реальных элементов, не путать с вместимостью.
-    private int capacity;
+    private int capacity = 10;
 
     // 1. Конструктор, принимающий capacity - вместимость.
+    public ArrayListCustom() {
+        size = 0;
+        //noinspection unchecked
+        items = (E[]) new Object[capacity];
+    }
+
     public ArrayListCustom(int capacity) {
         size = 0;
         //noinspection unchecked
         items = (E[]) new Object[capacity];
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder().append("{");
+
+        for (int i = 0; i < capacity; i++) {
+            if (items[i] != null) {
+                sb.append(items[i]).append(", ");
+            }
+        }
+
+        return sb.append("}").toString();
     }
 
     // 2. Метод. Возвращает количество элементов списка.
