@@ -7,11 +7,13 @@ import java.util.Arrays;
 
 public class ArrayListMain {
     public static void main(String[] args) {
-        ArrayListCustom<String> strings = new ArrayListCustom<>(10);
+        ArrayListCustom<String> strings = new ArrayListCustom<>();
 
         System.out.println(strings.size());
         System.out.println(strings.isEmpty());
 
         strings.add(0, "zero");
+
+        System.out.println(strings);
     }
 }
