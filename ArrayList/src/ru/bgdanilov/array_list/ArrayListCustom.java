@@ -1,20 +1,17 @@
 package ru.bgdanilov.array_list;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 
 public class ArrayListCustom<E> implements List<E> {
     E[] items;
     private int size; // количество реальных элементов, не путать с вместимостью.
-    private int capacity = 10;
+    private int modCount = 0;
 
     // 1. Конструктор, принимающий capacity - вместимость.
     public ArrayListCustom() {
         size = 0;
         //noinspection unchecked
-        items = (E[]) new Object[capacity];
+        items = (E[]) new Object[10];
     }
 
     public ArrayListCustom(int capacity) {
@@ -23,20 +20,49 @@ public class ArrayListCustom<E> implements List<E> {
         items = (E[]) new Object[capacity];
     }
 
+    // Метод. Возвращает вместимость списка.
+    public int getCapacity() {
+        return items.length;
+    }
+
+    // Увеличить вместимость списка при необходимости.
+    public void ensureCapacity() {
+        if (size >= getCapacity()) {
+            items = Arrays.copyOf(items, (3 * size) /2 + 1);
+        }
+    }
+
+    // Вложенный класс для итератора.
+    private class MyListIterator implements Iterator<E> {
+        private int currentIndex = -1; // текущий индеск в списке.
+        private int modCount = ArrayListCustom.this.modCount; // количество изменений.
+
+        public boolean hasNext() {
+            // TODO: next должен кидать исключение NoSuchElementException, если коллекция кончилась
+            // TODO: next должен кидать исключение ConcurrentModificationException,
+            //       если в коллекции добавились/удалились элементы за время обхода.
+            return currentIndex + 1 < size;
+        }
+
+        public E next() {
+            return items[currentIndex];
+        }
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder().append("{");
+        StringBuilder sb = new StringBuilder().append("{").append(items[0]);
 
-        for (int i = 0; i < capacity; i++) {
+        for (int i = 1; i < size(); i++) {
             if (items[i] != null) {
-                sb.append(items[i]).append(", ");
+                sb.append(", ").append(items[i]);
             }
         }
 
         return sb.append("}").toString();
     }
 
-    // 2. Метод. Возвращает количество элементов списка.
+    // Метод. Возвращает количество элементов списка.
     @Override
     public int size() {
         return size;
@@ -56,9 +82,9 @@ public class ArrayListCustom<E> implements List<E> {
     }
 
     @Override
-    // 5. Не надо делать по условию.
+    // 5. Итератор. Не надо делать?
     public Iterator<E> iterator() {
-        return null;
+        return new MyListIterator();
     }
 
     // 6. Метод. Преобразует список в массив.
@@ -72,9 +98,16 @@ public class ArrayListCustom<E> implements List<E> {
         return null;
     }
 
+    // 8. Метод. Добавление элемента в конец списка.
     @Override
     public boolean add(E e) {
-        return false;
+        //Проверка на вместимость.
+        ensureCapacity();
+        items[size] = e;
+        size++;
+        modCount++;
+
+        return true;
     }
 
     @Override
@@ -122,9 +155,23 @@ public class ArrayListCustom<E> implements List<E> {
         return null;
     }
 
+    // Вставить элемент по указанному индексу.
     @Override
     public void add(int i, E e) {
-        items[i] = e;
+        if (i < 0 || i > size) {
+            throw new IllegalArgumentException("add(int i, E e): i - неверный индекс элемента.");
+        }
+
+        if (i == size) {
+            add(e);
+        } else {
+            // Скопировать последние size-i элементов исходного массива
+            // в конечный массив (в него же), начиная с опреденного индекса i + 1:
+            System.arraycopy(items, i, items, i + 1, size - i);
+            items[i] = e;
+            size++;
+            modCount++;
+        }
     }
 
     @Override
@@ -157,3 +204,11 @@ public class ArrayListCustom<E> implements List<E> {
         return null;
     }
 }
+
+/* Описание класса.
+    1. Длина нового массива рассчитывается так (3*n)/2+1,
+    где n – это длина старого массива.
+    Т.е. если старый массив был длиной 100 элементов, то новый будет 300/2+1 = 151.
+
+
+ */
