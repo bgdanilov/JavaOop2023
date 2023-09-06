@@ -1,7 +1,9 @@
 package ru.bgdanilov.shapes;
 
-// Сделаем Square классом-record, как просит IDE.
-// record - это класс с неизменными (final) полями и отсутствующими сеттерами.
+/**
+ * Сделаем Square классом-record, как просит IDE.
+ * record - это класс с неизменными (final) полями и отсутствующими сеттерами.
+ */
 public record Square(double sideLength) implements Shape {
     @Override
     public double getHeight() {
@@ -25,7 +27,6 @@ public record Square(double sideLength) implements Shape {
 
     @Override
     public String toString() {
-        // По-сути  - имя класса.
         return getClass().getSimpleName() + ", сторона = " + sideLength;
     }
 
@@ -37,7 +38,7 @@ public record Square(double sideLength) implements Shape {
         }
 
         // Объект передали пустой или класса, отличного от сравниваемого.
-        if (object == null || this.getClass() != object.getClass()) {
+        if (object == null || getClass() != object.getClass()) {
             return false;
         }
 
@@ -51,11 +52,3 @@ public record Square(double sideLength) implements Shape {
         return Double.hashCode(sideLength);
     }
 }
-
-/**
- *  Описание класса. Заметки.
- *  ===================
- *  1. Я понимаю так, что для простого класса с одним полем, можно не переопределять hashCode()?
- *     Или пререопределить на как Double.hashCode() т.к. нам нужен int ?
- *     - В любом случае пришлось бы явно переопределять hashCode, даже с int.
-*/

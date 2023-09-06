@@ -20,48 +20,48 @@ public class Triangle implements Shape {
         this.x3 = x3;
         this.y3 = y3;
 
-        side1Length = getSideLength(x2, x1, y2, y1);
-        side2Length = getSideLength(x3, x2, y3, y2);
-        side3Length = getSideLength(x3, x1, y3, y1);
+        side1Length = getSideLength(x1, y2, x2, y2);
+        side2Length = getSideLength(x2, y2, x3, y3);
+        side3Length = getSideLength(x3, y3, x1, y1);
     }
 
     public double getX1() {
-        return this.x1;
+        return x1;
     }
 
     public double getX2() {
-        return this.x2;
+        return x2;
     }
 
     public double getX3() {
-        return this.x3;
+        return x3;
     }
 
     public double getY1() {
-        return this.y1;
+        return y1;
     }
 
     public double getY2() {
-        return this.y2;
+        return y2;
     }
 
     public double getY3() {
-        return this.y3;
+        return y3;
     }
 
-    public double getSide1() {
-        return this.side1Length;
+    public double getSide1Length() {
+        return side1Length;
     }
 
-    public double getSide2() {
-        return this.side2Length;
+    public double getSide2Length() {
+        return side2Length;
     }
 
-    public double getSide3() {
-        return this.side3Length;
+    public double getSide3Length() {
+        return side3Length;
     }
 
-    private static double getSideLength(double x2, double x1, double y2, double y1) {
+    private static double getSideLength(double x1, double y1, double x2, double y2) {
         return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     }
 
@@ -90,11 +90,10 @@ public class Triangle implements Shape {
 
     @Override
     public String toString() {
-        // По-сути  - имя класса.
         return getClass().getSimpleName() + ", "
                 + "(" + x1 + "; " + y2 + "), "
                 + "(" + x2 + "; " + y2 + "), "
-                + "(" + x3 + "; " + y2 + ")";
+                + "(" + x3 + "; " + y3 + ")";
     }
 
     @Override
@@ -105,7 +104,7 @@ public class Triangle implements Shape {
         }
 
         // Объект передали пустой или класса, отличного от сравниваемого.
-        if (object == null || this.getClass() != object.getClass()) {
+        if (object == null || getClass() != object.getClass()) {
             return false;
         }
 
@@ -135,8 +134,8 @@ public class Triangle implements Shape {
     }
 }
 
-/**
- *  Описание класса. Заметки.
+/*
+ *  Заметки.
  *  ===================
  *  1. Почему этот клас не предлагается сделать record ? Вроде поля final, сеттеров нет...
  *     - Конструктор записи не сможет вычислить эти значения, он может только присвоить им значения аргументов.

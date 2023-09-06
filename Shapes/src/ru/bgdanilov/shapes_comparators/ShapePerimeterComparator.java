@@ -11,8 +11,8 @@ public class ShapePerimeterComparator implements Comparator<Shape> {
     }
 }
 
-/**
- * Описание класса. Заметки.
+/*
+ * Заметки.
  * ===================
  * 1. Можно менять местами object2 и object1
  * в Double.compare(object2.getPerimeter(), object1.getPerimeter())

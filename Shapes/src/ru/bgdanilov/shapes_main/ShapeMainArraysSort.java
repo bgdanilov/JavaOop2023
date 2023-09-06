@@ -57,5 +57,10 @@ public class ShapeMainArraysSort {
         System.out.println("4. Проверим треугольники:");
         System.out.println(new Triangle(1, 1, 4, 1, 4, 4).equals(shapes[2]));
         System.out.println(new Triangle(0, 1, 4, 1, 4, 4).equals(shapes[2]));
+
+        // Почему я не могу получть getX1() из фигуры, которая в массиве?
+        Triangle triangle = new Triangle(1,1,4,1,4,4);
+        System.out.println(triangle.getX1());
+        //System.out.println(shapes[2].getX1());
     }
 }
