@@ -1,11 +1,15 @@
 package ru.bgdanilov.list;
 
+import java.util.NoSuchElementException;
+import java.lang.ArrayIndexOutOfBoundsException;
+
 // Это класс односвязного списка.
 public class List<E> {
     private ListItem<E> head; // первый элемент - голова списка.
     private int length; //  тут храним длину списка.
 
-    public List() {}
+    public List() {
+    }
 
     // 1.1. Получение размера списка.
     public int getLength() {
@@ -27,7 +31,7 @@ public class List<E> {
     // 1.2. Получение значения первого элемента.
     public E getFirst() {
         if (head == null) {
-            throw new IllegalArgumentException("У пустого списка не может быть первого элемента!");
+            throw new NoSuchElementException("У пустого списка не может быть первого элемента!");
         }
 
         return head.getData();
@@ -36,8 +40,8 @@ public class List<E> {
     // 1.3. Получение/изменение значения по указанному индексу.
     // Получение.
     public E getByIndex(int index) {
-        if (index < 0 || index > length - 1) {
-            throw new IllegalArgumentException("1.3. getItemByIndex() index: индекс выходит за границы списка.");
+        if (index < 0 || index >= length) {
+            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за границы [0 - "+ (length - 1) + "] списка.");
         }
 
         ListItem<E> currentItem = head;
@@ -52,7 +56,7 @@ public class List<E> {
     // Изменение с выдачей старого значения.
     public E setByIndex(int index, E data) {
         if (index < 0 || index >= length) {
-            throw new IllegalArgumentException("1.3. changeItemByIndex() index: индекс выходит за границы списка.");
+            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за границы [0 - "+ (length - 1) + "] списка.");
         }
 
         ListItem<E> currentItem = head;
@@ -70,18 +74,20 @@ public class List<E> {
 
     // 1.4. Удаление элемента по индексу, пусть выдает значение элемента.
     public E deleteByIndex(int index) {
-        if (index < 0 || index > length - 1) {
-            throw new IllegalArgumentException("1.4. deleteItemByIndex() index: индекс выходит за границы списка.");
+        if (index < 0 || index >= length) {
+            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за границы [0 - "+ (length - 1) + "] списка.");
         }
 
         ListItem<E> currentItem = head;
-        ListItem<E> previousItem = head;
+       // ListItem<E> previousItem = head;
 
         // Если нужно удалить нулевой элемент, то записываем в голову следующий за ним.
         if (index == 0) {
             //setHead(currentItem.getNext());
             head = currentItem.getNext();
         } else {
+            ListItem<E> previousItem = null;
+
             for (int i = 0; i < index; i++) { //3
                 previousItem = currentItem; // 3
                 currentItem = currentItem.getNext();// 4
@@ -110,7 +116,7 @@ public class List<E> {
     // 1.6. Вставка элемента по индексу.
     public void addByIndex(int index, E data) {
         if (index < 0 || index > length) {
-            throw new IllegalArgumentException("1.6. addItemByIndex() index: индекс выходит за границы списка.");
+            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за границы [0 - "+ (length - 1) + "] списка.");
         }
 
         // Индекс равен нулю. Значит в начало вставить.
@@ -145,7 +151,7 @@ public class List<E> {
             // Если значение текущего элемента идентично искомому значению:
             if (currentItem.getData().equals(data)) {
                 if (currentItem.equals(previousItem)) {
-                   // setHead(currentItem.getNext());
+                    // setHead(currentItem.getNext());
                     head = currentItem.getNext();
                 } else {
                     previousItem.setNext(currentItem.getNext());
@@ -163,6 +169,10 @@ public class List<E> {
 
     // 1.8. Удаление первого элемента, пусть выдает значение элемента.
     public E deleteFirst() {
+        if (head == null) {
+            throw new NoSuchElementException("У пустого списка не может быть первого элемента!");
+        }
+
         return this.deleteByIndex(0);
     }
 
@@ -275,4 +285,5 @@ public class List<E> {
     2. getItemByIndex тоже Item лишнее?
     3. Как правильно оформить сообщение исключения?
     4. Где посмотреть стек вызовов?
+    5. Почитать что такое NoSuchElementException. И, вообще, основные подвиды исключений.
  */
