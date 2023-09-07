@@ -4,6 +4,8 @@ package ru.bgdanilov.shapes;
  * Поля неизменные, поэтому этот класс - record.
  * Оставим этот класс обычным, не record, для демонстрации отличий синтаксиса.
  */
+// Игнорирование warning устаревшего кода для маскировки факта, что класс - не record.
+@SuppressWarnings("dep-ann")
 public class Rectangle implements Shape {
     private final double height;
     private final double width;
