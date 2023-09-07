@@ -1,32 +1,39 @@
 package ru.bgdanilov.list;
 
 // Это класс элемента односвязного списка.
-public class ListItem<T> {
-    private T data; // содержимое элемента.
-    private ListItem<T> next; // ссылка на следующий за ним элемент.
+class ListItem<E> {
+    private E data; // содержимое элемента.
+    private ListItem<E> next; // ссылка на следующий за ним элемент.
 
-    public ListItem(T data) {
+    public ListItem(E data) {
         this.data = data;
-        this.next = null;
+       // this.next = null;
     }
 
-    public T getData() {
-        return this.data;
+    public E getData() {
+        return data;
     }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public void setData(int index, T data) {
+/*
+    public void setData(E data) {
         this.data = data;
     }
+*/
+    public void setData(int index, E data) {
+        this.data = data;
+    }
 
-    public ListItem<T> getNext() {
+    public ListItem<E> getNext() {
         return next;
     }
 
-    public void setNext(ListItem<T> next) {
+    public void setNext(ListItem<E> next) {
         this.next = next;
     }
 }
+
+/*
+ *  Заметки.
+ *  ===================
+ *  1. Отсутствие модификатора у класса, метода или поля значит к нему модификатора по умолчанию.
+ *  Класс, поле или метод виден всем классам в текущем пакете.
+ */
