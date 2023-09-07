@@ -1,17 +1,11 @@
 package ru.bgdanilov.list;
 
 // Это класс односвязного списка.
-public class List<T> {
-    private ListItem<T> head; // первый элемент - голова списка.
-    private int length = 0; //  тут храним длину списка.
+public class List<E> {
+    private ListItem<E> head; // первый элемент - голова списка.
+    private int length; //  тут храним длину списка.
 
-    public List() {
-        head = null; // значит список пустой.
-    }
-
-    public void setHead(ListItem<T> head) {
-        this.head = head;
-    }
+    public List() {}
 
     // 1.1. Получение размера списка.
     public int getLength() {
@@ -22,7 +16,7 @@ public class List<T> {
     public int countLength() {
         int length = 0;
 
-        for (ListItem<T> currentItem = head;
+        for (ListItem<E> currentItem = head;
              currentItem != null;
              currentItem = currentItem.getNext()) {
             length++;
@@ -31,9 +25,9 @@ public class List<T> {
     }
 
     // 1.2. Получение значения первого элемента.
-    public T getFirstItem() {
+    public E getFirst() {
         if (head == null) {
-            throw new IllegalArgumentException("1.2. getFirstItem() head == 0: у пустого списка не может быть первого элемента!");
+            throw new IllegalArgumentException("У пустого списка не может быть первого элемента!");
         }
 
         return head.getData();
@@ -41,12 +35,12 @@ public class List<T> {
 
     // 1.3. Получение/изменение значения по указанному индексу.
     // Получение.
-    public T getItemByIndex(int index) {
+    public E getByIndex(int index) {
         if (index < 0 || index > length - 1) {
             throw new IllegalArgumentException("1.3. getItemByIndex() index: индекс выходит за границы списка.");
         }
 
-        ListItem<T> currentItem = head;
+        ListItem<E> currentItem = head;
         // TODO: Добавить исключение для пустого списка. Или вообще запретить создвать пустые списки.
         for (int i = 0; i < index; i++) {
             currentItem = currentItem.getNext();
@@ -56,35 +50,37 @@ public class List<T> {
     }
 
     // Изменение с выдачей старого значения.
-    public T changeItemByIndex(int index, T data) {
-        if (index < 0 || index > length - 1) {
+    public E setByIndex(int index, E data) {
+        if (index < 0 || index >= length) {
             throw new IllegalArgumentException("1.3. changeItemByIndex() index: индекс выходит за границы списка.");
         }
 
-        ListItem<T> currentItem = head;
+        ListItem<E> currentItem = head;
+
         // TODO: Добавить исключение для пустого списка. Или вообще запретить создвать пустые списки.
         for (int i = 0; i < index; i++) {
             currentItem = currentItem.getNext();
         }
 
-        T oldListItem = currentItem.getData();
+        E oldData = currentItem.getData();
         currentItem.setData(index, data);
 
-        return oldListItem;
+        return oldData;
     }
 
     // 1.4. Удаление элемента по индексу, пусть выдает значение элемента.
-    public T deleteItemByIndex(int index) {
+    public E deleteByIndex(int index) {
         if (index < 0 || index > length - 1) {
             throw new IllegalArgumentException("1.4. deleteItemByIndex() index: индекс выходит за границы списка.");
         }
 
-        ListItem<T> currentItem = head;
-        ListItem<T> previousItem = head;
+        ListItem<E> currentItem = head;
+        ListItem<E> previousItem = head;
 
         // Если нужно удалить нулевой элемент, то записываем в голову следующий за ним.
         if (index == 0) {
-            setHead(currentItem.getNext());
+            //setHead(currentItem.getNext());
+            head = currentItem.getNext();
         } else {
             for (int i = 0; i < index; i++) { //3
                 previousItem = currentItem; // 3
@@ -103,41 +99,33 @@ public class List<T> {
     }
 
     // 1.5. Вставка элемента в начало.
-    public void addFirstItem(T data) {
-        ListItem<T> currentListItem = head;
-
-        // В голову записываем новый созданный элемент.
-        head = new ListItem<>(data);
-
-        // Если список был не пуст, то в next новой головы записываем
-        // бывший головной элемент.
-        if (currentListItem != null) {
-            // В головной элемент записываем ссылку на бывший текущий элемент.
-            head.setNext(currentListItem);
-        }
-
+    public void addFirst(E data) {
+        // Запоминаем ссылку на текущий элемент, чтобы сделать ее потом next.
+        // Как это currentListItem не нужна?
+        ListItem<E> currentListItem = head;
+        head = new ListItem<>(data, currentListItem);
         length++;
     }
 
     // 1.6. Вставка элемента по индексу.
-    public void addItemByIndex(int index, T data) {
+    public void addByIndex(int index, E data) {
         if (index < 0 || index > length) {
             throw new IllegalArgumentException("1.6. addItemByIndex() index: индекс выходит за границы списка.");
         }
 
         // Индекс равен нулю. Значит в начало вставить.
         if (index == 0) {
-            addFirstItem(data);
+            addFirst(data);
         } else {
-            ListItem<T> currentItem = head;
-            ListItem<T> previousItem = head;
+            ListItem<E> currentItem = head;
+            ListItem<E> previousItem = head;
 
             for (int i = 0; i < index; i++) {
                 previousItem = currentItem;
                 currentItem = currentItem.getNext();
             }
 
-            ListItem<T> newListItem = new ListItem<>(data);
+            ListItem<E> newListItem = new ListItem<>(data);
             previousItem.setNext(newListItem);
             newListItem.setNext(currentItem);
 
@@ -146,18 +134,19 @@ public class List<T> {
     }
 
     // 1.7. Удаление узла по значению, пусть выдает true, если элемент был удален.
-    public boolean deleteItemByData(T data) {
+    public boolean deleteByData(E data) {
         boolean isItemDeleted = false;
 
         // Начинаем с головы, пока не дойдем до конца.
-        for (ListItem<T> currentItem = head, previousItem = head;
+        for (ListItem<E> currentItem = head, previousItem = head;
              currentItem != null;
              previousItem = currentItem,
                      currentItem = currentItem.getNext()) {
             // Если значение текущего элемента идентично искомому значению:
             if (currentItem.getData().equals(data)) {
                 if (currentItem.equals(previousItem)) {
-                    setHead(currentItem.getNext());
+                   // setHead(currentItem.getNext());
+                    head = currentItem.getNext();
                 } else {
                     previousItem.setNext(currentItem.getNext());
                 }
@@ -173,17 +162,17 @@ public class List<T> {
     }
 
     // 1.8. Удаление первого элемента, пусть выдает значение элемента.
-    public T deleteFirstItem() {
-        return this.deleteItemByIndex(0);
+    public E deleteFirst() {
+        return this.deleteByIndex(0);
     }
 
     // 1.9. Разворот списка за линейное время.
     public void reverse() {
-        // TODO: Добавить исключение для пустого списка. Или вообще запретить создвать пустые списки.
-        ListItem<T> currentItem = head; // адрес элемента в памяти.
-        ListItem<T> previousItem = null;
+        // TODO: Добавить исключение для пустого списка. Или вообще запретить создавать пустые списки.
+        ListItem<E> currentItem = head; // адрес элемента в памяти.
+        ListItem<E> previousItem = null;
 
-        for (ListItem<T> nextCurrent = currentItem.getNext();
+        for (ListItem<E> nextCurrent = currentItem.getNext();
              nextCurrent != null;
              previousItem = currentItem, currentItem = nextCurrent, nextCurrent = nextCurrent.getNext()) {
             currentItem.setNext(previousItem);
@@ -194,22 +183,22 @@ public class List<T> {
     }
 
     // 1.10. Копирование списка.
-    public List<T> copyList() {
-        List<T> newList = new List<>();
+    public List<E> copy() {
+        List<E> newList = new List<>();
 
-        for (ListItem<T> currentItem = head;
+        for (ListItem<E> currentItem = head;
              currentItem != null;
              currentItem = currentItem.getNext()) {
-            newList.addItem(currentItem.getData());
+            newList.add(currentItem.getData());
         }
 
         return newList;
     }
 
     // Добавление элемента в конец.
-    public void addItem(T data) {
+    public void add(E data) {
         // Создается элемент data = "One", next = null.
-        ListItem<T> newListItem = new ListItem<>(data);
+        ListItem<E> newListItem = new ListItem<>(data);
 
         // Если голова равна нулю, что происходит при первичном создании списка,
         // то созданный элемент - первый и голова - есть ссылка на него.
@@ -220,7 +209,7 @@ public class List<T> {
             // В противном случае, если голова есть, то нужно дойти до конца списка
             // и вставить элемент туда.
         } else {
-            ListItem<T> currentListItem = head; // ссылка на текущий элемент.
+            ListItem<E> currentListItem = head; // ссылка на текущий элемент.
             // Пока у текущего следующий элемент есть..
             while (currentListItem.getNext() != null) {
                 // ...текущий элемент равен следующему.
@@ -236,7 +225,7 @@ public class List<T> {
     @Override
     public String toString() {
         // Текущий элемент.
-        ListItem<T> currentListItem;
+        ListItem<E> currentListItem;
         StringBuilder sb = new StringBuilder();
 
         // Все справедливо если список не пустой.
@@ -276,6 +265,14 @@ public class List<T> {
     - 2. Делаем чтобы текущий элемент ссылался на предыдущий. И назначаем его головой.
     - 3. Назначаем в качестве нового предыдущего элемента текущий.
     - 4. А новый текущий теперь будет элемент, бывший следующий у у бывшего текущего,
-    - 5. адрес которого мы замомнили в temp.
+    - 5. адрес которого мы запомнили в temp.
     - 6. Повторяем 2. Пока не закончится список.
+
+
+    Вопросы.
+
+    1. Пустой конструктор - почитать?
+    2. getItemByIndex тоже Item лишнее?
+    3. Как правильно оформить сообщение исключения?
+    4. Где посмотреть стек вызовов?
  */
