@@ -10,6 +10,11 @@ class ListItem<E> {
        // this.next = null;
     }
 
+    public ListItem(E data, ListItem<E> next) {
+        this.data = data;
+        this.next = next;
+    }
+
     public E getData() {
         return data;
     }

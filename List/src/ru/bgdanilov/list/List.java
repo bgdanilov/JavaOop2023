@@ -27,7 +27,7 @@ public class List<E> {
     // 1.2. Получение значения первого элемента.
     public E getFirst() {
         if (head == null) {
-            throw new IllegalArgumentException("1.2. getFirstItem() head == null: у пустого списка не может быть первого элемента!");
+            throw new IllegalArgumentException("У пустого списка не может быть первого элемента!");
         }
 
         return head.getData();
@@ -51,20 +51,21 @@ public class List<E> {
 
     // Изменение с выдачей старого значения.
     public E setByIndex(int index, E data) {
-        if (index < 0 || index > length - 1) {
+        if (index < 0 || index >= length) {
             throw new IllegalArgumentException("1.3. changeItemByIndex() index: индекс выходит за границы списка.");
         }
 
         ListItem<E> currentItem = head;
+
         // TODO: Добавить исключение для пустого списка. Или вообще запретить создвать пустые списки.
         for (int i = 0; i < index; i++) {
             currentItem = currentItem.getNext();
         }
 
-        E oldListItem = currentItem.getData();
+        E oldData = currentItem.getData();
         currentItem.setData(index, data);
 
-        return oldListItem;
+        return oldData;
     }
 
     // 1.4. Удаление элемента по индексу, пусть выдает значение элемента.
@@ -99,18 +100,10 @@ public class List<E> {
 
     // 1.5. Вставка элемента в начало.
     public void addFirst(E data) {
+        // Запоминаем ссылку на текущий элемент, чтобы сделать ее потом next.
+        // Как это currentListItem не нужна?
         ListItem<E> currentListItem = head;
-
-        // В голову записываем новый созданный элемент.
-        head = new ListItem<>(data);
-
-        // Если список был не пуст, то в next новой головы записываем
-        // бывший головной элемент.
-        if (currentListItem != null) {
-            // В головной элемент записываем ссылку на бывший текущий элемент.
-            head.setNext(currentListItem);
-        }
-
+        head = new ListItem<>(data, currentListItem);
         length++;
     }
 
@@ -175,7 +168,7 @@ public class List<E> {
 
     // 1.9. Разворот списка за линейное время.
     public void reverse() {
-        // TODO: Добавить исключение для пустого списка. Или вообще запретить создвать пустые списки.
+        // TODO: Добавить исключение для пустого списка. Или вообще запретить создавать пустые списки.
         ListItem<E> currentItem = head; // адрес элемента в памяти.
         ListItem<E> previousItem = null;
 
@@ -280,4 +273,6 @@ public class List<E> {
 
     1. Пустой конструктор - почитать?
     2. getItemByIndex тоже Item лишнее?
+    3. Как правильно оформить сообщение исключения?
+    4. Где посмотреть стек вызовов?
  */
