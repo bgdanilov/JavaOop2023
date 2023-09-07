@@ -1,7 +1,9 @@
 package ru.bgdanilov.shapes;
 
-// Поля неизменные, поэтому этот класс - record.
-// Оставим этот класс обычным, не record, для демонстрации отличий синтаксиса.
+/**
+ * Поля неизменные, поэтому этот класс - record.
+ * Оставим этот класс обычным, не record, для демонстрации отличий синтаксиса.
+ */
 public class Rectangle implements Shape {
     private final double height;
     private final double width;
@@ -34,7 +36,6 @@ public class Rectangle implements Shape {
     // Переопределение toString.
     @Override
     public String toString() {
-        // По-сути  - имя класса.
         return getClass().getSimpleName() + ", высота = " + height + ", ширина = " + width;
     }
 
@@ -46,7 +47,7 @@ public class Rectangle implements Shape {
         }
 
         // Объект передали пустой или класса, отличного от сравниваемого.
-        if (object == null || this.getClass() != object.getClass()) {
+        if (object == null || getClass() != object.getClass()) {
             return false;
         }
 
