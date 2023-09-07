@@ -57,5 +57,35 @@ public class ShapeMainArraysSort {
         System.out.println("4. Проверим треугольники:");
         System.out.println(new Triangle(1, 1, 4, 1, 4, 4).equals(shapes[2]));
         System.out.println(new Triangle(0, 1, 4, 1, 4, 4).equals(shapes[2]));
+        System.out.println();
+
+        // Вызываем методы треугольника, которых нет в интерфейсе
+        // или они не используются, чтобы не было warning.
+        System.out.println("5. Координаты вершин и длины сторон, высота и ширина треугольника:");
+        Triangle shape2 = (Triangle) shapes[2];
+
+        System.out.println("x1 = " + shape2.getX1());
+        System.out.println("y1 = " + shape2.getY1());
+        System.out.println("x2 = " + shape2.getX2());
+        System.out.println("y2 = " + shape2.getY2());
+        System.out.println("x3 = " + shape2.getX3());
+        System.out.println("y3 = " + shape2.getY3());
+
+        System.out.println("Side1Length = " + shape2.getSide1Length());
+        System.out.println("Side2Length = " + shape2.getSide2Length());
+        System.out.println("Side3Length = " + shape2.getSide3Length());
+
+        System.out.println("Высота = " + shape2.getHeight());
+        System.out.println("Ширина = " + shape2.getWidth());
     }
 }
+
+/*
+ *  Заметки.
+ *  ===================
+ *  1. Почему я не могу получить getX1() из фигуры, которая в массиве?
+ *     shapes[2].getX1();
+ *     - потому, что нужно привести к треугольнику, т.к. не каждая фигура - треугольник.
+ *       ((Triangle) shapes[2]).getX1();
+ *
+ */
