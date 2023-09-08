@@ -90,26 +90,22 @@ public class ListMain {
             strings.addByIndex(3, "Три");
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
-            System.out.println("1.6. Вставляем новый элемент \"Шесть\" индексом 6.");
-            strings.addByIndex(6, "Шесть");
-            System.out.println("Наш список теперь есть: " + strings);
-            System.out.println("=============================");
             System.out.println();
 
             // 1.7. Удаление узла по значению, пусть выдает true, если элемент был удален.
-            System.out.println("Удаляем элемент \"Ноль\". Удалили? - " + strings.deleteByData("Ноль"));
+            System.out.println("1.7. Удаляем элемент \"Ноль\". Удалили? - " + strings.deleteByData("Ноль"));
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
-            System.out.println("Удаляем элемент \"Четыре\". Удалили? - " + strings.deleteByData("Четыре"));
+            System.out.println("1.7. Удаляем элемент \"Четыре\". Удалили? - " + strings.deleteByData("Четыре"));
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
-            System.out.println("Удаляем элемент \"Два\". Удалили? - " + strings.deleteByData("Два"));
+            System.out.println("1.7. Удаляем элемент \"Два\". Удалили? - " + strings.deleteByData("Два"));
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
-            System.out.println("Удаляем элемент \"Три\". Удалили? - " + strings.deleteByData("Три"));
+            System.out.println("1.7. Удаляем элемент \"Три\". Удалили? - " + strings.deleteByData("Три"));
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
-            System.out.println("Удаляем элемент \"Один\". Удалили? - " + strings.deleteByData("Один"));
+            System.out.println("1.7. Удаляем элемент \"Один\". Удалили? - " + strings.deleteByData("Один"));
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
             System.out.println();
@@ -129,14 +125,19 @@ public class ListMain {
             System.out.println();
 
             // 1.8. Удаление первого элемента, пусть выдает значение элемента.
-            System.out.println("Удаляем первый элемент: " + strings.deleteFirst());
+            System.out.println("1.8. Удаляем первый элемент: " + strings.deleteFirst());
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
             System.out.println();
 
+            // Проверим длину списка.
+            System.out.println("Длина нашего списка равна: " + strings.getLength() + ".");
+            System.out.println("Расчет длины нашего списка: " + strings.countLength() + ".");
+            System.out.println();
+
             //  1.9. Разворот списка за линейное время.
             strings.reverse();
-            System.out.println("Разворачиваем список. Наш список теперь есть: " + strings);
+            System.out.println("1.9. Разворачиваем список. Наш список теперь есть: " + strings);
             System.out.println("=============================");
             System.out.println();
 
@@ -150,7 +151,7 @@ public class ListMain {
             System.out.println();
 
             // 1.11. Проверим работу исключения.
-            System.out.println("1.11. Проверим работу исключения. Запросим элемент списка с индексом 10.");
+            System.out.println("1.11. Проверим работу исключения. Запросим элемент списка с индексом 4.");
             System.out.println(strings.getByIndex(4));
         } catch (IllegalArgumentException e) {
             System.out.println("Ошибка! " + e.getMessage());

@@ -69,9 +69,8 @@ public class List<E> {
 
         ListItem<E> currentItem = head;
 
-        // Если нужно удалить нулевой элемент, то записываем в голову следующий за ним.
         if (index == 0) {
-            head = currentItem.getNext();
+            deleteFirst();
         } else {
             ListItem<E> previousItem = currentItem;
 
@@ -84,9 +83,8 @@ public class List<E> {
             // поле next следующего за текущим элементом.
             // Таким образом, текущий элемент исключаем из цепочки.
             previousItem.setNext(currentItem.getNext());
+            length--;
         }
-
-        length--;
 
         return currentItem.getData();
     }
@@ -118,9 +116,7 @@ public class List<E> {
             currentItem = currentItem.getNext();
         }
 
-        ListItem<E> newListItem = new ListItem<>(data);
-        previousItem.setNext(newListItem);
-        newListItem.setNext(currentItem);
+        previousItem.setNext(new ListItem<>(data, currentItem));
 
         length++;
     }
@@ -157,7 +153,11 @@ public class List<E> {
     public E deleteFirst() {
         checkIndex(0, length);
 
-        return this.deleteByIndex(0);
+        ListItem<E> currentItem = head;
+        head = currentItem.getNext();
+        length--;
+
+        return currentItem.getData();
     }
 
     // 1.9. Разворот списка за линейное время.
