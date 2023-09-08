@@ -2,6 +2,8 @@ package ru.bgdanilov.list_main;
 
 import ru.bgdanilov.list.List;
 
+import java.util.LinkedList;
+
 public class ListMain {
     public static void main(String[] args) {
         try {
@@ -88,6 +90,10 @@ public class ListMain {
             strings.addByIndex(3, "Три");
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
+            System.out.println("1.6. Вставляем новый элемент \"Шесть\" индексом 6.");
+            strings.addByIndex(6, "Шесть");
+            System.out.println("Наш список теперь есть: " + strings);
+            System.out.println("=============================");
             System.out.println();
 
             // 1.7. Удаление узла по значению, пусть выдает true, если элемент был удален.
@@ -145,7 +151,7 @@ public class ListMain {
 
             // 1.11. Проверим работу исключения.
             System.out.println("1.11. Проверим работу исключения. Запросим элемент списка с индексом 10.");
-            System.out.println(strings.getByIndex(10));
+            System.out.println(strings.getByIndex(4));
         } catch (IllegalArgumentException e) {
             System.out.println("Ошибка! " + e.getMessage());
         }
@@ -160,7 +166,7 @@ public class ListMain {
  * System.out.printf("1.3. Элемент списка с индексом 3: %<T>.", strings.getItemByIndex(3));
  *
  * Хотя, наверное, это бессмысленно, мы же изначально список типа String создали,
- * и кроме строк там ничегоне может появиться.
+ * и кроме строк там ничего не может появиться.
  *
  * 2. Может тут заменить <T> на <E>, у нас же элементы коллекции?
  */
