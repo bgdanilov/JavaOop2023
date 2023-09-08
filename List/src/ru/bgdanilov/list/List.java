@@ -1,7 +1,6 @@
 package ru.bgdanilov.list;
 
 import java.util.NoSuchElementException;
-import java.lang.ArrayIndexOutOfBoundsException;
 
 // Это класс односвязного списка.
 public class List<E> {
@@ -40,10 +39,7 @@ public class List<E> {
     // 1.3. Получение/изменение значения по указанному индексу.
     // Получение.
     public E getByIndex(int index) {
-        if (index < 0 || index >= length) {
-            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за границы [0 - "+ (length - 1) + "] списка.");
-        }
-
+        checkIndex(index, length - 1);
         ListItem<E> currentItem = head;
         // TODO: Добавить исключение для пустого списка. Или вообще запретить создвать пустые списки.
         for (int i = 0; i < index; i++) {
@@ -55,10 +51,7 @@ public class List<E> {
 
     // Изменение с выдачей старого значения.
     public E setByIndex(int index, E data) {
-        if (index < 0 || index >= length) {
-            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за границы [0 - "+ (length - 1) + "] списка.");
-        }
-
+        checkIndex(index, length - 1);
         ListItem<E> currentItem = head;
 
         // TODO: Добавить исключение для пустого списка. Или вообще запретить создвать пустые списки.
@@ -74,10 +67,7 @@ public class List<E> {
 
     // 1.4. Удаление элемента по индексу, пусть выдает значение элемента.
     public E deleteByIndex(int index) {
-        if (index < 0 || index >= length) {
-            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за границы [0 - "+ (length - 1) + "] списка.");
-        }
-
+        checkIndex(index, length - 1);
         ListItem<E> currentItem = head;
        // ListItem<E> previousItem = head;
 
@@ -115,10 +105,7 @@ public class List<E> {
 
     // 1.6. Вставка элемента по индексу.
     public void addByIndex(int index, E data) {
-        if (index < 0 || index > length) {
-            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за границы [0 - "+ (length - 1) + "] списка.");
-        }
-
+        checkIndex(index, length);
         // Индекс равен нулю. Значит в начало вставить.
         if (index == 0) {
             addFirst(data);
@@ -257,6 +244,17 @@ public class List<E> {
 
         return sb.toString();
     }
+
+    // Проверка индекса на принадлежность допустимому диапазону.
+    // private - доступ только внутри класса.
+    // static - не нужно, т.к. метод из вне не нужно и нельзя вызывать.
+    // index > maxIndex - на случай addByIndex, там мы выходим за границы на единицу.
+    private void checkIndex(int index, int maxIndex) {
+        if (index < 0 || index > maxIndex) {
+            throw new IllegalArgumentException("Индекс [" + index + "] выходит за границы [0 - "+ maxIndex + "]  допустимого диапазона.");
+            //throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за границы [0 - "+ (maxIndex - 1) + "] списка.");
+        }
+    }
 }
 
 /*  Описание класса:
@@ -286,4 +284,5 @@ public class List<E> {
     3. Как правильно оформить сообщение исключения?
     4. Где посмотреть стек вызовов?
     5. Почитать что такое NoSuchElementException. И, вообще, основные подвиды исключений.
+    6. п. 15. IndexOutOfBoundsException - вроде пожходит , но он прерывает программу - красный код.
  */
