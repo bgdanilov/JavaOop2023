@@ -142,7 +142,6 @@ public class ListMain {
             List<String> stringsCopy = strings.copy();
             System.out.println("Копия исходного списка: " + stringsCopy);
             System.out.println("=============================");
-            System.out.println(stringsCopy.getLength());
             System.out.println();
 
             // 1.11. Проверим работу исключения.
