@@ -1,16 +1,11 @@
 package ru.bgdanilov.list;
 
 // Это класс односвязного списка.
-public class List<T> {
-    private ListItem<T> head; // первый элемент - голова списка.
-    private int length = 0; //  тут храним длину списка.
+public class List<E> {
+    private ListItem<E> head; // первый элемент - голова списка.
+    private int length; //  тут храним длину списка.
 
     public List() {
-        head = null; // значит список пустой.
-    }
-
-    public void setHead(ListItem<T> head) {
-        this.head = head;
     }
 
     // 1.1. Получение размера списка.
@@ -18,172 +13,129 @@ public class List<T> {
         return length;
     }
 
-    // Подсчет размера. Для проверки.
-    public int countLength() {
-        int length = 0;
-
-        for (ListItem<T> currentItem = head;
-             currentItem != null;
-             currentItem = currentItem.getNext()) {
-            length++;
-        }
-        return length;
-    }
-
     // 1.2. Получение значения первого элемента.
-    public T getFirstItem() {
-        if (head == null) {
-            throw new IllegalArgumentException("1.2. getFirstItem() head == 0: у пустого списка не может быть первого элемента!");
-        }
-
+    public E getFirst() {
+        checkIndex(0, length);
         return head.getData();
     }
 
     // 1.3. Получение/изменение значения по указанному индексу.
     // Получение.
-    public T getItemByIndex(int index) {
-        if (index < 0 || index > length - 1) {
-            throw new IllegalArgumentException("1.3. getItemByIndex() index: индекс выходит за границы списка.");
-        }
-
-        ListItem<T> currentItem = head;
-        // TODO: Добавить исключение для пустого списка. Или вообще запретить создвать пустые списки.
-        for (int i = 0; i < index; i++) {
-            currentItem = currentItem.getNext();
-        }
-
-        return currentItem.getData();
+    public E getByIndex(int index) {
+        checkIndex(index, length);
+        return getItemByIndex(index).getData();
     }
 
     // Изменение с выдачей старого значения.
-    public T changeItemByIndex(int index, T data) {
-        if (index < 0 || index > length - 1) {
-            throw new IllegalArgumentException("1.3. changeItemByIndex() index: индекс выходит за границы списка.");
-        }
+    public E setByIndex(int index, E data) {
+        checkIndex(index, length);
 
-        ListItem<T> currentItem = head;
-        // TODO: Добавить исключение для пустого списка. Или вообще запретить создвать пустые списки.
-        for (int i = 0; i < index; i++) {
-            currentItem = currentItem.getNext();
-        }
+        ListItem<E> currentItem = getItemByIndex(index);
 
-        T oldListItem = currentItem.getData();
+        E oldData = currentItem.getData();
         currentItem.setData(index, data);
 
-        return oldListItem;
+        return oldData;
     }
 
     // 1.4. Удаление элемента по индексу, пусть выдает значение элемента.
-    public T deleteItemByIndex(int index) {
-        if (index < 0 || index > length - 1) {
-            throw new IllegalArgumentException("1.4. deleteItemByIndex() index: индекс выходит за границы списка.");
-        }
+    public E deleteByIndex(int index) {
+        checkIndex(index, length);
 
-        ListItem<T> currentItem = head;
-        ListItem<T> previousItem = head;
+        ListItem<E> currentItem = head;
 
-        // Если нужно удалить нулевой элемент, то записываем в голову следующий за ним.
         if (index == 0) {
-            setHead(currentItem.getNext());
+            deleteFirst();
         } else {
-            for (int i = 0; i < index; i++) { //3
-                previousItem = currentItem; // 3
-                currentItem = currentItem.getNext();// 4
-            }
-
-            // На данном этапе мы в поле next предыдущего элемента, записываем
-            // поле next следующего за текущим элементом.
-            // Таким образом, текущий элемент исключаем из цепочки.
-            previousItem.setNext(currentItem.getNext());
-        }
-
-        length--;
-
-        return currentItem.getData();
-    }
-
-    // 1.5. Вставка элемента в начало.
-    public void addFirstItem(T data) {
-        ListItem<T> currentListItem = head;
-
-        // В голову записываем новый созданный элемент.
-        head = new ListItem<>(data);
-
-        // Если список был не пуст, то в next новой головы записываем
-        // бывший головной элемент.
-        if (currentListItem != null) {
-            // В головной элемент записываем ссылку на бывший текущий элемент.
-            head.setNext(currentListItem);
-        }
-
-        length++;
-    }
-
-    // 1.6. Вставка элемента по индексу.
-    public void addItemByIndex(int index, T data) {
-        if (index < 0 || index > length) {
-            throw new IllegalArgumentException("1.6. addItemByIndex() index: индекс выходит за границы списка.");
-        }
-
-        // Индекс равен нулю. Значит в начало вставить.
-        if (index == 0) {
-            addFirstItem(data);
-        } else {
-            ListItem<T> currentItem = head;
-            ListItem<T> previousItem = head;
+            ListItem<E> previousItem = currentItem;
 
             for (int i = 0; i < index; i++) {
                 previousItem = currentItem;
                 currentItem = currentItem.getNext();
             }
 
-            ListItem<T> newListItem = new ListItem<>(data);
-            previousItem.setNext(newListItem);
-            newListItem.setNext(currentItem);
+            previousItem.setNext(currentItem.getNext());
 
-            length++;
+            length--;
         }
+
+        return currentItem.getData();
+    }
+
+    // 1.5. Вставка элемента в начало.
+    public void addFirst(E data) {
+        head = new ListItem<>(data, head);
+
+        length++;
+    }
+
+    // 1.6. Вставка элемента по индексу.
+    public void addByIndex(int index, E data) {
+        checkIndex(index, length + 1);
+
+        // Индекс равен нулю. Значит в начало вставить.
+        if (index == 0) {
+            addFirst(data);
+
+            return;
+        }
+
+        ListItem<E> currentItem = head;
+        ListItem<E> previousItem = currentItem; // это тоже одинаковое присваивание?
+
+        for (int i = 0; i < index; i++) {
+            previousItem = currentItem;
+            currentItem = currentItem.getNext();
+        }
+
+        previousItem.setNext(new ListItem<>(data, currentItem));
+
+        length++;
     }
 
     // 1.7. Удаление узла по значению, пусть выдает true, если элемент был удален.
-    public boolean deleteItemByData(T data) {
-        boolean isItemDeleted = false;
-
-        // Начинаем с головы, пока не дойдем до конца.
-        for (ListItem<T> currentItem = head, previousItem = head;
+    public boolean deleteByData(E data) {
+        for (ListItem<E> currentItem = head, previousItem = null;
              currentItem != null;
-             previousItem = currentItem,
-                     currentItem = currentItem.getNext()) {
-            // Если значение текущего элемента идентично искомому значению:
-            if (currentItem.getData().equals(data)) {
-                if (currentItem.equals(previousItem)) {
-                    setHead(currentItem.getNext());
+             previousItem = currentItem, currentItem = currentItem.getNext()) {
+
+            if (currentItem.getData() == data) {
+                if (previousItem == null) {
+                    head = currentItem.getNext();
                 } else {
                     previousItem.setNext(currentItem.getNext());
                 }
 
-                isItemDeleted = true;
                 length--;
 
-                break;
+                return true;
             }
         }
 
-        return isItemDeleted;
+        return false;
     }
 
     // 1.8. Удаление первого элемента, пусть выдает значение элемента.
-    public T deleteFirstItem() {
-        return this.deleteItemByIndex(0);
+    public E deleteFirst() {
+        checkIndex(0, length);
+
+        ListItem<E> currentItem = head;
+        head = currentItem.getNext();
+        length--;
+
+        return currentItem.getData();
     }
 
     // 1.9. Разворот списка за линейное время.
     public void reverse() {
-        // TODO: Добавить исключение для пустого списка. Или вообще запретить создвать пустые списки.
-        ListItem<T> currentItem = head; // адрес элемента в памяти.
-        ListItem<T> previousItem = null;
+        if (head == null) { // список пустой.
+            return;
+        }
 
-        for (ListItem<T> nextCurrent = currentItem.getNext();
+        ListItem<E> currentItem = head; // адрес элемента в памяти.
+        ListItem<E> previousItem = null;
+
+        for (ListItem<E> nextCurrent = currentItem.getNext();
              nextCurrent != null;
              previousItem = currentItem, currentItem = nextCurrent, nextCurrent = nextCurrent.getNext()) {
             currentItem.setNext(previousItem);
@@ -194,88 +146,83 @@ public class List<T> {
     }
 
     // 1.10. Копирование списка.
-    public List<T> copyList() {
-        List<T> newList = new List<>();
+    public List<E> copy() {
+        // создали новый пустой список.
+        List<E> copiedList = new List<>();
+        copiedList.length = length;
 
-        for (ListItem<T> currentItem = head;
-             currentItem != null;
-             currentItem = currentItem.getNext()) {
-            newList.addItem(currentItem.getData());
+        ListItem<E> copiedCurrentItem = new ListItem<>(head.getData());
+        copiedList.head = copiedCurrentItem;
+
+        for (ListItem<E> nextItem = head.getNext(); nextItem != null; nextItem = nextItem.getNext()) {
+            ListItem<E> copiedNextItem = new ListItem<>(nextItem.getData());
+            copiedCurrentItem.setNext(copiedNextItem);
+            copiedCurrentItem = copiedNextItem;
         }
 
-        return newList;
-    }
-
-    // Добавление элемента в конец.
-    public void addItem(T data) {
-        // Создается элемент data = "One", next = null.
-        ListItem<T> newListItem = new ListItem<>(data);
-
-        // Если голова равна нулю, что происходит при первичном создании списка,
-        // то созданный элемент - первый и голова - есть ссылка на него.
-        if (head == null) {
-            // в голову записываем ссылку на наш только что созданный элемент
-            head = newListItem;
-            length = 1;
-            // В противном случае, если голова есть, то нужно дойти до конца списка
-            // и вставить элемент туда.
-        } else {
-            ListItem<T> currentListItem = head; // ссылка на текущий элемент.
-            // Пока у текущего следующий элемент есть..
-            while (currentListItem.getNext() != null) {
-                // ...текущий элемент равен следующему.
-                currentListItem = currentListItem.getNext();
-            }
-
-            // Следующего элемента нет: записываем в next ссылку нового элемента.
-            currentListItem.setNext(newListItem);
-            length++;
-        }
+        return copiedList;
     }
 
     @Override
     public String toString() {
-        // Текущий элемент.
-        ListItem<T> currentListItem;
-        StringBuilder sb = new StringBuilder();
-
-        // Все справедливо если список не пустой.
-        if (head != null) {
-            sb.append("[");
-
-            // Начинаем с головы и пока у текущего есть next.
-            for (currentListItem = head;
-                 currentListItem.getNext() != null;
-                 currentListItem = currentListItem.getNext()) {
-                sb.append(currentListItem.getData()).append(", ");
-            }
-
-            sb.append(currentListItem.getData()).append("]");
-        } else {
-            // TODO: Тут как-то коряво. Надо null заменить на что-то...
-            return null;
+        if (head == null) {
+            return "[]";
         }
+
+        ListItem<E> currentItem;
+        StringBuilder sb = new StringBuilder().append('[');
+
+        for (currentItem = head; currentItem.getNext() != null; currentItem = currentItem.getNext()) {
+            sb.append(currentItem.getData()).append(", ");
+        }
+
+        sb.append(currentItem.getData()).append(']');
 
         return sb.toString();
     }
+
+    // Добавление элемента в конец.
+    public void add(E data) {
+        addByIndex(length, data);
+    }
+
+    // Проверка индекса на принадлежность допустимому диапазону.
+    // Private - доступ только внутри класса.
+    // Static - не нужно, т.к. метод из вне не нужно и нельзя вызывать.
+    private void checkIndex(int index, int maxIndex) {
+        if (index < 0 || index >= maxIndex) {
+            throw new IllegalArgumentException("Index: " + index + ", Длина списка: " + length + ". Индекс выходит за пределы списка.");
+            //throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за границы [0 - "+ (maxIndex - 1) + "] списка.");
+        }
+    }
+
+    // Итерация до заданного по индексу элемента.
+    private ListItem<E> getItemByIndex(int index) {
+        ListItem<E> currentItem = head;
+
+        for (int i = 0; i < index; i++) {
+            currentItem = currentItem.getNext();
+        }
+
+        return currentItem;
+    }
 }
 
-/*  Описание класса:
-    ===============================
-    - Список - набор связанных объектов.
-    - Связный список - это набор связанных объектов,
-      где ссылка переносит нас от одного элемента к другому.
-    - Односвязный список - это объект, содержащий ССЫЛКУ на первый элемент списка.
-        Эту ссылку называют головой - head.
-        Голова - это ссылка. Ссылка на первый элемент списка.
-        next - это ссылка.
-        next == null - последний элемент.
-
-    1.9. Разворот списка за линейное время.
-    - 1. Запоминаем адрес следующего за текущим элемента.
-    - 2. Делаем чтобы текущий элемент ссылался на предыдущий. И назначаем его головой.
-    - 3. Назначаем в качестве нового предыдущего элемента текущий.
-    - 4. А новый текущий теперь будет элемент, бывший следующий у у бывшего текущего,
-    - 5. адрес которого мы замомнили в temp.
-    - 6. Повторяем 2. Пока не закончится список.
+/*  Заметки.
+ *  ===================
+ *  1. Список - набор связанных объектов.
+ *  2. Связный список - это набор связанных объектов,
+ *     где ссылка переносит нас от одного элемента к другому.
+ *  3. Односвязный список - это объект, содержащий ССЫЛКУ на первый элемент списка.
+ *       Эту ссылку называют головой - head.
+ *       Голова - это ссылка. Ссылка на первый элемент списка.
+ *       Next - это ссылка.
+ *       Next == null - последний элемент.
+ *
+ *  4. reverse() - разворот списка за линейное время.
+ *   - Запоминаем адрес следующего за текущим элемента.
+ *   - Делаем чтобы текущий элемент ссылался на предыдущий. И назначаем его головой.
+ *   - Назначаем в качестве нового предыдущего элемента текущий.
+ *   - А новый текущий теперь будет элемент, бывший следующий у бывшего текущего, адрес которого мы запомнили в temp.
+ *   - Повторяем 2. Пока не закончится список.
  */
