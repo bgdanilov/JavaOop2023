@@ -124,30 +124,23 @@ public class List<E> {
 
     // 1.7. Удаление узла по значению, пусть выдает true, если элемент был удален.
     public boolean deleteByData(E data) {
-        boolean isItemDeleted = false;
-
-        // Начинаем с головы, пока не дойдем до конца.
-        for (ListItem<E> currentItem = head, previousItem = head;
+        for (ListItem<E> currentItem = head, previousItem = null;
              currentItem != null;
-             previousItem = currentItem,
-                     currentItem = currentItem.getNext()) {
-            // Если значение текущего элемента идентично искомому значению:
-            if (currentItem.getData().equals(data)) {
-                if (currentItem.equals(previousItem)) {
-                    // setHead(currentItem.getNext());
+             previousItem = currentItem, currentItem = currentItem.getNext()) {
+
+            if (currentItem.getData() == data) {
+                if (previousItem == null) {
                     head = currentItem.getNext();
                 } else {
                     previousItem.setNext(currentItem.getNext());
                 }
 
-                isItemDeleted = true;
                 length--;
-
-                break;
+                return true;
             }
         }
 
-        return isItemDeleted;
+        return false;
     }
 
     // 1.8. Удаление первого элемента, пусть выдает значение элемента.
@@ -184,18 +177,15 @@ public class List<E> {
     public List<E> copy() {
         // создали новый пустой список.
         List<E> newList = new List<>();
+        newList.length = length;
 
         ListItem<E> newCurrent = new ListItem<>(head.getData());
         newList.head = newCurrent;
-
-        newList.length++;
 
         for (ListItem<E> next = head.getNext(); next != null; next = next.getNext()) {
             ListItem<E> newNext = new ListItem<>(next.getData());
             newCurrent.setNext(newNext);
             newCurrent = newNext;
-
-            newList.length++;
         }
 
         return newList;
