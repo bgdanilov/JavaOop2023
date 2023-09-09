@@ -33,7 +33,7 @@ public class List<E> {
         ListItem<E> currentItem = getItemByIndex(index);
 
         E oldData = currentItem.getData();
-        currentItem.setData(index, data);
+        currentItem.setData(data);
 
         return oldData;
     }

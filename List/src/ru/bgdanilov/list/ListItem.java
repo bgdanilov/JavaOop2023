@@ -7,7 +7,6 @@ class ListItem<E> {
 
     public ListItem(E data) {
         this.data = data;
-       // this.next = null;
     }
 
     public ListItem(E data, ListItem<E> next) {
@@ -18,12 +17,8 @@ class ListItem<E> {
     public E getData() {
         return data;
     }
-/*
+
     public void setData(E data) {
-        this.data = data;
-    }
-*/
-    public void setData(int index, E data) {
         this.data = data;
     }
 
