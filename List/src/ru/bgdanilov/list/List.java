@@ -110,6 +110,7 @@ public class List<E> {
 
         ListItem<E> currentItem = head;
         ListItem<E> previousItem = head;
+        // TODO: Одинаковое присваивание.
 
         for (int i = 0; i < index; i++) {
             previousItem = currentItem;
@@ -181,12 +182,20 @@ public class List<E> {
 
     // 1.10. Копирование списка.
     public List<E> copy() {
+        // создали новый пустой список.
         List<E> newList = new List<>();
 
-        for (ListItem<E> currentItem = head;
-             currentItem != null;
-             currentItem = currentItem.getNext()) {
-            newList.add(currentItem.getData());
+        ListItem<E> newCurrent = new ListItem<>(head.getData());
+        newList.head = newCurrent;
+
+        newList.length++;
+
+        for (ListItem<E> next = head.getNext(); next != null; next = next.getNext()) {
+            ListItem<E> newNext = new ListItem<>(next.getData());
+            newCurrent.setNext(newNext);
+            newCurrent = newNext;
+
+            newList.length++;
         }
 
         return newList;

@@ -114,7 +114,7 @@ public class ListMain {
             System.out.println("Восстановим список.");
             strings.addFirst("One");
             strings.addByIndex(1, "Two");
-            strings.addByIndex(2, "Three");
+            strings.addByIndex(2, null);
             strings.add("Four");
             strings.addByIndex(0, "Zero");
             System.out.println("Наш список теперь есть: " + strings);
@@ -143,11 +143,12 @@ public class ListMain {
 
             // 1.10. Копирование списка.
             System.out.println("1.10. Копирование списка.");
-            List<String> stringsCopy = strings.copy();
-            stringsCopy.reverse(); // Развернем обратно копию.
+            //stringsCopy.reverse(); // Развернем обратно копию.
             System.out.println("Наш исходный список: " + strings);
-            System.out.println("Развернутая копия исходного списка: " + stringsCopy);
+            List<String> stringsCopy = strings.copy();
+            System.out.println("Копия исходного списка: " + stringsCopy);
             System.out.println("=============================");
+            System.out.println(stringsCopy.getLength());
             System.out.println();
 
             // 1.11. Проверим работу исключения.
