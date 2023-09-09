@@ -2,12 +2,10 @@ package ru.bgdanilov.list_main;
 
 import ru.bgdanilov.list.List;
 
-import java.util.LinkedList;
-
 public class ListMain {
     public static void main(String[] args) {
         try {
-            // Создаем список - на самом деле объект с полем, которое хранит ссылку на
+            // Создаем список - на самом деле объект с полем, хранящим ссылку на
             // объект специального класса ListItem, который мы считаем головой.
             // По-умолчанию, при инициализации - эта ссылка = null. Список пустой.
             List<String> strings = new List<>();
@@ -25,7 +23,6 @@ public class ListMain {
 
             // 1.1. Получение размера списка.
             System.out.println("1.1. Длина нашего списка равна: " + strings.getLength() + ".");
-            System.out.println("1.1. Расчет длины нашего списка: " + strings.countLength() + ".");
             System.out.println();
 
             // 1.2. Получение значения первого элемента.
@@ -61,7 +58,6 @@ public class ListMain {
 
             // Проверим длину списка.
             System.out.println("Длина нашего списка равна: " + strings.getLength() + ".");
-            System.out.println("Расчет длины нашего списка: " + strings.countLength() + ".");
             System.out.println();
 
             // 1.5. Вставка элемента в начало.
@@ -120,7 +116,6 @@ public class ListMain {
             System.out.println("Наш список теперь есть: " + strings);
             // Проверим длину списка.
             System.out.println("Длина нашего списка равна: " + strings.getLength() + ".");
-            System.out.println("Расчет длины нашего списка: " + strings.countLength() + ".");
             System.out.println("=============================");
             System.out.println();
 
@@ -132,7 +127,6 @@ public class ListMain {
 
             // Проверим длину списка.
             System.out.println("Длина нашего списка равна: " + strings.getLength() + ".");
-            System.out.println("Расчет длины нашего списка: " + strings.countLength() + ".");
             System.out.println();
 
             //  1.9. Разворот списка за линейное время.
@@ -159,16 +153,3 @@ public class ListMain {
         }
     }
 }
-
-/*
- * Вопросы:
- * 1. Можно ли Дженерик в printf засунуть?
- * Вроде такого: ...с индексом 3: %<T>
- * чтобы универсальный метод был, не только для строк.
- * System.out.printf("1.3. Элемент списка с индексом 3: %<T>.", strings.getItemByIndex(3));
- *
- * Хотя, наверное, это бессмысленно, мы же изначально список типа String создали,
- * и кроме строк там ничего не может появиться.
- *
- * 2. Может тут заменить <T> на <E>, у нас же элементы коллекции?
- */
