@@ -2,7 +2,7 @@ package ru.bgdanilov.array_list_home;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
+// import java.util.Iterator;
 
 // Задача «ArrayListHome».
 // 2. Есть список из целых чисел. Удалить из него все четные числа.
@@ -24,30 +24,32 @@ public class DeleteEvenNumbers {
                 integers2.remove(i);
                 i--; // компенсируем сдвиг элементов влево.
             }
-
-            //integers2.trimToSize();
         }
+
+        //integers2.trimToSize(); он в этой задаче не нужен.
 
         System.out.println("Массив без четных чисел: " + integers2);
         System.out.println("Размер массива без четных чисел: " + integers2.size());
         System.out.println();
 
+        // Оставлю этот пункт для разнообразия и истории.
         // 2.2. Теперь IDE ругается, что "The loop can be replaced with 'Collection.removeIf"
         // В итоге получилось 2.3.
-        ArrayList<Integer> integers3 = new ArrayList<>(integers1);
-        System.out.println("2.2. Удаление итератором. Исходный массив: " + integers3);
-
-        Iterator<Integer> iterator = integers3.iterator();
-
-        while (iterator.hasNext()) {
-            if (iterator.next() % 2 == 0) {
-                iterator.remove();
-            }
-        }
-
-        System.out.println("Массив без четных чисел: " + integers3);
-        System.out.println("Размер массива без четных чисел: " + integers3.size());
-        System.out.println();
+        // ArrayList<Integer> integers3 = new ArrayList<>(integers1);
+        // System.out.println("2.2. Удаление итератором. Исходный массив: " + integers3);
+        //
+        // Iterator<Integer> iterator = integers3.iterator();
+        //
+        //
+        // while (iterator.hasNext()) {
+        //     if (iterator.next() % 2 == 0) {
+        //         iterator.remove();
+        //     }
+        // }
+        //
+        // System.out.println("Массив без четных чисел: " + integers3);
+        // System.out.println("Размер массива без четных чисел: " + integers3.size());
+        // System.out.println();
 
         // 2.3. В итоге все свелось к одной строчке.
         System.out.println("2.3. Удаление пока не изученным кодом по совету IDE.");
@@ -57,11 +59,3 @@ public class DeleteEvenNumbers {
         System.out.println("Размер массива без четных чисел: " + integers1.size());
     }
 }
-
-/*
-    Вопросы:
-    1. В п. 2.1. добавил поправку на сдвиг элементов влево, но ведь и без нее работало?
-    И размер списка правильный выдает без коррекции размера integers2.trimToSize() ?
-    2. В п. 2.2. Ворнинг, я так понимаю, предлагающий более элегантное решение.
-    Можно удалить этот блок вообще?
- */
