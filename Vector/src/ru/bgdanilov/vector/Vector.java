@@ -28,13 +28,13 @@ public class Vector {
             throw new IllegalArgumentException("components.length: размерность вектора должна быть больше нуля!");
         }
 
-        this.components = components;
+        this.components = Arrays.copyOf(components, components.length);
     }
 
     // 1.d. Конструктор - заполнение вектора значениями из массива.
     // Если длина массива меньше size, то считать что в остальных компонентах 0.
     public Vector(int size, double[] array) {
-        if (size <= 0 || array.length == 0) {
+        if (size < 0) {
             throw new IllegalArgumentException("size: размерность вектора должна быть больше нуля!");
         }
 
@@ -46,52 +46,45 @@ public class Vector {
         return components.length;
     }
 
-    // Нужно в Matrix
-    public double[] getComponents() {
-        return components;
-    }
-
     // 3. Метод. toString(), чтобы выдавал информацию о векторе в  формате { значения компонент через запятую }
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder().append("{");
-        int size = getSize();
+        if (components.length == 0) {
+            return "{}";
+        }
 
-        for (int i = 0; i < size - 1; i++) {
+        StringBuilder sb = new StringBuilder().append('{');
+        int maxIndex = components.length - 1;
+
+        for (int i = 0; i < maxIndex; i++) {
             sb.append(components[i]).append(", ");
         }
 
-        sb.append(components[size - 1]).append("}");
+        sb.append(components[maxIndex]).append('}');
 
         return sb.toString();
     }
 
     // 4.a. Добавить вектор к вектору.
     public void add(Vector vector) {
-        int size = components.length;
-        int vectorSize = vector.components.length;
-
-        if (vectorSize > size) {
-            components = Arrays.copyOf(components, vectorSize);
+        if (vector.components.length > components.length) {
+            components = Arrays.copyOf(components, vector.components.length);
         }
 
-        for (int i = 0; i < vectorSize; i++) {
-            this.components[i] += vector.components[i];
+        for (int i = 0; i < vector.components.length; i++) {
+            components[i] += vector.components[i];
         }
     }
 
     // 4.b. Вычесть вектор из вектора.
     public void subtract(Vector vector) {
-        int size = components.length;
-        int vectorSize = vector.components.length;
-
         // Исходный вектор дополним нулями до размерности добавочного.
         // Если добавочный больше.
-        if (vectorSize > size) {
-            components = Arrays.copyOf(components, vectorSize);
+        if (vector.components.length > components.length) {
+            components = Arrays.copyOf(components, vector.components.length);
         }
 
-        for (int i = 0; i < vectorSize; i++) {
+        for (int i = 0; i < vector.components.length; i++) {
             components[i] -= vector.components[i];
         }
     }
@@ -146,7 +139,7 @@ public class Vector {
         // Для доступа к полям-компонентам, нужно привести Object к Vector.
         Vector vector = (Vector) object;
 
-        return Arrays.equals(components, vector.getComponents());
+        return Arrays.equals(components, vector.components);
     }
 
     // Берем готовый метод получения Хэш массива.
@@ -173,10 +166,10 @@ public class Vector {
 
     // 5.c. Скалярное произведение двух векторов.
     public static double getDotProduct(Vector vector1, Vector vector2) {
-        int smallerSize = Math.min(vector1.getSize(), vector2.getSize());
+        int minSize = Math.min(vector1.components.length, vector2.components.length);
         double dotProduct = 0;
 
-        for (int i = 0; i < smallerSize; i++) {
+        for (int i = 0; i < minSize; i++) {
             dotProduct += vector1.components[i] * vector2.components[i];
         }
 

@@ -11,7 +11,7 @@ public class VectorMain {
         Vector vector1 = new Vector(7);
         System.out.println("     Вектор 1: " + vector1);
 
-        // 1.c. Создаем вектор из значений массива.
+        /* 1.c. Создаем вектор из значений массива. */
         System.out.println("1.c. Создаем вектор из значений массива.");
         Vector vector3 = new Vector(new double[]{1, 2, 3, 4, 5});
         System.out.println("     Вектор 3: " + vector3);
