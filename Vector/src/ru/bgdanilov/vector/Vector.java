@@ -7,12 +7,7 @@ public class Vector {
 
     // 1.a. Конструктор - создание пустого вектора размерностью size.
     public Vector(int size) {
-        // Если size < 0 - бросаем исключение.
-        if (size <= 0) {
-            throw new IllegalArgumentException("size: размерность вектора должна быть больше нуля!");
-        }
-
-        // Код, выполняемый в отсутствии исключения.
+        checkSize(size);
         components = new double[size];
     }
 
@@ -24,74 +19,60 @@ public class Vector {
 
     // 1.c. Конструктор - заполнение вектора значениями из массива.
     public Vector(double[] components) {
-        if (components.length == 0) {
-            throw new IllegalArgumentException("components.length: размерность вектора должна быть больше нуля!");
-        }
-
-        this.components = components;
+        this.components = Arrays.copyOf(components, components.length);
     }
 
     // 1.d. Конструктор - заполнение вектора значениями из массива.
     // Если длина массива меньше size, то считать что в остальных компонентах 0.
     public Vector(int size, double[] array) {
-        if (size <= 0 || array.length == 0) {
-            throw new IllegalArgumentException("size: размерность вектора должна быть больше нуля!");
-        }
-
+        checkSize(size);
         components = Arrays.copyOf(array, size);
     }
 
-    // 2. Метод. Получение размерности вектора - по-сути длину массива компонент.
+    // 2. Метод. Получение размерности вектора - по-сути длина массива компонент.
     public int getSize() {
         return components.length;
     }
 
-    // Нужно в Matrix
-    public double[] getComponents() {
-        return components;
-    }
-
-    // 3. Метод. toString(), чтобы выдавал информацию о векторе в  формате { значения компонент через запятую }
+    // 3. Метод. toString(), чтобы выдавал информацию о векторе в формате {значения компонент через запятую}
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder().append("{");
-        int size = getSize();
+        if (components.length == 0) {
+            return "{}";
+        }
 
-        for (int i = 0; i < size - 1; i++) {
+        StringBuilder sb = new StringBuilder().append('{');
+        int maxIndex = components.length - 1;
+
+        for (int i = 0; i < maxIndex; i++) {
             sb.append(components[i]).append(", ");
         }
 
-        sb.append(components[size - 1]).append("}");
+        sb.append(components[maxIndex]).append('}');
 
         return sb.toString();
     }
 
     // 4.a. Добавить вектор к вектору.
     public void add(Vector vector) {
-        int size = components.length;
-        int vectorSize = vector.components.length;
-
-        if (vectorSize > size) {
-            components = Arrays.copyOf(components, vectorSize);
+        if (vector.components.length > components.length) {
+            components = Arrays.copyOf(components, vector.components.length);
         }
 
-        for (int i = 0; i < vectorSize; i++) {
-            this.components[i] += vector.components[i];
+        for (int i = 0; i < vector.components.length; i++) {
+            components[i] += vector.components[i];
         }
     }
 
     // 4.b. Вычесть вектор из вектора.
     public void subtract(Vector vector) {
-        int size = components.length;
-        int vectorSize = vector.components.length;
-
         // Исходный вектор дополним нулями до размерности добавочного.
         // Если добавочный больше.
-        if (vectorSize > size) {
-            components = Arrays.copyOf(components, vectorSize);
+        if (vector.components.length > components.length) {
+            components = Arrays.copyOf(components, vector.components.length);
         }
 
-        for (int i = 0; i < vectorSize; i++) {
+        for (int i = 0; i < vector.components.length; i++) {
             components[i] -= vector.components[i];
         }
     }
@@ -146,7 +127,7 @@ public class Vector {
         // Для доступа к полям-компонентам, нужно привести Object к Vector.
         Vector vector = (Vector) object;
 
-        return Arrays.equals(components, vector.getComponents());
+        return Arrays.equals(components, vector.components);
     }
 
     // Берем готовый метод получения Хэш массива.
@@ -173,52 +154,55 @@ public class Vector {
 
     // 5.c. Скалярное произведение двух векторов.
     public static double getDotProduct(Vector vector1, Vector vector2) {
-        int smallerSize = Math.min(vector1.getSize(), vector2.getSize());
+        int minSize = Math.min(vector1.components.length, vector2.components.length);
         double dotProduct = 0;
 
-        for (int i = 0; i < smallerSize; i++) {
+        for (int i = 0; i < minSize; i++) {
             dotProduct += vector1.components[i] * vector2.components[i];
         }
 
         return dotProduct;
     }
+
+    // Проверка размерности вектора.
+    private void checkSize(int size) {
+        if (size < 0) {
+            throw new IllegalArgumentException("Size: " + size + ", Отрицательная размерность вектора недопустима.");
+        }
+    }
 }
 
-/*  Описание класса:
-    ===============================
-    - У вектора есть единственное поле - массив его компонент.
-    - Конструкторы - функции с перегрузкой.
-    - Здесь мы только бросаем исключения.Обработки нет.
-      Обработка должна быть в main. Т.е. тут мы бросаем, а в маин ловим.
-      Но блок try-catch по условию не требуется.
-
-    1.d. Конструктор - заполнение вектора значениями из массива.
-     - Если компоненты не поместились (длина меньше длины существующего вектора), то лишние значения игнорируются.
-     - Если длина массива больше длины вектора, ячейки заполняются нулями.
-
-    4.a. Метод "Добавить вектор к вектору".
-    - К компонентам исходного вектора прибавить соответствующие компоненты добавляемого вектора.
-    - Мы движемся в цикле по добавочному вектору, потому, что его компоненты добавляем к компонентам исходника.
-    - Поэтому, если добавочный по размеру превышает исходник, то его компоненты все не влезут.
-    - Нужно дополнить исходник до размеров добавочного.
-    - А если наоборот, то меньшее всегда влезет в большее.
-    - К компонентам исходника, которые за пределами размерности добавочного вектора, просто ничего не прибавится,
-      что равносзначно прибавлению нуля. Поэтому дополнять нулями добавочный вектор до размеров исходного необязательно.
-            source:     [1, 2, 3]     или  [1, 2, 3, 4]
-          + additional: [1, 2, 3, 4]  или  [1, 2, 3]
-          = source:     [2, 4, 6, 4]       [2, 4, 6, 4]
-
-    4.b. Метод "Вычесть вектор из вектора".
-    - Аналогично методу "Добавить вектор к вектору".
-
-    5.c. Метод "Скалярное произведение двух векторов".
-    - Скалярным произведением двух векторов называется сумма произведений соответствующих компонент векторов.
-            vector1:    [1, 2, 3, 4]          или  [1, 2, 3]
-          + vector2:    [1, 2, 3]             или  [1, 2, 3, 4]
-          = dotProduct:  1 + 4 + 9 + (4 * 0)        1 + 4 + 9
-          Если число итераций цикла будет равно большей размерности из двух вектров,
-          то надо дополнять меньший вектор нулями.
-          а если идти итерировать по меньшей размерности, то просто четверку ни на что не умножаем,
-          и нулями заполнять не нужно.
-          Можно так же, наверное, поступить в 4.a. ?
+/*  Заметки.
+ *  ===================
+ *  - У вектора есть единственное поле - массив его компонент.
+ *    - Конструкторы - функции с перегрузкой.
+ *
+ *    1.d. Конструктор - заполнение вектора значениями из массива.
+ *     - Если компоненты не поместились (длина меньше длины существующего вектора), то лишние значения игнорируются.
+ *     - Если длина массива больше длины вектора, ячейки заполняются нулями.
+ *
+ *   4.a. Метод "Добавить вектор к вектору".
+ *    - К компонентам исходного вектора прибавить соответствующие компоненты добавляемого вектора.
+ *    - Мы движемся в цикле по добавочному вектору, потому, что его компоненты добавляем к компонентам исходника.
+ *    - Поэтому, если добавочный по размеру превышает исходник, то его компоненты все не влезут.
+ *    - Нужно дополнить исходник до размеров добавочного.
+ *    - А если наоборот, то меньшее всегда влезет в большее.
+ *    - К компонентам исходника, которые за пределами размерности добавочного вектора, просто ничего не прибавится,
+ *      что равнозначно прибавлению нуля. Поэтому дополнять нулями добавочный вектор до размеров исходного необязательно.
+ *            source:     [1, 2, 3]     или  [1, 2, 3, 4]
+ *          + additional: [1, 2, 3, 4]  или  [1, 2, 3]
+ *          = source:     [2, 4, 6, 4]       [2, 4, 6, 4]
+ *
+ *    4.b. Метод "Вычесть вектор из вектора".
+ *    - Аналогично методу "Добавить вектор к вектору".
+ *
+ *    5.c. Метод "Скалярное произведение двух векторов".
+ *    - Скалярным произведением двух векторов называется сумма произведений соответствующих компонент векторов.
+ *            vector1:    [1, 2, 3, 4]          или  [1, 2, 3]
+ *          + vector2:    [1, 2, 3]             или  [1, 2, 3, 4]
+ *          = dotProduct:  1 + 4 + 9 + (4 * 0)        1 + 4 + 9
+ *          Если число итераций цикла будет равно большей размерности из двух векторов,
+ *          то надо дополнять меньший вектор нулями.
+ *          А если идти итерировать по меньшей размерности, то просто четверку ни на что не умножаем,
+ *          и нулями заполнять не нужно.
  */
