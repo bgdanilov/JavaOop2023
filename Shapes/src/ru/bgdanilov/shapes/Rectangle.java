@@ -1,30 +1,6 @@
 package ru.bgdanilov.shapes;
 
-/**
- * Поля неизменные, поэтому этот класс - record.
- * Оставим этот класс обычным, не record, для демонстрации отличий синтаксиса.
- */
-// Игнорирование warning устаревшего кода для маскировки факта, что класс - не record.
-@SuppressWarnings("dep-ann")
-public class Rectangle implements Shape {
-    private final double height;
-    private final double width;
-
-    public Rectangle(double height, double width) {
-        this.height = height;
-        this.width = width;
-    }
-
-    @Override
-    public double getHeight() {
-        return height;
-    }
-
-    @Override
-    public double getWidth() {
-        return width;
-    }
-
+public record Rectangle(double height, double width) implements Shape {
     @Override
     public double getPerimeter() {
         return (height + width) * 2;
@@ -43,12 +19,12 @@ public class Rectangle implements Shape {
 
     @Override
     public boolean equals(Object object) {
-        // Передали объект (сам себе равен).
+        // Ссылаемся на тот же самый объект (ссылки равны).
         if (this == object) {
             return true;
         }
 
-        // Объект передали пустой или класса, отличного от сравниваемого.
+        // Ссылка пустая или ведет к объекту с классом, отличным от сравниваемого.
         if (object == null || getClass() != object.getClass()) {
             return false;
         }

@@ -20,7 +20,7 @@ public class Triangle implements Shape {
         this.x3 = x3;
         this.y3 = y3;
 
-        side1Length = getSideLength(x1, y2, x2, y2);
+        side1Length = getSideLength(x1, y1, x2, y2);
         side2Length = getSideLength(x2, y2, x3, y3);
         side3Length = getSideLength(x3, y3, x1, y1);
     }
@@ -66,12 +66,12 @@ public class Triangle implements Shape {
     }
 
     @Override
-    public double getHeight() {
+    public double height() {
         return Math.max(Math.max(y1, y2), y3) - Math.min(Math.min(y1, y2), y3);
     }
 
     @Override
-    public double getWidth() {
+    public double width() {
         return Math.max(Math.max(x1, x2), x3) - Math.min(Math.min(x1, x2), x3);
     }
 
@@ -98,12 +98,12 @@ public class Triangle implements Shape {
 
     @Override
     public boolean equals(Object object) {
-        // Передали объект (сам себе равен).
+        // Ссылаемся на тот же самый объект (ссылки равны).
         if (this == object) {
             return true;
         }
 
-        // Объект передали пустой или класса, отличного от сравниваемого.
+        // Ссылка пустая или ведет к объекту с классом, отличным от сравниваемого.
         if (object == null || getClass() != object.getClass()) {
             return false;
         }
