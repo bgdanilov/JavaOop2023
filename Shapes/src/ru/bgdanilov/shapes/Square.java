@@ -6,12 +6,12 @@ package ru.bgdanilov.shapes;
  */
 public record Square(double sideLength) implements Shape {
     @Override
-    public double getHeight() {
+    public double height() {
         return sideLength;
     }
 
     @Override
-    public double getWidth() {
+    public double width() {
         return sideLength;
     }
 
@@ -32,12 +32,12 @@ public record Square(double sideLength) implements Shape {
 
     @Override
     public boolean equals(Object object) {
-        // Передали объект (сам себе равен).
+        // Ссылаемся на тот же самый объект (ссылки равны).
         if (this == object) {
             return true;
         }
 
-        // Объект передали пустой или класса, отличного от сравниваемого.
+        // Ссылка пустая или ведет к объекту с классом, отличным от сравниваемого.
         if (object == null || getClass() != object.getClass()) {
             return false;
         }
