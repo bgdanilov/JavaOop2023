@@ -14,7 +14,7 @@ public class MatrixMain {
 
             // 1.c.	Конструктор - создание из Matrix(double[][]) – из двумерного массива.
             System.out.println("1.c.Конструктор - создание из Matrix(double[][]) – из двумерного массива.");
-            double[][] array = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9, 10}};
+            double[][] array = {{}, {4, 5, 6}, {7, 8, 9, 10}};
             Matrix matrix1c = new Matrix(array);
             System.out.println("    matrix1c : " + matrix1c);
             System.out.println();

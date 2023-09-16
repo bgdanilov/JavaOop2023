@@ -11,7 +11,7 @@ public class Matrix {
             throw new IllegalArgumentException("1.2. Matrix(int rowsAmount, int columnsAmount): rowsAmount, columnsAmount - размерность матрицы не может быть ноль на ноль и меньше.");
         }
 
-        // Создаем строки матрицы - массив объектов Vector c rowsAmount-элементами.
+        // Создаем строки матрицы - массив объектов Vector.
         rows = new Vector[rowsAmount];
 
         // Теперь нужно в каждый элемент массива matrix, поместить вектор с columnsAmount-элементами.
@@ -23,46 +23,36 @@ public class Matrix {
 
     // 1.b. Конструктор копирования - Matrix(Matrix).
     public Matrix(Matrix matrix) {
-        // Получаем количество строк (векторов) в исходной матрице.
-        int n = matrix.getRowsAmount();
-
-        // Создаем новый массив векторов с тем же количеством векторов.
         rows = new Vector[matrix.rows.length];
 
-        // Заполняем созданный массив новыми векторами,
-        // созданными из векторов матрицы переданного объекта matrix.
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < matrix.rows.length; i++) {
             rows[i] = new Vector(matrix.rows[i]);
         }
     }
 
     // 1.c.	Конструктор - создание из Matrix(double[][]) – из двумерного массива.
     public Matrix(double[][] array) {
-        int n = array.length; // Число строк.
-        int m = 0;                  // Число столбцов - размерность векторов.
+        int rowsAmount = array.length;
+        int columnsAmount = 0;
 
-        // Ищем максимальный размер подмассива в переданном массиве.
-        for (double[] subArrays : array) {
-            int temp = subArrays.length;
+        // Ищем максимальный размер среди векторов массива - число столбцов будущей матрицы.
+        for (double[] row : array) {
+            int maxColumnAmount = row.length;
 
-            /*
-            Тут можно положиться на исключение из Vector?
-            if (temp == 0) {
-                throw new IllegalArgumentException("1.c. Размер подмассива должен быть больше нуля!");
-            }
-            */
-
-            if (temp > m) {
-                m = temp;
+            if (maxColumnAmount > columnsAmount) {
+                columnsAmount = maxColumnAmount;
             }
         }
 
-        // Создаем новый массив векторов с тем же количеством элементов.
-        rows = new Vector[n];
+        if (columnsAmount == 0) {
+            throw new IllegalArgumentException("Количество столбцов: " + columnsAmount + ", матрицу размера 0 создать нельзя.");
+        }
 
-        for (int i = 0; i < n; i++) {
+        rows = new Vector[rowsAmount];
+
+        for (int i = 0; i < rowsAmount; i++) {
             // Используем 1.d. Конструктор - заполнение вектора значениями из массива.
-            rows[i] = new Vector(m, array[i]);
+            rows[i] = new Vector(columnsAmount, array[i]);
         }
     }
 
@@ -80,11 +70,6 @@ public class Matrix {
             if (row.getSize() > columnsAmount) {
                 columnsAmount = row.getSize();
             }
-            // int temp = row.getSize();
-            //
-            // if (temp > columnsAmount) {
-            //     columnsAmount = temp;
-            // }
         }
 
         // Заполняем матрицу новыми векторами, созданными из исходных векторов.
@@ -105,7 +90,7 @@ public class Matrix {
     }
 
     public int getColumnsAmount() {
-        return rows[0].getSize(); // m
+        return rows[0].getSize();
     }
 
     // 2.b. Метод. Получение и задание вектора-строки по индексу.
@@ -352,4 +337,5 @@ public class Matrix {
 
 
        1. 1.d. что выгоднее: новую переменную завести temp или два раза getRows() посчитать?
+       2. 1.b. можно ли тут применить foreach? По двум аргументам одновременно.
  */
