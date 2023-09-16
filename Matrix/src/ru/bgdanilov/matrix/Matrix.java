@@ -7,8 +7,12 @@ public class Matrix {
 
     // 1.a. Конструктор - создание пустой матрицы размера rowsAmount * columnsAmount.
     public Matrix(int rowsAmount, int columnsAmount) {
-        if (rowsAmount <= 0 || columnsAmount <= 0) {
-            throw new IllegalArgumentException("1.2. Matrix(int rowsAmount, int columnsAmount): rowsAmount, columnsAmount - размерность матрицы не может быть ноль на ноль и меньше.");
+        if (rowsAmount <= 0) {
+            throw new IllegalArgumentException("Количество строк: " + rowsAmount + ", нельзя создать матрицу с нулевым или отрицательным числом строк.");
+        }
+
+        if (columnsAmount <= 0) {
+            throw new IllegalArgumentException("Количество столбцов: " + columnsAmount + ", нельзя создать матрицу с нулевым или отрицательным числом столбцов.");
         }
 
         // Создаем строки матрицы - массив объектов Vector.
@@ -61,7 +65,8 @@ public class Matrix {
         if (rows.length == 0) {
             throw new IllegalArgumentException("Количество строк: " + rows.length + ", матрицу размера 0 создать нельзя.");
         }
-        // Создаем новый массив векторов (матрицу) с тем же количеством элементов.
+
+        // Создаем новый массив векторов (матрицу).
         this.rows = new Vector[rows.length];
         // Ищем максимальный размер среди векторов массива - число столбцов будущей матрицы.
         int columnsAmount = 0;
@@ -74,13 +79,8 @@ public class Matrix {
 
         // Заполняем матрицу новыми векторами, созданными из исходных векторов.
         for (int i = 0; i < rows.length; i++) {
-            this.rows[i] = new Vector(rows[i]);
-
-            // Проверяем на совпадение с максимальным размером, при необходимости
-            // дополняем нулями при помощи дополнения временного нового вектора размера columnsAmount.
-            if (this.rows[i].getSize() < columnsAmount) {
-                this.rows[i].add(new Vector(columnsAmount));
-            }
+            this.rows[i] = new Vector(columnsAmount);
+            this.rows[i].add(rows[i]);
         }
     }
 
@@ -95,36 +95,40 @@ public class Matrix {
 
     // 2.b. Метод. Получение и задание вектора-строки по индексу.
     public Vector getRow(int index) {
-        if (index < 0 || index > getRowsAmount() - 1) {
-            throw new IllegalArgumentException("2.b. Vector getRow(int index): index - неверный индекс.");
+        if (index < 0 || index >= rows.length) {
+            throw new IndexOutOfBoundsException("Индекс: " + index + ", за пределами индексов строк [0, " + (rows.length - 1) + "] матрицы.");
         }
 
         return new Vector(rows[index]);
     }
 
-    public void setRow(Vector vector, int index) {
-        int n = this.getRowsAmount();
-        int m = this.getColumnsAmount();
+    public void setRow(int index, Vector vector) {
+        int rowsAmount = rows.length;
+        int columnsAmount = getColumnsAmount();
 
-        if (vector.getSize() > m || (index < 0 || index > n - 1)) {
-            throw new IllegalArgumentException("2.b. setRow(Vector vector, int index): index - векторы не совпадают по размеру или неверный индекс.");
+        if (index < 0 || index >= rowsAmount) {
+            throw new IndexOutOfBoundsException("Индекс: " + index + ", за пределами индексов строк [0, " + (rowsAmount - 1) + "] матрицы.");
         }
 
-        for (int i = 0; i < m; i++) {
+        if (vector.getSize() > columnsAmount) {
+            throw new IllegalArgumentException("Размер вектора: " + vector.getSize() + ", превышает число столбцов [" + columnsAmount + "] матрицы.");
+        }
+
+        for (int i = 0; i < columnsAmount; i++) {
             this.rows[index].setComponent(i, vector.getComponent(i));
         }
     }
 
     // 2.c. Метод. Получение вектора-столбца по индексу.
     public Vector getColumn(int index) {
-        if (index < 0 || index > getColumnsAmount() - 1) {
-            throw new IllegalArgumentException("2.c. getColumn(int index): index - неверный индекс.");
+        if (index < 0 || index >= getColumnsAmount()) {
+            throw new IndexOutOfBoundsException("Индекс: " + index + ", за пределами индексов столбцов [0, " + (getColumnsAmount() - 1) + "] матрицы.");
         }
 
-        int n = getRowsAmount();
-        Vector column = new Vector(n);
+        int rowsAmount = rows.length;
+        Vector column = new Vector(rowsAmount);
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < rowsAmount; i++) {
             column.setComponent(i, rows[i].getComponent(index));
         }
 
@@ -133,11 +137,11 @@ public class Matrix {
 
     // 2.d. Метод. Транспонирование матрицы.
     public void transpose() {
-        int m = getColumnsAmount();
+        int columnsAmount = getColumnsAmount();
 
-        Vector[] temp = new Vector[m];
+        Vector[] temp = new Vector[columnsAmount];
 
-        for (int i = 0; i < m; i++) {
+        for (int i = 0; i < columnsAmount; i++) {
             temp[i] = getColumn(i);
         }
 
@@ -153,29 +157,31 @@ public class Matrix {
 
     // 2.f. Метод. Вычисление определителя.
     public double getDeterminant() {
-        if (getRowsAmount() != getColumnsAmount()) {
-            throw new IllegalArgumentException("2.f. getDeterminant(): матрица должна быть квадратной!");
+        if (rows.length != getColumnsAmount()) {
+            throw new UnsupportedOperationException("Число строк: " + rows.length + ", число столбцов: " + getColumnsAmount() + ". Матрица должна быть квадратной.");
         }
 
         Matrix triangleMatrix = new Matrix(rows);
 
         int matrixSize = getRowsAmount();
-        int swapsCounter = 0;
+        int swapsAmount = 0;
 
-        for (int i = 0; i < matrixSize - 1; i++) { // цикл по столбцам.
-            for (int j = i + 1; j < matrixSize; j++) { //  цикл по строкам.
+        for (int i = 0; i < matrixSize - 1; i++) { // Цикл по столбцам.
+            for (int j = i + 1; j < matrixSize; j++) { // Цикл по строкам.
                 // Если на диагонали ноль, то "опускаем" его вниз, меняя строку с нижеидущей.
-                if (triangleMatrix.rows[i].getComponent(i) == 0) {
+                double epsilon = 1.0e-10;
+
+                if (Math.abs(triangleMatrix.rows[i].getComponent(i)) <= epsilon) {
                     // Меняем строки местами и на следующую итерацию.
-                    Vector temp = triangleMatrix.getRow(j);  //  это новый вектор.
+                    Vector temp = triangleMatrix.getRow(j);  // Это новый вектор.
                     triangleMatrix.rows[j] = triangleMatrix.getRow(i);
                     triangleMatrix.rows[i] = temp;
-                    swapsCounter++;
+                    swapsAmount++;
 
                     continue;
                 }
 
-                // Добавляем к строке вышестоящую строку, умноженую на число,
+                // Добавляем к строке вышестоящую строку, умноженную на число,
                 // чтобы получить ноль под элементом диагонали.
                 double rowMultiplier = -(triangleMatrix.rows[j].getComponent(i)) / triangleMatrix.rows[i].getComponent(i);
                 Vector temp = triangleMatrix.getRow(i);
@@ -190,7 +196,7 @@ public class Matrix {
             determinant *= triangleMatrix.rows[i].getComponent(i);
         }
 
-        if (swapsCounter % 2 != 0) {
+        if (swapsAmount % 2 != 0) {
             return -determinant;
         }
 
@@ -201,48 +207,39 @@ public class Matrix {
     // чтобы результат получался в таком виде: {{1, 2}, {2, 3}}
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder().append("{");
-        int n = rows.length;
+        StringBuilder sb = new StringBuilder().append('{' );
 
-        for (int i = 0; i < n - 1; i++) {
+        for (int i = 0; i < rows.length - 1; i++) {
             sb.append(rows[i]).append(", ");
         }
 
-        sb.append(rows[n - 1]).append("}");
+        sb.append(rows[rows.length - 1]).append('}' );
 
         return sb.toString();
     }
 
     // 2.i. Метод. Сложение матриц.
     public void add(Matrix matrix) {
-        if (this.getColumnsAmount() != matrix.getColumnsAmount()
-                && this.getRowsAmount() != matrix.getRowsAmount()) {
-            throw new IllegalArgumentException("2.i. add(Matrix matrix): матрицы должны быть одинаковой размрности!");
-        }
+        compareMatricesSize(this, matrix);
 
-        int matrixSize = getRowsAmount();
-
-        for (int i = 0; i < matrixSize; i++) {
-            this.rows[i].add(matrix.getRow(i));
+        for (int i = 0; i < rows.length; i++) {
+            this.rows[i].add(matrix.rows[i]);
         }
     }
 
     // 2.j. Метод. Вычитание матриц.
     public void subtract(Matrix matrix) {
-        if (this.getColumnsAmount() != matrix.getColumnsAmount()
-                && this.getRowsAmount() != matrix.getRowsAmount()) {
-            throw new IllegalArgumentException("2.j. subtract(Matrix matrix): матрицы должны быть одинаковой размерности!");
-        }
+        compareMatricesSize(this, matrix);
 
-        int matrixSize = getRowsAmount();
-
-        for (int i = 0; i < matrixSize; i++) {
-            this.rows[i].subtract(matrix.getRow(i));
+        for (int i = 0; i < rows.length; i++) {
+            this.rows[i].subtract(matrix.rows[i]);
         }
     }
 
     // 3.a. Метод. Сложение матриц.
     public static Matrix getSum(Matrix matrix1, Matrix matrix2) {
+        compareMatricesSize(matrix1, matrix2);
+
         Matrix resultMatrix = new Matrix(matrix1);
         resultMatrix.add(matrix2);
         return resultMatrix;
@@ -250,16 +247,29 @@ public class Matrix {
 
     // 3.b. Метод. Вычитание матриц.
     public static Matrix getDifference(Matrix matrix1, Matrix matrix2) {
+        compareMatricesSize(matrix1, matrix2);
+
         Matrix resultMatrix = new Matrix(matrix1);
         resultMatrix.subtract(matrix2);
         return resultMatrix;
     }
 
+    private static void compareMatricesSize(Matrix matrix1, Matrix matrix2) {
+        // Вот тут яркий пример. Что выгоднее: объявить переменные rowsAmount и columnsAmount или напрямую считать?
+        if (matrix1.getColumnsAmount() != matrix2.getColumnsAmount()
+                || matrix1.rows.length != matrix2.rows.length) {
+            throw new IllegalArgumentException("Исходная (строк: "+ matrix1.rows.length +", столбцов: "+ matrix1.getColumnsAmount() +")"
+                    + " и добавочная (строк: "+ matrix2.rows.length +", столбцов: "+ matrix2.getColumnsAmount()
+                    +") матрицы не совпадают по размеру.");
+        }
+    }
+
     // 3.c. Метод. Умножение матриц.
-    public static Matrix getMultiplication(Matrix matrix1, Matrix matrix2) {
+    public static Matrix getProduct(Matrix matrix1, Matrix matrix2) {
         if (matrix1.getRowsAmount() != matrix2.getColumnsAmount()) {
             throw new IllegalArgumentException("3.c. getMultiplication(Matrix matrix1, Matrix matrix2): число столбцов первой матрицы должно быть равно числу строк второй!");
         }
+        
         int resultMatrixSize = matrix1.getRowsAmount();
 
         Matrix resultMatrix = new Matrix(resultMatrixSize, resultMatrixSize);
@@ -277,15 +287,10 @@ public class Matrix {
 }
 
 /*
-    Описание класса:
-    ===============================
-    n - число строк.
-    m - число колонок.
-
     1.d. Конструктор Matrix(Vector[]) – из массива векторов-строк.
 
     2.a. Метод. Получение размеров матрицы.
-    - getColumnsAmount(). Будем считать, что в процессе создания матрицы не моут получится
+    - getColumnsAmount(). Будем считать, что в процессе создания матрицы не могут получиться
       строки разной длины, поэтому длину берем из первой строки.
 
     2.d. Метод. Транспонирование матрицы.

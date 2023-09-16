@@ -51,7 +51,7 @@ public class MatrixMain {
             Vector sourceVector = new Vector(new double[]{9, 10, 11});
             System.out.println("     Вектор-строка: " + sourceVector);
             System.out.println("     Исходная матрица matrix1a: " + matrix1a);
-            matrix1a.setRow(sourceVector, 1);
+            matrix1a.setRow(1, sourceVector);
             System.out.println("     Результат - matrix1a: " + matrix1a);
             System.out.println();
 
@@ -110,7 +110,7 @@ public class MatrixMain {
             System.out.println("     Исходная матрица matrix1d: " + matrix1d);
             Matrix matrix1e = new Matrix(matrix1d);
             System.out.println("     Исходная матрица matrix1e: " + matrix1e);
-            matrix1d.add(matrix1e);
+                matrix1d.add(matrix1e);
             System.out.println("     Результат: матрица matrix1d: " + matrix1d);
             System.out.println();
 
@@ -135,10 +135,12 @@ public class MatrixMain {
             System.out.println();
 
             // 3.c. Метод. Умножение матриц.
+            System.out.println("3.c. Метод. Умножение матриц.");
             Vector[] vectors3c1 = new Vector[]{
                     new Vector(2, new double[]{2, 1}),
                     new Vector(2, new double[]{-3, 0}),
-                    new Vector(2, new double[]{4, -1})
+                    new Vector(2, new double[]{4, -1}),
+                    new Vector(2, new double[]{3, -4})
             };
             Matrix matrix1 = new Matrix(vectors3c1);
 
@@ -149,7 +151,7 @@ public class MatrixMain {
             Matrix matrix2 = new Matrix(vectors3c2);
             System.out.println("     Исходная матрица matrix1: " + matrix1);
             System.out.println("     Исходная матрица matrix2: " + matrix2);
-            System.out.println("     Их произведение: " + Matrix.getMultiplication(matrix1, matrix2));
+            System.out.println("     Их произведение: " + Matrix.getProduct(matrix1, matrix2));
             System.out.println();
 
             // Проверим исключение:
@@ -159,8 +161,8 @@ public class MatrixMain {
             };
 
             Matrix matrix3 = new Matrix(vectors3c3);
-            System.out.println(Matrix.getMultiplication(matrix1, matrix3));
-        } catch (IllegalArgumentException e) {
+            System.out.println(Matrix.getProduct(matrix1, matrix3));
+        } catch (IllegalArgumentException | IndexOutOfBoundsException | UnsupportedOperationException e) {
             System.out.println("Ошибка! " + e.getMessage());
         }
     }
