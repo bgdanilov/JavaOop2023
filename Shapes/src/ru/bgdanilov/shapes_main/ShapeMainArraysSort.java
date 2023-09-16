@@ -75,8 +75,8 @@ public class ShapeMainArraysSort {
         System.out.println("Side2Length = " + shape2.getSide2Length());
         System.out.println("Side3Length = " + shape2.getSide3Length());
 
-        System.out.println("Высота = " + shape2.getHeight());
-        System.out.println("Ширина = " + shape2.getWidth());
+        System.out.println("Высота = " + shape2.height());
+        System.out.println("Ширина = " + shape2.width());
     }
 }
 
