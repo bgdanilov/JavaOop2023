@@ -110,7 +110,7 @@ public class MatrixMain {
             System.out.println("     Исходная матрица matrix1d: " + matrix1d);
             Matrix matrix1e = new Matrix(matrix1d);
             System.out.println("     Исходная матрица matrix1e: " + matrix1e);
-                matrix1d.add(matrix1e);
+            matrix1d.add(matrix1e);
             System.out.println("     Результат: матрица matrix1d: " + matrix1d);
             System.out.println();
 
@@ -155,8 +155,10 @@ public class MatrixMain {
             System.out.println();
 
             // Проверим исключение:
+            System.out.println("Проверим исключение:");
             Vector[] vectors3c3 = new Vector[]{
                     new Vector(2, new double[]{5, -1}),
+                    new Vector(2, new double[]{-3, 0}),
                     new Vector(2, new double[]{-3, 0})
             };
 

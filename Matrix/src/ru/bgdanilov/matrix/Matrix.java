@@ -218,6 +218,11 @@ public class Matrix {
         return sb.toString();
     }
 
+    // 2.h.	Метод. Умножение матрицы на вектор.
+    public void multiplyByVector(Vector row) {
+        
+    }
+
     // 2.i. Метод. Сложение матриц.
     public void add(Matrix matrix) {
         compareMatricesSize(this, matrix);
@@ -258,27 +263,29 @@ public class Matrix {
         // Вот тут яркий пример. Что выгоднее: объявить переменные rowsAmount и columnsAmount или напрямую считать?
         if (matrix1.getColumnsAmount() != matrix2.getColumnsAmount()
                 || matrix1.rows.length != matrix2.rows.length) {
-            throw new IllegalArgumentException("Исходная (строк: "+ matrix1.rows.length +", столбцов: "+ matrix1.getColumnsAmount() +")"
-                    + " и добавочная (строк: "+ matrix2.rows.length +", столбцов: "+ matrix2.getColumnsAmount()
-                    +") матрицы не совпадают по размеру.");
+            throw new IllegalArgumentException("Исходная (строк: " + matrix1.rows.length + ", столбцов: " + matrix1.getColumnsAmount() + ")"
+                    + " и добавочная (строк: " + matrix2.rows.length + ", столбцов: " + matrix2.getColumnsAmount()
+                    + ") матрицы не совпадают по размеру.");
         }
     }
 
     // 3.c. Метод. Умножение матриц.
     public static Matrix getProduct(Matrix matrix1, Matrix matrix2) {
-        if (matrix1.getRowsAmount() != matrix2.getColumnsAmount()) {
-            throw new IllegalArgumentException("3.c. getMultiplication(Matrix matrix1, Matrix matrix2): число столбцов первой матрицы должно быть равно числу строк второй!");
+        if (matrix1.getColumnsAmount() != matrix2.rows.length) {
+            throw new IllegalArgumentException("Число столбцов ("
+                    + matrix1.getColumnsAmount() + ") первой матрицы должно равняться числу строк ("
+                    + matrix2.rows.length + ") второй матрицы.");
         }
-        
-        int resultMatrixSize = matrix1.getRowsAmount();
 
-        Matrix resultMatrix = new Matrix(resultMatrixSize, resultMatrixSize);
+        int resultRowsAmount = matrix1.rows.length;
+        int resultColumnsAmount = matrix2.getColumnsAmount();
+
+        Matrix resultMatrix = new Matrix(resultRowsAmount, resultColumnsAmount);
 
         // Скалярное произведение строк на столбцы.
-        for (int i = 0; i < resultMatrixSize; i++) {
-            for (int j = 0; j < resultMatrixSize; j++) {
-                double resultMatrixItem = Vector.getDotProduct(matrix1.getRow(i), matrix2.getColumn(j));
-                resultMatrix.rows[i].setComponent(j, resultMatrixItem);
+        for (int i = 0; i < resultRowsAmount; i++) {
+            for (int j = 0; j < resultColumnsAmount; j++) {
+                resultMatrix.rows[i].setComponent(j, Vector.getDotProduct(matrix1.rows[i], matrix2.getColumn(j)));
             }
         }
 
