@@ -220,7 +220,7 @@ public class Matrix {
 
     // 2.h.	Метод. Умножение матрицы на вектор.
     public void multiplyByVector(Vector row) {
-        
+
     }
 
     // 2.i. Метод. Сложение матриц.
