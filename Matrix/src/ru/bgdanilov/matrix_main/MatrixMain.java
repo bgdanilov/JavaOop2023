@@ -105,6 +105,15 @@ public class MatrixMain {
             System.out.println("     Определитель матрицы matrix2f: " + matrix2f.getDeterminant());
             System.out.println();
 
+            // 2.h.	Метод. Умножение матрицы на вектор.
+            System.out.println("2.h. Метод. Умножение матрицы на вектор.");
+            Matrix matrix2h = new Matrix(new double[][]{{1, 2}, {3, 4}, {5, 6}});
+            System.out.println("     Исходная матрица matrix2h: " + matrix2h);
+            Vector vector2h = new Vector(new double[]{1, 2});
+            System.out.println("     Исходный вектор-столбец vector2h: " + vector2h);
+            System.out.println("     Результат: вектор-столбец: " + matrix2h.multiplyByVector(vector2h));
+            System.out.println();
+
             // 2.i. Метод. Сложение матриц.
             System.out.println("2.i. Метод. Сложение матриц.");
             System.out.println("     Исходная матрица matrix1d: " + matrix1d);
