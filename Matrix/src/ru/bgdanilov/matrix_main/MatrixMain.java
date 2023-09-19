@@ -14,7 +14,7 @@ public class MatrixMain {
 
             // 1.c.	Конструктор - создание из Matrix(double[][]) – из двумерного массива.
             System.out.println("1.c.Конструктор - создание из Matrix(double[][]) – из двумерного массива.");
-            double[][] array = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9, 10}};
+            double[][] array = {{}, {4, 5, 6}, {7, 8, 9, 10}};
             Matrix matrix1c = new Matrix(array);
             System.out.println("    matrix1c : " + matrix1c);
             System.out.println();
@@ -51,7 +51,7 @@ public class MatrixMain {
             Vector sourceVector = new Vector(new double[]{9, 10, 11});
             System.out.println("     Вектор-строка: " + sourceVector);
             System.out.println("     Исходная матрица matrix1a: " + matrix1a);
-            matrix1a.setRow(sourceVector, 1);
+            matrix1a.setRow(1, sourceVector);
             System.out.println("     Результат - matrix1a: " + matrix1a);
             System.out.println();
 
@@ -80,7 +80,7 @@ public class MatrixMain {
             // 2.f. Метод. Вычисление определителя.
             System.out.println("2.f. Метод. Вычисление определителя.");
         /*
-        Почему в этой строке обязательно нужно что-то написать чтобы не было варнинга?
+        Почему в этой строке обязательно нужно что-то написать чтобы не было warning?
         Vector[] vectors2f = new Vector[]{
                 new Vector(10, new double[]{0, 0, 3, 4, 5, 4, 7, 8, 9, 5}),
                 new Vector(10, new double[]{4, 7, 8, 9, 5, 4, 7, 8, 9, 5}),
@@ -103,6 +103,15 @@ public class MatrixMain {
             Matrix matrix2f = new Matrix(vectors2f);
             System.out.println("     Исходная матрица matrix2f: " + matrix2f);
             System.out.println("     Определитель матрицы matrix2f: " + matrix2f.getDeterminant());
+            System.out.println();
+
+            // 2.h.	Метод. Умножение матрицы на вектор.
+            System.out.println("2.h. Метод. Умножение матрицы на вектор.");
+            Matrix matrix2h = new Matrix(new double[][]{{1, 2}, {3, 4}, {5, 6}});
+            System.out.println("     Исходная матрица matrix2h: " + matrix2h);
+            Vector vector2h = new Vector(new double[]{1, 2});
+            System.out.println("     Исходный вектор-столбец vector2h: " + vector2h);
+            System.out.println("     Результат: вектор-столбец: " + matrix2h.multiplyByVector(vector2h));
             System.out.println();
 
             // 2.i. Метод. Сложение матриц.
@@ -135,10 +144,12 @@ public class MatrixMain {
             System.out.println();
 
             // 3.c. Метод. Умножение матриц.
+            System.out.println("3.c. Метод. Умножение матриц.");
             Vector[] vectors3c1 = new Vector[]{
                     new Vector(2, new double[]{2, 1}),
                     new Vector(2, new double[]{-3, 0}),
-                    new Vector(2, new double[]{4, -1})
+                    new Vector(2, new double[]{4, -1}),
+                    new Vector(2, new double[]{3, -4})
             };
             Matrix matrix1 = new Matrix(vectors3c1);
 
@@ -149,18 +160,20 @@ public class MatrixMain {
             Matrix matrix2 = new Matrix(vectors3c2);
             System.out.println("     Исходная матрица matrix1: " + matrix1);
             System.out.println("     Исходная матрица matrix2: " + matrix2);
-            System.out.println("     Их произведение: " + Matrix.getMultiplication(matrix1, matrix2));
+            System.out.println("     Их произведение: " + Matrix.getProduct(matrix1, matrix2));
             System.out.println();
 
             // Проверим исключение:
+            System.out.println("Проверим исключение:");
             Vector[] vectors3c3 = new Vector[]{
                     new Vector(2, new double[]{5, -1}),
+                    new Vector(2, new double[]{-3, 0}),
                     new Vector(2, new double[]{-3, 0})
             };
 
             Matrix matrix3 = new Matrix(vectors3c3);
-            System.out.println(Matrix.getMultiplication(matrix1, matrix3));
-        } catch (IllegalArgumentException e) {
+            System.out.println(Matrix.getProduct(matrix1, matrix3));
+        } catch (IllegalArgumentException | IndexOutOfBoundsException | UnsupportedOperationException e) {
             System.out.println("Ошибка! " + e.getMessage());
         }
     }
