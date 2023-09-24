@@ -6,12 +6,12 @@ package ru.bgdanilov.shapes;
  */
 public record Square(double sideLength) implements Shape {
     @Override
-    public double height() {
+    public double getHeight() {
         return sideLength;
     }
 
     @Override
-    public double width() {
+    public double getWidth() {
         return sideLength;
     }
 

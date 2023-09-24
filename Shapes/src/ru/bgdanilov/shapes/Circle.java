@@ -6,12 +6,12 @@ package ru.bgdanilov.shapes;
  */
 public record Circle(double radius) implements Shape {
     @Override
-    public double height() {
+    public double getHeight() {
         return radius * 2;
     }
 
     @Override
-    public double width() {
+    public double getWidth() {
         return radius * 2;
     }
 
