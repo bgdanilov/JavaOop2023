@@ -2,6 +2,16 @@ package ru.bgdanilov.shapes;
 
 public record Rectangle(double height, double width) implements Shape {
     @Override
+    public double getHeight() {
+        return height;
+    }
+
+    @Override
+    public double getWidth() {
+        return width;
+    }
+
+    @Override
     public double getPerimeter() {
         return (height + width) * 2;
     }

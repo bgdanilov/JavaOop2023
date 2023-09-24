@@ -5,9 +5,9 @@ package ru.bgdanilov.shapes;
  * Потом каждую кнопку в классе каждой фигуры переопределим.
  */
 public interface Shape {
-    double height();
+    double getHeight();
 
-    double width();
+    double getWidth();
 
     double getPerimeter();
 
