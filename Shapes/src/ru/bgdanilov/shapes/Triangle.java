@@ -66,12 +66,12 @@ public class Triangle implements Shape {
     }
 
     @Override
-    public double height() {
+    public double getHeight() {
         return Math.max(Math.max(y1, y2), y3) - Math.min(Math.min(y1, y2), y3);
     }
 
     @Override
-    public double width() {
+    public double getWidth() {
         return Math.max(Math.max(x1, x2), x3) - Math.min(Math.min(x1, x2), x3);
     }
 
