@@ -8,11 +8,11 @@ public class Matrix {
     // 1.a. Конструктор - создание пустой матрицы размера rowsAmount * columnsAmount.
     public Matrix(int rowsAmount, int columnsAmount) {
         if (rowsAmount <= 0) {
-            throw new IllegalArgumentException("Количество строк: " + rowsAmount + ", нельзя создать матрицу с нулевым или отрицательным числом строк.");
+            throw new IllegalArgumentException("Количество строк: " + rowsAmount + ", нельзя создать матрицу с нулевым или отрицательным количеством строк.");
         }
 
         if (columnsAmount <= 0) {
-            throw new IllegalArgumentException("Количество столбцов: " + columnsAmount + ", нельзя создать матрицу с нулевым или отрицательным числом столбцов.");
+            throw new IllegalArgumentException("Количество столбцов: " + columnsAmount + ", нельзя создать матрицу с нулевым или отрицательным количеством столбцов.");
         }
 
         // Создаем строки матрицы - массив объектов Vector.
@@ -29,7 +29,7 @@ public class Matrix {
     public Matrix(Matrix matrix) {
         int rowsAmount = matrix.rows.length;
 
-        rows = new Vector[rowsAmount];
+        rows = new Vector[matrix.rows.length];
 
         for (int i = 0; i < rowsAmount; i++) {
             rows[i] = new Vector(matrix.rows[i]);
@@ -129,10 +129,10 @@ public class Matrix {
 
     // 2.c. Метод. Получение вектора-столбца по индексу.
     public Vector getColumn(int index) {
-        int columnAmount = getColumnsAmount();
+        int columnsAmount = getColumnsAmount();
 
-        if (index < 0 || index >= columnAmount) {
-            throw new IndexOutOfBoundsException("Индекс: " + index + ", за пределами индексов столбцов [0, " + (columnAmount - 1) + "] матрицы.");
+        if (index < 0 || index >= columnsAmount) {
+            throw new IndexOutOfBoundsException("Индекс: " + index + ", за пределами индексов столбцов [0, " + (columnsAmount - 1) + "] матрицы.");
         }
 
         int rowsAmount = rows.length;
@@ -175,28 +175,28 @@ public class Matrix {
 
         int matrixSize = getRowsAmount();
         int swapsAmount = 0;
+        final double EPSILON = 1.0e-10;
 
         for (int i = 0; i < matrixSize - 1; i++) { // Цикл по столбцам.
             for (int j = i + 1; j < matrixSize; j++) { // Цикл по строкам.
                 // Если на диагонали ноль, то "опускаем" его вниз, меняя строку с ниже-идущей.
-                double epsilon = 1.0e-10;
-
-                if (Math.abs(triangleMatrix.rows[i].getComponent(i)) <= epsilon) {
+                if (Math.abs(triangleMatrix.rows[i].getComponent(i)) <= EPSILON) {
                     // Меняем строки местами и на следующую итерацию.
-                    Vector temp = triangleMatrix.getRow(j);  // Это новый вектор.
-                    triangleMatrix.rows[j] = triangleMatrix.getRow(i);
-                    triangleMatrix.rows[i] = temp;
+                    Vector currentRow = triangleMatrix.getRow(i);
+                    triangleMatrix.rows[i] = triangleMatrix.getRow(j);
+                    triangleMatrix.rows[j] = currentRow;
+
                     swapsAmount++;
 
                     continue;
                 }
 
-                // Добавляем к строке вышестоящую строку, умноженную на число,
+                // Добавляем к текущей строке ниже-идущую строку, умноженную на число,
                 // чтобы получить ноль под элементом диагонали.
                 double rowMultiplier = -(triangleMatrix.rows[j].getComponent(i)) / triangleMatrix.rows[i].getComponent(i);
-                Vector temp = triangleMatrix.getRow(i);
-                temp.multiplyByScalar(rowMultiplier);
-                triangleMatrix.rows[j].add(temp);
+                Vector currentRow = triangleMatrix.getRow(i);
+                currentRow.multiplyByScalar(rowMultiplier);
+                triangleMatrix.rows[j].add(currentRow);
             }
         }
 
@@ -248,25 +248,25 @@ public class Matrix {
 
     // 2.i. Метод. Сложение матриц.
     public void add(Matrix matrix) {
-        compareMatricesSize(this, matrix);
+        checkMatricesSizes(this, matrix);
 
         for (int i = 0; i < rows.length; i++) {
-            this.rows[i].add(matrix.rows[i]);
+            rows[i].add(matrix.rows[i]);
         }
     }
 
     // 2.j. Метод. Вычитание матриц.
     public void subtract(Matrix matrix) {
-        compareMatricesSize(this, matrix);
+        checkMatricesSizes(this, matrix);
 
         for (int i = 0; i < rows.length; i++) {
-            this.rows[i].subtract(matrix.rows[i]);
+            rows[i].subtract(matrix.rows[i]);
         }
     }
 
     // 3.a. Метод. Сложение матриц.
     public static Matrix getSum(Matrix matrix1, Matrix matrix2) {
-        compareMatricesSize(matrix1, matrix2);
+        checkMatricesSizes(matrix1, matrix2);
 
         Matrix resultMatrix = new Matrix(matrix1);
         resultMatrix.add(matrix2);
@@ -275,21 +275,21 @@ public class Matrix {
 
     // 3.b. Метод. Вычитание матриц.
     public static Matrix getDifference(Matrix matrix1, Matrix matrix2) {
-        compareMatricesSize(matrix1, matrix2);
+        checkMatricesSizes(matrix1, matrix2);
 
         Matrix resultMatrix = new Matrix(matrix1);
         resultMatrix.subtract(matrix2);
         return resultMatrix;
     }
 
-    private static void compareMatricesSize(Matrix matrix1, Matrix matrix2) {
+    private static void checkMatricesSizes(Matrix matrix1, Matrix matrix2) {
         // Вот тут яркий пример. Что выгоднее: объявить переменные rowsAmount и columnsAmount или напрямую считать?
         // Или сделать как в 3.c ниже?
         if (matrix1.getColumnsAmount() != matrix2.getColumnsAmount()
                 || matrix1.rows.length != matrix2.rows.length) {
-            throw new IllegalArgumentException("Исходная (строк: " + matrix1.rows.length + ", столбцов: " + matrix1.getColumnsAmount() + ")"
-                    + " и добавочная (строк: " + matrix2.rows.length + ", столбцов: " + matrix2.getColumnsAmount()
-                    + ") матрицы не совпадают по размеру.");
+            throw new IllegalArgumentException("Матрица1 (строк: " + matrix1.rows.length + ", столбцов: " + matrix1.getColumnsAmount() + ")"
+                    + " и Матрица2 (строк: " + matrix2.rows.length + ", столбцов: " + matrix2.getColumnsAmount()
+                    + ") не совпадают по размеру.");
         }
     }
 
@@ -342,7 +342,7 @@ public class Matrix {
  *    2.f. Метод. Вычисление определителя.
  *    - используем метод Гаусса. Приводим матрицу к нижнему треугольному виду.
  *    - определитель не изменится, если к строке добавить строку, умноженную на число.
- *    - определитель - еть произведение элементов по диагонали.
+ *    - определитель - есть произведение элементов по диагонали.
  *    - при перемене строк, определитель меняет знак, поэтому считаем число замен.
  *
  *    3.c. Метод. Умножение матриц.
