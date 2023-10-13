@@ -166,14 +166,14 @@ public class Vector {
     // Проверка размерности вектора.
     private static void checkSize(int size) {
         if (size <= 0) {
-            throw new IllegalArgumentException("Size: " + size + ", Отрицательная или нулевая размерность вектора недопустима.");
+            throw new IllegalArgumentException("Size: (" + size + "), Отрицательная или нулевая размерность вектора недопустима.");
         }
     }
 
     // Проверка передаваемого индекса.
     private void checkIndex(int index) {
         if (index < 0 || components.length - 1 < index) {
-           throw new IndexOutOfBoundsException("Индекс: (" + index + "), за пределами индексов (0, " + (components.length - 1) + ") вектора.");
+            throw new IndexOutOfBoundsException("Индекс: (" + index + "), за пределами индексов (0, " + (components.length - 1) + ") вектора.");
         }
     }
 }
