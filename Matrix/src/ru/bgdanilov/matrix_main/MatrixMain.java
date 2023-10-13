@@ -27,7 +27,7 @@ public class MatrixMain {
 
             // 1.d. Конструктор	Matrix(Vector[]) – из массива векторов-строк.
             System.out.println("1.d. Конструктор Matrix(Vector[]) – из массива векторов-строк.");
-            Vector[] vectors = new Vector[]{new Vector(3, new double[]{1, 2, 3}), new Vector(2, new double[]{3, 4})};
+            Vector[] vectors = {new Vector(3, new double[]{1, 2, 3}), new Vector(2, new double[]{3, 4})};
             Matrix matrix1d = new Matrix(vectors);
             System.out.println("     matrix1d : " + matrix1d);
             System.out.println();
@@ -81,7 +81,7 @@ public class MatrixMain {
             System.out.println("2.f. Метод. Вычисление определителя.");
         /*
         Почему в этой строке обязательно нужно что-то написать чтобы не было warning?
-        Vector[] vectors2f = new Vector[]{
+        Vector[] vectors2f = {
                 new Vector(10, new double[]{0, 0, 3, 4, 5, 4, 7, 8, 9, 5}),
                 new Vector(10, new double[]{4, 7, 8, 9, 5, 4, 7, 8, 9, 5}),
                 new Vector(10, new double[]{0, 0, 3, 4, 5, 10, 11, 12, 5, 5}),
@@ -94,7 +94,7 @@ public class MatrixMain {
                 new Vector(10, new double[]{13, 14, 8, 9, 0, 4, 7, 15, 0, 12})
         };
         */
-            Vector[] vectors2f = new Vector[]{
+            Vector[] vectors2f = {
                     new Vector(4, new double[]{2, -2, 1, 3}),
                     new Vector(4, new double[]{0, 1, 2, 9}),
                     new Vector(4, new double[]{2, 2, -1, 7}),
@@ -145,7 +145,7 @@ public class MatrixMain {
 
             // 3.c. Метод. Умножение матриц.
             System.out.println("3.c. Метод. Умножение матриц.");
-            Vector[] vectors3c1 = new Vector[]{
+            Vector[] vectors3c1 = {
                     new Vector(2, new double[]{2, 1}),
                     new Vector(2, new double[]{-3, 0}),
                     new Vector(2, new double[]{4, -1}),
@@ -153,7 +153,7 @@ public class MatrixMain {
             };
             Matrix matrix1 = new Matrix(vectors3c1);
 
-            Vector[] vectors3c2 = new Vector[]{
+            Vector[] vectors3c2 = {
                     new Vector(3, new double[]{5, -1, 6}),
                     new Vector(3, new double[]{-3, 0, 7})
             };
@@ -165,7 +165,7 @@ public class MatrixMain {
 
             // Проверим исключение:
             System.out.println("Проверим исключение:");
-            Vector[] vectors3c3 = new Vector[]{
+            Vector[] vectors3c3 = {
                     new Vector(2, new double[]{5, -1}),
                     new Vector(2, new double[]{-3, 0}),
                     new Vector(2, new double[]{-3, 0})
