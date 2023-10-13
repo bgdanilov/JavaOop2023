@@ -19,6 +19,7 @@ public class Vector {
 
     // 1.c. Конструктор - заполнение вектора значениями из массива.
     public Vector(double[] components) {
+        checkSize(components.length);
         this.components = Arrays.copyOf(components, components.length);
     }
 
@@ -37,10 +38,6 @@ public class Vector {
     // 3. Метод. toString(), чтобы выдавал информацию о векторе в формате {значения компонент через запятую}
     @Override
     public String toString() {
-        if (components.length == 0) {
-            return "{}";
-        }
-
         StringBuilder sb = new StringBuilder().append('{');
         int maxIndex = components.length - 1;
 
@@ -102,10 +99,12 @@ public class Vector {
 
     // 4.f. Получение и установка компоненты вектора по индексу.
     public double getComponent(int index) {
+        checkIndex(index);
         return components[index];
     }
 
     public void setComponent(int index, double component) {
+        checkIndex(index);
         components[index] = component;
     }
 
@@ -165,9 +164,16 @@ public class Vector {
     }
 
     // Проверка размерности вектора.
-    private void checkSize(int size) {
-        if (size < 0) {
-            throw new IllegalArgumentException("Size: " + size + ", Отрицательная размерность вектора недопустима.");
+    private static void checkSize(int size) {
+        if (size <= 0) {
+            throw new IllegalArgumentException("Size: " + size + ", Отрицательная или нулевая размерность вектора недопустима.");
+        }
+    }
+
+    // Проверка передаваемого индекса.
+    private void checkIndex(int index) {
+        if (index < 0 || components.length - 1 < index) {
+           throw new IndexOutOfBoundsException("Индекс: (" + index + "), за пределами индексов (0, " + (components.length - 1) + ") вектора.");
         }
     }
 }

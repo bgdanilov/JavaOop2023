@@ -115,7 +115,7 @@ public class VectorMain {
             System.out.println("     Для справки vector1: " + vector1);
             System.out.println("     Для справки vector5: " + vector5);
             System.out.println();
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
             System.out.println("Ошибка! " + e.getMessage());
         }
     }
