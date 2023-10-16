@@ -2,34 +2,38 @@
 // Создать бесконечный поток корней чисел.
 // С консоли прочитать число – сколько элементов нужно вычислить, затем – распечатать эти элементы.
 
-package ru.bgdanilov.lambdas_main;
+package ru.bgdanilov.lambdas;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Stream;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 public class LambdasMainTask2 {
     public static void main(String[] args) {
-        int inputNumber = getNumber();
+        // 1. Сначала создаем Stream целых чисел.
+        IntStream ints = IntStream.iterate(1, number -> number + 1);
 
-        if (inputNumber == 0) {
+        // 2. Считываем число-ограничитель с консоли.
+        int rootsAmount = getRootsAmount();
+
+        if (rootsAmount == 0) {
             System.out.println("Вы выбрали \"выход\". Программа завершена.");
             return;
         }
 
-        Stream<Double> sqrt = Stream
-                .iterate(1, number -> ++number)
-                //.map(x -> Math.sqrt(number)) // каждый элемент меняем на корень.
-                .map(Math::sqrt) // каждому элементу применяем sqrt из класса Math.
-                .limit(inputNumber);
+        // 3. Ограничиваем поток целых чисел, вычисляем корни, создаем список.
+        List<Double> squareRoots = ints
+                .limit(rootsAmount)
+                .mapToDouble(Math::sqrt)
+                .boxed()
+                .toList();
 
-        List<Double> mylist = sqrt.toList();
-
-        System.out.println(mylist);
+        System.out.println("Вычисленный список корней:");
+        System.out.println(squareRoots);
     }
 
-    public static int getNumber() {
+    public static int getRootsAmount() {
         Scanner scanner = new Scanner(System.in).useDelimiter("\n");
         System.out.printf("Введите целое число от 1 до 100 или 0 для выхода:%n");
 

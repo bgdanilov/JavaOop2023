@@ -2,7 +2,7 @@ package ru.bgdanilov.lambdas;
 
 public class Person {
     private String name;
-    private int age;
+    private final int age;
 
     public Person(String name, int age) {
         this.name = name;
@@ -13,16 +13,12 @@ public class Person {
         return name;
     }
 
-    public int getAge() {
-        return age;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public int getAge() {
+        return age;
     }
 
     @Override
