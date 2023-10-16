@@ -1,77 +1,71 @@
-package ru.bgdanilov.lambdas_main;
-
-import ru.bgdanilov.lambdas.Person;
+package ru.bgdanilov.lambdas;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class LambdasMain {
     public static void main(String[] args) {
-        List<Person> persons = new ArrayList<>();
-
-        persons.add(new Person("Петр", 30));
-        persons.add(new Person("Иван", 34));
-        persons.add(new Person("Сергей", 25));
-        persons.add(new Person("Дмитрий", 34));
-        persons.add(new Person("Борис", 42));
-        persons.add(new Person("Иван", 55));
-        persons.add(new Person("Петр", 17));
-        persons.add(new Person("Елена", 12));
+        List<Person> persons = Arrays.asList(
+                new Person("Петр", 30),
+                new Person("Иван", 34),
+                new Person("Сергей", 25),
+                new Person("Дмитрий", 34),
+                new Person("Борис", 45),
+                new Person("Иван", 55),
+                new Person("Петр", 17),
+                new Person("Елена", 12));
 
         // А. Получить список уникальных имен.
+        System.out.println("А. Получить список уникальных имен.");
         List<String> uniqueNames = persons.stream()
                 .map(Person::getName)
                 .distinct()
                 .toList();
 
+        System.out.println(uniqueNames);
+        System.out.println();
+
         // Б. Вывести список уникальных имен в формате Имена: Имя1, Имя2.
         System.out.println("Б. Вывести список уникальных имен в формате Имена: Имя1, Имя2.");
-        System.out.print("Имена: "
-                + uniqueNames.stream().collect(Collectors.joining(", "))
-                + ".\n");
+        String uniqueNamesLine = "Имена: " + String.join(", ", uniqueNames) + ".";
 
-        // IDE предлагает так сделать.
-        System.out.print("Имена: "
-                + String.join(", ", uniqueNames)
-                + ".\n");
+        System.out.println(uniqueNamesLine);
         System.out.println();
 
         // В. Получить список людей младше 18, посчитать для них средний возраст.
         System.out.println("В. Получить список людей младше 18, посчитать для них средний возраст.");
-        List<Person> underEighteenPersons = persons.stream()
-                .filter(person -> person.getAge() < 18)
+        List<Person> under18Persons = persons.stream()
+                .filter(p -> p.getAge() < 18)
                 .toList();
 
-        System.out.println(underEighteenPersons);
-
-        System.out.println("Средний возраст персон младше 18 лет: "
-                + underEighteenPersons.stream()
+        OptionalDouble personsUnder18average = under18Persons.stream()
                 .mapToInt(Person::getAge)
-                .average().orElse(0)
-                + " лет.");
+                .average();
+
+        personsUnder18average.ifPresentOrElse(
+                averageAge -> System.out.println("Средний возраст персон младше 18 лет: " + averageAge + "."),
+                () -> System.out.println("Людей младше 18 лет нет.")
+        );
         System.out.println();
 
         // Г. При помощи группировки получить Map, в котором ключи – имена, а значения – средний возраст.
         System.out.println("Г. При помощи группировки получить Map, в котором ключи – имена, а значения – средний возраст.");
-        Map<String, Double> averageAgeByNames = persons.stream()
+        Map<String, Double> averageAgesByNames = persons.stream()
                 .collect(Collectors.groupingBy(Person::getName, Collectors.averagingInt(Person::getAge)));
 
-        System.out.println(averageAgeByNames);
+        System.out.println(averageAgesByNames);
         System.out.println();
 
         // Д. Получить людей, возраст которых от 20 до 45, вывести в консоль их имена в порядке убывания возраста.
         System.out.println("Д. Получить людей, возраст которых от 20 до 45, вывести в консоль их имена в порядке убывания возраста.");
-        List<Person> personsAgedBetween20And45 = persons.stream()
-                .filter(person -> person.getAge() < 45)
-                .filter(person -> person.getAge() > 20)
-                .toList();
-
-        System.out.println(personsAgedBetween20And45);
-
-        System.out.print("Имена порядке убывания возраста: " + personsAgedBetween20And45.stream()
-                .sorted((person2, person1) -> person1.getAge() - person2.getAge())
+        String personsAgedBetween20And45Line = "Имена порядке убывания возраста: " + persons.stream()
+                .filter(p -> p.getAge() >= 20 && p.getAge() <= 45)
+                // Так тоже можно.
+                //.sorted((person1, person2) -> person2.getAge() - person1.getAge())
+                .sorted(Collections.reverseOrder(Comparator.comparingInt(Person::getAge)))
                 .map(Person::getName)
-                .collect(Collectors.joining(", "))
-                + ".\n");
+                .collect(Collectors.joining(", ")) + ".";
+
+        System.out.println(personsAgedBetween20And45Line);
     }
 }
