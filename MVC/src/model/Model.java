@@ -4,41 +4,53 @@ public class Model {
     private double temperature;
     private char range;
 
-    public double convertTemperature(double temperature, char range) {
-        if (this.range == range) {
-            return temperature;
+    public void convertTemperature(char outputRange) {
+        if (range == outputRange) {
+            return;
         }
 
-        switch (this.range) {
+        switch (range) {
             case 'C':
-                switch (range) {
+                switch (outputRange) {
                     case 'K' -> {
-                        return temperature + 273.15;
+                        setTemperature(temperature + 273.15);
+                        setRange(outputRange);
+                        return;
                     }
                     case 'F' -> {
-                        return temperature * 1.8 + 32.0;
+                        setTemperature(temperature * 1.8 + 32.0);
+                        setRange(outputRange);
+                        return;
                     }
                 }
             case 'K':
-                switch (range) {
+                switch (outputRange) {
                     case 'C' -> {
-                        return temperature - 273.15;
+                        setTemperature(temperature - 273.15);
+                        setRange(outputRange);
+                        return;
                     }
                     case 'F' -> {
-                        return 1.8 * (temperature - 273.15) + 32.0;
+                        setTemperature(1.8 * (temperature - 273.15) + 32.0);
+                        setRange(outputRange);
+                        return;
                     }
                 }
             case 'F':
-                switch (range) {
+                switch (outputRange) {
                     case 'C' -> {
-                        return 5.0 * (temperature - 32.0) / 9.0;
+                        setTemperature(5.0 * (temperature - 32.0) / 9.0);
+                        setRange(outputRange);
+                        return;
                     }
                     case 'K' -> {
-                        return 273.15 + 5.0 * (temperature - 32.0) / 9.0;
+                        setTemperature(273.15 + 5.0 * (temperature - 32.0) / 9.0);
+                        setRange(outputRange);
+                        return;
                     }
                 }
             default:
-                throw new IllegalArgumentException("Что-то надо написать.");
+                throw new IllegalArgumentException("Ошибка.");
         }
     }
 
@@ -59,5 +71,6 @@ public class Model {
     }
 }
 
+// Тезисы:
 // Основная часть программы.
-// Тут обычно делают соединение с БД, проверки, основные вычисления..
+// Тут обычно делают соединение с БД, проверки, основные вычисления.

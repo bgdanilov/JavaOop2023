@@ -5,13 +5,9 @@ import view.ConsoleView;
 public class Main {
     public static void main(String[] args) {
         try {
-            Model inputTemperature = new Model();
-            Controller inputTemperatureController = new Controller(inputTemperature);
-
-            Model outputTemperature = new Model();
-            Controller outputTemperatureController = new Controller(outputTemperature);
-
-            ConsoleView userView = new ConsoleView(inputTemperatureController, outputTemperatureController);
+            Model model = new Model();
+            Controller controller = new Controller(model);
+            ConsoleView userView = new ConsoleView(controller);
 
             userView.execute();
         } catch (NumberFormatException e) {

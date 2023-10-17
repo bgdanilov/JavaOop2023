@@ -5,12 +5,10 @@ import controller.Controller;
 import java.util.Scanner;
 
 public class ConsoleView {
-    private final Controller inputTemperatudeController;
-    private final Controller outputTemperatudeController;
+    private final Controller controller;
 
-    public ConsoleView(Controller controller1, Controller controller2) {
-        inputTemperatudeController = controller1;
-        outputTemperatudeController = controller2;
+    public ConsoleView(Controller controller) {
+        this.controller = controller;
     }
 
     public void execute() {
@@ -33,27 +31,33 @@ public class ConsoleView {
         System.out.println("Введите во что конвертировать (C, K, F):");
         char outputTemperatureRange = scanner.next().charAt(0);
 
-        if (outputTemperatureRange != 'C' && inputTemperatureRange != 'K' && inputTemperatureRange != 'F') {
+        if (outputTemperatureRange != 'C' && outputTemperatureRange != 'K' && outputTemperatureRange != 'F') {
             throw new NumberFormatException("Вы должны ввести C, K или F.");
         }
 
-        inputTemperatudeController.setTemperatureData(inputTemperature, inputTemperatureRange);
+        // Записываем данные исходной температуры в модель.
+        controller.setTemperatureData(inputTemperature, inputTemperatureRange);
+        // Формируем сообщение с данными исходной температуры.
+        String inputTemperatureMessage = "Исходная температура: " + controller.getTemperatureData();
 
-        double outTemperature = inputTemperatudeController.getOutputTemperature(inputTemperature, outputTemperatureRange);
-        outputTemperatudeController.setTemperatureData(outTemperature, outputTemperatureRange);
+        // Конвертируем температуру, согласно заданию. Изменяем состояние модели.
+        controller.convertTemperature(outputTemperatureRange);
+        // Формируем сообщение с данными выходной температуры.
+        String outputTemperatureMessage = "Выходная температура: " + controller.getTemperatureData();
 
-        System.out.println("Исходная температура: " + inputTemperatudeController.getTemperatureData());
-        System.out.println("Выходная температура: " + outputTemperatudeController.getTemperatureData());
+        System.out.println(inputTemperatureMessage);
+        System.out.println(outputTemperatureMessage);
     }
 }
 
+// Тезисы:
 // Это то, что можно увидеть и только.
-// У вью есть свойство-поле, привязка к определенному контроллеру.
+// У Вьюшки есть свойство-поле, привязка к определенному контроллеру.
 // Нельзя создавать экземпляры класса друг в друге
-// Класс модели во Вью. Контроллер внутри модели.
+// Класс модели во Вьюшке. Контроллер внутри модели.
 // !!!! Вью должна быть подписана на Модель, на ее изменения.
-// Или, мой случай. Модель выдает результат Контроллеру, а Контроллер что-то вызывает у Вью.
-// 1. Тут типа Кнопка Вью вызывает метод контроллера.
+// Или, мой случай. Модель выдает результат Контроллеру, а Контроллер что-то вызывает у Вьюшки.
+// 1. Тут подобие Кнопки Вьюшки вызывает метод контроллера.
 // 2. Контроллер вызывает метод Модели.
 // 3. Модель производит вычисления и отдает результат Контроллеру.
-// 4. Контроллер вызывает sout у Вью и отображает результат.
+// 4. Контроллер вызывает System.out.println у Вьюшки и отображает результат.
