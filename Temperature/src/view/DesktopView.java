@@ -29,7 +29,7 @@ public class DesktopView extends JFrame {
         setIconImage(icon);
 
         JLabel header = new JLabel("Введите температуру:");
-        JTextField textField = new JTextField("0", 12);
+        JTextField textField = new JTextField("0", 13);
 
         String[] temperatureRanges = new String[]{"Celsius", "Fahrenheit", "Kelvin"};
         JComboBox<String> inputTemperatureComboBox = new JComboBox<>(temperatureRanges);
@@ -81,7 +81,6 @@ public class DesktopView extends JFrame {
                 textField.setEditable(false);
             } catch (NumberFormatException exception) {
                 showMessageDialog(this, "Вы должны ввести число.");
-                header.setText("Введите температуру:");
                 textField.setText("0");
                 // Эта ситуация тут невозможна, но на всякий случай.
                 // Почему NullPointerException не ловит для rangeOutput.getSelectedItem()).charAt(0) ?
@@ -96,6 +95,7 @@ public class DesktopView extends JFrame {
             // TODO Использовать замыкание, чтобы при сбросе подставлялась исходная температура.
             //  Вдруг я захочу одну и ту же температуру по разным шкалам конвертировать.
             textField.setEditable(true);
+            textField.setText("0");
             inputTemperatureComboBox.setSelectedIndex(0);
             outputTemperatureComboBox.setSelectedIndex(0);
         });
