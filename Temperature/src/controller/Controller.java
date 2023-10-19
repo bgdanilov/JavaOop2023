@@ -20,9 +20,8 @@ public class Controller {
         DecimalFormat temperatureFormat = new DecimalFormat("0.00E00");
 
         return model.getTemperature() < 10000 ?
-                String.valueOf(model.getTemperature()) : temperatureFormat.format(model.getTemperature())
-                + " "
-                + model.getRange();
+                model.getTemperature() + " " + model.getRange() :
+                temperatureFormat.format(model.getTemperature()) + " " + model.getRange();
     }
 
     public void convertTemperature(char outputRange) {
