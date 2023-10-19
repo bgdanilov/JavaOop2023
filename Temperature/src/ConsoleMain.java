@@ -2,7 +2,7 @@ import controller.Controller;
 import model.Model;
 import view.ConsoleView;
 
-public class  Main {
+public class ConsoleMain {
     public static void main(String[] args) {
         try {
             Model model = new Model();
