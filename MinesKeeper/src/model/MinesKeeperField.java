@@ -68,13 +68,13 @@ public class MinesKeeperField {
         }
     }
 
-    public void getMinesAroundAmount() {
+    public void calculateMinesAround() {
         int minesAmount = 0;
 
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field.length; j++) {
                 if (!field[i][j].isMine) {
-                    minesAmount = minesAmount + checkAround(i, j);
+                    minesAmount = minesAmount + calculateMinesAround(i, j);
                 }
 
                 field[i][j].minesAroundAmount = minesAmount;
@@ -83,7 +83,7 @@ public class MinesKeeperField {
         }
     }
 
-    public int checkAround(int row, int column) {
+    public int calculateMinesAround(int row, int column) {
         int count = 0;
 
         for (int i = row - 1; i < row + 2; i++) {
@@ -102,7 +102,7 @@ public class MinesKeeperField {
         return count;
     }
 
-    public void openCell(int row, int column) {
+    public void openCells(int row, int column) {
         // Открываем выбранную клетку.
         field[row][column].status = "O";
 
@@ -110,15 +110,15 @@ public class MinesKeeperField {
             return;
         }
 
-        // Проверяем клетки вокруг выбранной клетки. Создаем карман.
-        ArrayList<MineCell> stash = new ArrayList<>();
-        // Кладем в карман выбранную клетку.
-        stash.add(new MineCell(row, column));
+        // Проверяем клетки вокруг выбранной клетки. Создаем очередь.
+        ArrayList<MineCell> queue = new ArrayList<>();
+        // Помещаем в очередь выбранную клетку.
+        queue.add(new MineCell(row, column));
 
-        // Пока в кармане есть ожидающие проверки клетки.
-        while (stash.size() != 0) {
-            // Берем выбранную клетку из кармана.
-            MineCell currentCell = stash.get(0);
+        // Пока в очереди есть ожидающие проверки клетки.
+        while (queue.size() != 0) {
+            // Берем выбранную очереди из кармана - всегда первая.
+            MineCell currentCell = queue.get(0);
             row = currentCell.row;
             column = currentCell.column;
 
@@ -137,13 +137,13 @@ public class MinesKeeperField {
                         continue;
                     }
 
-                    // Если не мина и клетка не ранее обработана, то проверяем.
+                    // Если не мина и клетка не обработана ранее, то проверяем.
                     if (!field[i][j].isMine && !field[i][j].isChecked) {
 
                         // Если пустая, добавляем в очередь и открываем иначе просто открываем.
                         if (field[i][j].minesAroundAmount == 0) {
-                            //queue.add(new MineCell(i, j));
-                            stash.add(new MineCell(i, j));
+                            queue.add(new MineCell(i, j));
+                            //stash.add(new MineCell(i, j));
                         }
 
                         field[i][j].status = "O";
@@ -151,11 +151,9 @@ public class MinesKeeperField {
                 }
             }
 
-            // Помечаем клетку как проверенную. И удаляем из кармана.
+            // Помечаем клетку как проверенную. И удаляем из очереди.
             field[row][column].isChecked = true;
-            stash.remove(0);
+            queue.remove(0);
         }
     }
 }
-
-
