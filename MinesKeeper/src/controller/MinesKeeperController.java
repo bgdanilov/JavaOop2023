@@ -12,7 +12,7 @@ public class MinesKeeperController {
     public void addCells() {
         field.makeMineCells();
         field.generateMines();
-        field.getMinesAroundAmount();
+        field.calculateMinesAround();
     }
 
     public void displayMinesField() {
@@ -21,7 +21,7 @@ public class MinesKeeperController {
 
     public void makeAction(int action, int row, int columns) {
         if (action == 1) {
-            field.openCell(row, columns);
+            field.openCells(row, columns);
         } else if (action == 2) {
             field.setFlag(row, columns);
         }
