@@ -1,12 +1,9 @@
 package controller;
 
-import model.MineCell;
 import model.MinesKeeperField;
 
-import java.util.Random;
-
 public class MinesKeeperController {
-    private MinesKeeperField field;
+    private final MinesKeeperField field;
 
     public MinesKeeperController(MinesKeeperField field) {
         this.field = field;
@@ -19,8 +16,15 @@ public class MinesKeeperController {
     }
 
     public void displayMinesField() {
-        field.checkAround2(0, 0);
         field.displayField();
+    }
+
+    public void makeAction(int action, int row, int columns) {
+        if (action == 1) {
+            field.openCell(row, columns);
+        } else if (action == 2) {
+            field.setFlag(row, columns);
+        }
     }
 }
 

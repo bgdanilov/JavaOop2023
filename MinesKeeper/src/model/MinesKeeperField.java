@@ -1,13 +1,16 @@
 package model;
 
-import java.util.Random;
+import java.util.*;
 
 public class MinesKeeperField {
-    //private HashMap<String, MineCell> mineField = new HashMap<>();
-    private MineCell[][] field;
+    private final MineCell[][] field;
 
     public MinesKeeperField(int size) {
         field = new MineCell[size][size];
+    }
+
+    public void setFlag(int row, int column) {
+        field[row][column].status = "F";
     }
 
     public void makeMineCells() {
@@ -19,17 +22,30 @@ public class MinesKeeperField {
     }
 
     public void displayField() {
-        for (int i = 0; i < field.length; i++) {
+        for (MineCell[] mineCells : field) {
             for (int j = 0; j < field.length; j++) {
-                //System.out.print(field[i][j].isMine + "," + field[i][j].minesAroundAmount + "| ");
-                String x = String.valueOf(field[i][j].minesAroundAmount);
-                String y = field[i][j].status;
-                if (field[i][j].isMine) {
-                    x = "x";
-                } else {
-                    x = y;
+                String msg = " ";
+
+                if (Objects.equals(mineCells[j].status, "O")) {
+                    if (mineCells[j].isMine) {
+                        msg = "X";
+                    } else {
+                        int minesAmount = mineCells[j].minesAroundAmount;
+
+                        if (minesAmount == 0) {
+                            msg = ".";
+                        } else {
+                            msg = String.valueOf(minesAmount);
+                        }
+                    }
+                } else if (Objects.equals(mineCells[j].status, "F")) {
+                    msg = "F";
                 }
-                System.out.print(x + " | ");
+
+                // Открыть все мины.
+                if (mineCells[j].isMine) msg = "X";
+
+                System.out.print(msg + " | ");
             }
 
             System.out.println();
@@ -41,8 +57,8 @@ public class MinesKeeperField {
         Random rd = new Random();
 
         for (int i = 0; i < minesAmount; i++) {
-            int rdRow = rd.nextInt(4);
-            int rdColumn = rd.nextInt(4);
+            int rdRow = rd.nextInt(field.length);
+            int rdColumn = rd.nextInt(field.length);
 
             if (field[rdRow][rdColumn].isMine) {
                 continue;
@@ -52,7 +68,6 @@ public class MinesKeeperField {
         }
     }
 
-    //  Считает еще и саму себя, поэтому нужно отнять -1.
     public void getMinesAroundAmount() {
         int minesAmount = 0;
 
@@ -87,64 +102,58 @@ public class MinesKeeperField {
         return count;
     }
 
-    public void openEmptyCells(int row, int columns) {
+    public void openCell(int row, int column) {
+        // Открываем выбранную клетку.
+        field[row][column].status = "O";
 
-    }
-
-    public void checkAround2(int row, int column) {
-        if (!field[row][column].isMine) {
-            field[row][column].status = "e";
-        } else {
+        if (field[row][column].isMine) {
             return;
         }
 
-        for (int i = row - 1; i < row + 2; i++) {
-            if (i < 0 || i == field.length) {
-                continue;
+        // Проверяем клетки вокруг выбранной клетки. Создаем карман.
+        ArrayList<MineCell> stash = new ArrayList<>();
+        // Кладем в карман выбранную клетку.
+        stash.add(new MineCell(row, column));
+
+        // Пока в кармане есть ожидающие проверки клетки.
+        while (stash.size() != 0) {
+            // Берем выбранную клетку из кармана.
+            MineCell currentCell = stash.get(0);
+            row = currentCell.row;
+            column = currentCell.column;
+
+            // Если попали в цифру, отличную от нуля - то вокруг не проверяем.
+            if (field[row][column].minesAroundAmount != 0) {
+                return;
             }
 
-            for (int j = column - 1; j < column + 2; j++) {
-                if (j < 0 || j == field.length) {
+            for (int i = row - 1; i < row + 2; i++) {
+                if (i < 0 || i == field.length) {
                     continue;
                 }
 
-                if (i == row && j ==column) {
-                    continue;
-                }
+                for (int j = column - 1; j < column + 2; j++) {
+                    if (j < 0 || j == field.length) {
+                        continue;
+                    }
 
-                if (!field[i][j].isMine) {
-                    field[i][j].status = "e";
-                    //checkAround2(i, j);
-                }
-            }
-        }
-    }
+                    // Если не мина и клетка не ранее обработана, то проверяем.
+                    if (!field[i][j].isMine && !field[i][j].isChecked) {
 
-    public void checkAround3(int row, int column) {
-        if (!field[row][column].isMine) {
-            field[row][column].status = "e";
-        } else {
-            return;
-        }
+                        // Если пустая, добавляем в очередь и открываем иначе просто открываем.
+                        if (field[i][j].minesAroundAmount == 0) {
+                            //queue.add(new MineCell(i, j));
+                            stash.add(new MineCell(i, j));
+                        }
 
-        for (int i = row - 1; i < row + 2; i++) {
-            if (i < 0 || i == field.length) {
-                continue;
-            }
-
-            for (int j = column - 1; j < column + 2; j++) {
-                if (j < 0 || j == field.length) {
-                    continue;
-                }
-
-                if (i == row && j ==column) {
-                    continue;
-                }
-
-                if (!field[i][j].isMine) {
-                    field[i][j].status = "e";
+                        field[i][j].status = "O";
+                    }
                 }
             }
+
+            // Помечаем клетку как проверенную. И удаляем из кармана.
+            field[row][column].isChecked = true;
+            stash.remove(0);
         }
     }
 }
