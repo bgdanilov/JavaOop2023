@@ -3,27 +3,32 @@ package model;
 import java.util.*;
 
 public class MinesKeeperField {
-    private final MineCell[][] field;
+    private final MineCell[][] mineField;
 
-    public MinesKeeperField(int size) {
-        field = new MineCell[size][size];
+    public MinesKeeperField(int size1, int size2) {
+        mineField = new MineCell[size1][size2];
+    }
+
+    public MineCell[][] getMineField() {
+        return mineField;
     }
 
     public void setFlag(int row, int column) {
-        field[row][column].status = "F";
+        mineField[row][column].status = "F";
     }
 
     public void makeMineCells() {
-        for (int i = 0; i < field.length; i++) {
-            for (int j = 0; j < field.length; j++) {
-                field[i][j] = new MineCell(i, j);
+        for (int i = 0; i < mineField.length; i++) {
+            for (int j = 0; j < mineField[0].length; j++) {
+                mineField[i][j] = new MineCell(i, j);
             }
         }
     }
 
+    /* Метод перенесен во Вьюшку.
     public void displayField() {
-        for (MineCell[] mineCells : field) {
-            for (int j = 0; j < field.length; j++) {
+        for (MineCell[] mineCells : mineField) {
+            for (int j = 0; j < mineField.length; j++) {
                 String msg = " ";
 
                 if (Objects.equals(mineCells[j].status, "O")) {
@@ -50,35 +55,35 @@ public class MinesKeeperField {
 
             System.out.println();
         }
-    }
+    }*/
 
     public void generateMines() {
-        int minesAmount = field.length;
+        int minesAmount = mineField.length;
         Random rd = new Random();
 
         for (int i = 0; i < minesAmount; i++) {
-            int rdRow = rd.nextInt(field.length);
-            int rdColumn = rd.nextInt(field.length);
+            int rdRow = rd.nextInt(mineField.length);
+            int rdColumn = rd.nextInt(mineField[0].length);
 
-            if (field[rdRow][rdColumn].isMine) {
+            if (mineField[rdRow][rdColumn].isMine) {
                 continue;
             }
 
-            field[rdRow][rdColumn].isMine = true;
+            mineField[rdRow][rdColumn].isMine = true;
         }
     }
 
-    public void calculateMinesAround() {
-        int minesAmount = 0;
+    public void setMinesAroundAmount() {
+        int minesAmountAround = 0;
 
-        for (int i = 0; i < field.length; i++) {
-            for (int j = 0; j < field.length; j++) {
-                if (!field[i][j].isMine) {
-                    minesAmount = minesAmount + calculateMinesAround(i, j);
+        for (int i = 0; i < mineField.length; i++) {
+            for (int j = 0; j < mineField[0].length; j++) {
+                if (!mineField[i][j].isMine) {
+                    minesAmountAround = minesAmountAround + calculateMinesAround(i, j);
                 }
 
-                field[i][j].minesAroundAmount = minesAmount;
-                minesAmount = 0;
+                mineField[i][j].minesAroundAmount = minesAmountAround;
+                minesAmountAround = 0;
             }
         }
     }
@@ -87,15 +92,15 @@ public class MinesKeeperField {
         int count = 0;
 
         for (int i = row - 1; i < row + 2; i++) {
-            if (i < 0 || i == field.length) {
+            if (i < 0 || i == mineField.length) {
                 continue;
             }
             for (int j = column - 1; j < column + 2; j++) {
-                if (j < 0 || j == field.length) {
+                if (j < 0 || j == mineField[0].length) {
                     continue;
                 }
 
-                if (field[i][j].isMine) count++;
+                if (mineField[i][j].isMine) count++;
             }
         }
 
@@ -103,10 +108,9 @@ public class MinesKeeperField {
     }
 
     public void openCells(int row, int column) {
-        // Открываем выбранную клетку.
-        field[row][column].status = "O";
-
-        if (field[row][column].isMine) {
+        // Если мина - на выход!
+        if (mineField[row][column].isMine) {
+            mineField[row][column].status = "O";
             return;
         }
 
@@ -117,42 +121,61 @@ public class MinesKeeperField {
 
         // Пока в очереди есть ожидающие проверки клетки.
         while (queue.size() != 0) {
-            // Берем выбранную очереди из кармана - всегда первая.
+            // Берем выбранную из очереди - всегда первая.
             MineCell currentCell = queue.get(0);
-            row = currentCell.row;
-            column = currentCell.column;
 
-            // Если попали в цифру, отличную от нуля - то вокруг не проверяем.
-            if (field[row][column].minesAroundAmount != 0) {
+            // Если попали в цифру, отличную от нуля,
+            // открываем, отмечаем как проверенную и выходим.
+            if (mineField[currentCell.row][currentCell.column].minesAroundAmount != 0) {
+                mineField[currentCell.row][currentCell.column].isChecked = true;
+                mineField[currentCell.row][currentCell.column].status = "O";
                 return;
             }
 
-            for (int i = row - 1; i < row + 2; i++) {
-                if (i < 0 || i == field.length) {
+            // Проверяем восемь клеток вокруг.
+            for (int i = currentCell.row - 1; i < currentCell.row + 2; i++) {
+                if (i < 0 || i == mineField.length) {
                     continue;
                 }
 
-                for (int j = column - 1; j < column + 2; j++) {
-                    if (j < 0 || j == field.length) {
+                for (int j = currentCell.column - 1; j < currentCell.column + 2; j++) {
+                    if (j < 0 || j == mineField[0].length) {
                         continue;
                     }
 
-                    // Если не мина и клетка не обработана ранее, то проверяем.
-                    if (!field[i][j].isMine && !field[i][j].isChecked) {
+                    // TODO: ? В Лямбды можно передавать только переменные, которые не меняются внутри кода.
+                    int finalI = i;
+                    int finalJ = j;
+
+                    // Проверяем есть ли перебираемая клетка в очереди на переборку?
+                    // Чтобы второй раз ее в очередь не добавлять.
+                    // Если клетка с такими же полями есть в очереди, то
+                    // размер отфильтрованного списка list будет равен нулю.
+                    // TODO: ? В идеале сделать проверку на нахождение такой же клетки
+                    //  в самой очереди, но у меня не получилось.
+                    List<MineCell> list = new ArrayList<>(queue.stream()
+                            .filter(e -> e.getRow() == finalI && e.getColumn() == finalJ)
+                            .toList());
+
+                    // Если: не мина и клетка не обработана ранее, не текущая (в центре девятая) и нет в очереди.
+                    if (!mineField[i][j].isMine && !mineField[i][j].isChecked && (i != currentCell.row || j != currentCell.column) && list.size() == 0) {
 
                         // Если пустая, добавляем в очередь и открываем иначе просто открываем.
-                        if (field[i][j].minesAroundAmount == 0) {
+                        if (mineField[i][j].minesAroundAmount == 0) {
                             queue.add(new MineCell(i, j));
-                            //stash.add(new MineCell(i, j));
                         }
-
-                        field[i][j].status = "O";
+                        // TODO: ? Если не мина. Мину не надо открывать.
+                        mineField[i][j].status = "O";
                     }
+
+                    // Очищаем список для новой итерации.
+                    list.clear();
                 }
             }
 
-            // Помечаем клетку как проверенную. И удаляем из очереди.
-            field[row][column].isChecked = true;
+            // Помечаем клетку как проверенную, открываем. И удаляем из очереди.
+            mineField[currentCell.row][currentCell.column].isChecked = true;
+            mineField[currentCell.row][currentCell.column].status = "O";
             queue.remove(0);
         }
     }
