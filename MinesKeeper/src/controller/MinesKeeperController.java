@@ -1,5 +1,6 @@
 package controller;
 
+import model.MineCell;
 import model.MinesKeeperField;
 
 public class MinesKeeperController {
@@ -9,14 +10,14 @@ public class MinesKeeperController {
         this.field = field;
     }
 
+    public MineCell[][] getField() {
+        return field.getMineField();
+    }
+
     public void addCells() {
         field.makeMineCells();
         field.generateMines();
-        field.calculateMinesAround();
-    }
-
-    public void displayMinesField() {
-        field.displayField();
+        field.setMinesAroundAmount();
     }
 
     public void makeAction(int action, int row, int columns) {

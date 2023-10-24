@@ -2,8 +2,8 @@ package model;
 
 public class MineCell {
     // Protected - доступны в пределах пакета. Ячейка доступна в field.
-    protected int row;
-    protected int column;
+    protected final int row;
+    protected final int column;
     protected String status = "C"; // O - opened, C -closed, F - flag
     protected int minesAroundAmount;
     protected boolean isMine;
@@ -12,6 +12,26 @@ public class MineCell {
     public MineCell(int row, int column) {
         this.row = row;
         this.column = column;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public boolean isMine() {
+        return isMine;
+    }
+
+    public int getMinesAroundAmount() {
+        return minesAroundAmount;
     }
 }
 
