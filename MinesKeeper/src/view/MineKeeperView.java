@@ -23,7 +23,7 @@ public class MineKeeperView {
 
         Scanner scanner = new Scanner(System.in);
 
-        while (true) {
+        while (!controller.checkLoose()) {
             System.out.print("Введите row: ");
             int row = scanner.nextInt();
 
@@ -37,8 +37,9 @@ public class MineKeeperView {
             displayMineField(mineField);
         }
 
-        //System.out.println("Вы проиграли!!!");
+        System.out.println("Вы проиграли!");
     }
+
 
     public void displayMineField(MineCell[][] mineField) {
         for (MineCell[] cellsRow : mineField) {
@@ -63,12 +64,9 @@ public class MineKeeperView {
 
                 // Открыть все мины.
                 //if (cellsRow[i].isMine()) msg = "X";
-
                 System.out.print(msg + " | ");
             }
             System.out.println();
-
-
         }
     }
 }
