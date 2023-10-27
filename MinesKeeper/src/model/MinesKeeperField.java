@@ -4,9 +4,18 @@ import java.util.*;
 
 public class MinesKeeperField {
     private final MineCell[][] mineField;
+    private boolean isLoose;
 
     public MinesKeeperField(int size1, int size2) {
         mineField = new MineCell[size1][size2];
+    }
+
+    public boolean isLoose() {
+        return isLoose;
+    }
+
+    public void setLoose(boolean isLoose) {
+        this.isLoose = isLoose;
     }
 
     public MineCell[][] getMineField() {
@@ -107,11 +116,22 @@ public class MinesKeeperField {
         return count;
     }
 
+    public void openAllMines() {
+        for (MineCell[] cellsRow : mineField) {
+            for (int i = 0; i < mineField[0].length; i++) {
+                if (cellsRow[i].isMine) {
+                    cellsRow[i].status = "O";
+                }
+            }
+        }
+    }
+
     public void openCells(int row, int column) {
         // Если мина - на выход!
         if (mineField[row][column].isMine) {
-            mineField[row][column].status = "O";
-            return;
+            // Открыть все мины.
+            openAllMines();
+            setLoose(true);
         }
 
         // Проверяем клетки вокруг выбранной клетки. Создаем очередь.

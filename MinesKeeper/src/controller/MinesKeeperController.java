@@ -20,6 +20,10 @@ public class MinesKeeperController {
         field.setMinesAroundAmount();
     }
 
+    public boolean checkLoose() {
+        return field.isLoose();
+    }
+
     public void makeAction(int action, int row, int columns) {
         if (action == 1) {
             field.openCells(row, columns);
