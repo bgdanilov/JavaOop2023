@@ -1,13 +1,13 @@
 package controller;
 
-import model.Model;
+import model.IModel;
 
 import java.text.DecimalFormat;
 
-public class Controller {
-    private final Model model;
+public class Controller implements IController {
+    private final IModel model;
 
-    public Controller(Model model) {
+    public Controller(IModel model) {
         this.model = model;
     }
 

@@ -1,8 +1,8 @@
 package model;
 
-public class Model {
-    private double temperature;
-    private char range;
+public class Model implements IModel {
+    protected double temperature;
+    protected char range;
 
     public void convertTemperature(char outputRange) {
         if (range == outputRange) {
