@@ -1,31 +1,25 @@
-package controller;
+package ru.bgdanilov.temperature_controller;
 
-import model.IModel;
+import ru.bgdanilov.temperature_model.ITemperatureModel;
+import ru.bgdanilov.temperature_model.ITemperature;
 
-import java.text.DecimalFormat;
+import java.util.List;
 
-public class Controller implements IController {
-    private final IModel model;
+public class TemperatureController implements ITemperatureController {
+    private final ITemperatureModel model;
 
-    public Controller(IModel model) {
+    public TemperatureController(ITemperatureModel model) {
         this.model = model;
     }
 
-    public void setTemperatureData(double temperature, char range) {
-        model.setTemperature(temperature);
-        model.setRange(range);
+    @Override
+    public List<ITemperature> getTemperatureScales() {
+        return model.getTemperatureScales();
     }
 
-    public String getTemperatureData() {
-        DecimalFormat temperatureFormat = new DecimalFormat("0.00E00");
-
-        return model.getTemperature() < 10000 ?
-                model.getTemperature() + " " + model.getRange() :
-                temperatureFormat.format(model.getTemperature()) + " " + model.getRange();
-    }
-
-    public void convertTemperature(char outputRange) {
-        model.convertTemperature(outputRange);
+    @Override
+    public double getOutputTemperature(double temperature, char inputTemperatureScale, char outputTemperatureScale) {
+        return model.convertTemperature(temperature, inputTemperatureScale, outputTemperatureScale);
     }
 }
 
