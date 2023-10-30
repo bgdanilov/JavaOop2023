@@ -1,15 +1,25 @@
 package view;
 
-import controller.Controller;
+// import controller.IController;
+
+import model.Celsius;
+import model.Fahrenheit;
+import model.ITemperature;
+import model.Kelvin;
 
 import java.util.Scanner;
 
 public class ConsoleView {
-    private final Controller controller;
+    /*
+     В данной редакции контроллер не нужен получается.
+     Да и Модель тоже. Модель - это сами классы с названиями температур.
 
-    public ConsoleView(Controller controller) {
-        this.controller = controller;
-    }
+        private final IController controller;
+
+        public ConsoleView(IController controller) {
+            this.controller = controller;
+        }
+    */
 
     public void execute() {
         Scanner scanner = new Scanner(System.in);
@@ -35,18 +45,37 @@ public class ConsoleView {
             throw new NumberFormatException("Вы должны ввести C, K или F.");
         }
 
-        // Записываем данные исходной температуры в модель.
-        controller.setTemperatureData(inputTemperature, inputTemperatureRange);
-        // Формируем сообщение с данными исходной температуры.
-        String inputTemperatureMessage = "Исходная температура: " + controller.getTemperatureData();
+        // Создаем объекты входной и выходной температуры.
+        ITemperature inputTemperatureObject = createTemperatureObject(inputTemperatureRange);
+        ITemperature outputTemperatureObject = createTemperatureObject(outputTemperatureRange);
 
-        // Конвертируем температуру, согласно заданию. Изменяем состояние модели.
-        controller.convertTemperature(outputTemperatureRange);
-        // Формируем сообщение с данными выходной температуры.
-        String outputTemperatureMessage = "Выходная температура: " + controller.getTemperatureData();
+        // 1. Все делаем через градусы Цельсия.
+        // 2. Объект входной температуры (например K) возвращает ее в Цельсиях.
+        // 3. Объект выходной температуры (например F) получает температуру в Цельсиях.
+        // 4. И конвертирует ее в свой диапазон (F).
+        // 5. Это и есть выходная температура.
+        double outputTemperature = outputTemperatureObject
+                .covertToThis(inputTemperatureObject.convertToCelsius(inputTemperature));
+
+        String inputTemperatureMessage = "Исходная температура: " + inputTemperature;
+        String outputTemperatureMessage = "Выходная температура: " + outputTemperature;
 
         System.out.println(inputTemperatureMessage);
         System.out.println(outputTemperatureMessage);
+    }
+
+    public static ITemperature createTemperatureObject(char temperatureRange) {
+        ITemperature temperatureObject;
+
+        if (temperatureRange == 'K') {
+            temperatureObject = new Kelvin();
+        } else if (temperatureRange == 'F') {
+            temperatureObject = new Fahrenheit();
+        } else {
+            temperatureObject = new Celsius();
+        }
+
+        return temperatureObject;
     }
 }
 
