@@ -5,8 +5,7 @@ public interface ITemperature {
 
     double covertToThis(double temperature);
 
-    char getKey();
-    void setKey(char key);
-    String getName();
-    void setName(String name);
+    char key();
+
+    String name();
 }
