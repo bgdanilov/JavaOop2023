@@ -7,7 +7,7 @@ public record TemperatureModel(List<ITemperature> temperatureScales) implements 
     @Override
     public ITemperature chooseScaleObject(char temperatureKey) {
         return temperatureScales.stream()
-                .filter(scale -> scale.getKey() == temperatureKey)
+                .filter(scale -> scale.key() == temperatureKey)
                 .findFirst()
                 .orElse(null);
     }
@@ -15,7 +15,7 @@ public record TemperatureModel(List<ITemperature> temperatureScales) implements 
     @Override
     public ITemperature chooseScaleObject(String temperatureName) {
         return temperatureScales.stream()
-                .filter(scale -> scale.getName().equals(temperatureName))
+                .filter(scale -> scale.name().equals(temperatureName))
                 .findFirst()
                 .orElse(null);
     }
@@ -28,15 +28,8 @@ public record TemperatureModel(List<ITemperature> temperatureScales) implements 
     @Override
     public boolean checkTemperatureScaleKey(char temperatureScaleKey) {
         return getTemperatureScales().stream()
-                .map(ITemperature::getKey)
+                .map(ITemperature::key)
                 .noneMatch(key -> key == temperatureScaleKey);
-    }
-
-    @Override
-    public boolean checkTemperatureScaleName(String temperatureScaleName) {
-        return getTemperatureScales().stream()
-                .map(ITemperature::getName)
-                .noneMatch(name -> name.equals(temperatureScaleName));
     }
 
     @Override
@@ -53,6 +46,11 @@ public record TemperatureModel(List<ITemperature> temperatureScales) implements 
         ITemperature outputScaleObject = chooseScaleObject(outputTemperatureScaleName);
 
         return outputScaleObject.covertToThis(inputScaleObject.convertToCelsius(temperature));
+    }
+
+    @Override
+    public char getTemperatureScaleKey(String temperatureScaleName) {
+        return chooseScaleObject(temperatureScaleName).key();
     }
 }
 
