@@ -100,8 +100,6 @@ public class TemperatureDesktopView {
                 frame.add(convertButton);
 
                 // Ограничение количества вводимых символов.
-                // Код взял с Демо-файла Oracle, а у него атрибут некого автора Inlay Hints.
-                // Как это, вообще, возможно (new*) ?
                 textField.addKeyListener(new KeyAdapter() {
                     @Override
                     public void keyTyped(KeyEvent event) {
