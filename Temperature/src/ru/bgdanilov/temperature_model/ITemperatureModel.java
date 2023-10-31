@@ -3,9 +3,17 @@ package ru.bgdanilov.temperature_model;
 import java.util.List;
 
 public interface ITemperatureModel {
-    ITemperature chooseTemperatureObject(char temperatureKey);
+    ITemperature chooseScaleObject(char temperatureKey);
 
-    double convertTemperature(double temperature, char inputTemperatureScale, char outputTemperatureScale);
+    ITemperature chooseScaleObject(String name);
 
     List<ITemperature> getTemperatureScales();
+
+    boolean checkTemperatureScaleKey(char temperatureScaleKey);
+
+    boolean checkTemperatureScaleName(String temperatureScaleName);
+
+    double convertTemperature(double temperature, char inputTemperatureScaleKey, char outputTemperatureScaleKey);
+
+    double convertTemperature(double temperature, String inputTemperatureScaleName, String outputTemperatureScaleName);
 }

@@ -4,7 +4,6 @@ import ru.bgdanilov.temperature_controller.ITemperatureController;
 import ru.bgdanilov.temperature_model.ITemperature;
 
 import java.text.DecimalFormat;
-import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -27,42 +26,36 @@ public class TemperatureConsoleView {
 
         double inputTemperature = scanner.nextDouble();
 
-        // Ввод исходной шкалы измерения.
-        List<Character> temperatureScalesKeys = controller.getTemperatureScales().stream()
+        String temperatureScalesKeysLine = controller.getTemperatureScales().stream()
                 .map(ITemperature::getKey)
-                .toList();
-
-        String temperatureScalesKeysLine = temperatureScalesKeys.stream()
                 .map(Object::toString)
                 .collect(Collectors.joining(", ", "(", ")"));
 
-        String temperatureScalesInputMessage = "Введите исходную шкалу " + temperatureScalesKeysLine + ":";
+        String inputMessage = "Введите исходную шкалу " + temperatureScalesKeysLine + ":";
 
-        System.out.println(temperatureScalesInputMessage);
-        char inputTemperatureScale = scanner.next().charAt(0);
+        System.out.println(inputMessage);
+        char inputTemperatureScaleKey = scanner.next().charAt(0);
 
-        String temperatureScalesErrorMessage = "Вы должны ввести " + temperatureScalesKeysLine + ".";
+        String errorMessage = "Вы должны ввести " + temperatureScalesKeysLine + ".";
 
-        if (temperatureScalesKeys.stream().noneMatch(key -> key == inputTemperatureScale)) {
-            throw new NumberFormatException(temperatureScalesErrorMessage);
+        if (controller.checkTemperatureScaleKey(inputTemperatureScaleKey)) {
+            throw new NumberFormatException(errorMessage);
         }
 
         // Ввод результирующей шкалы измерения.
         System.out.println("Введите результирующую шкалу " + temperatureScalesKeysLine + ":");
-        char outputTemperatureScale = scanner.next().charAt(0);
+        char outputTemperatureScaleKey = scanner.next().charAt(0);
 
-        if (temperatureScalesKeys.stream().noneMatch(key -> key == outputTemperatureScale)) {
-            throw new NumberFormatException(temperatureScalesErrorMessage);
+        if (controller.checkTemperatureScaleKey(outputTemperatureScaleKey)) {
+            throw new NumberFormatException(errorMessage);
         }
 
-        // Выбираем объекты входной и выходной температуры.
-        double outputTemperature = controller
-                .getOutputTemperature(inputTemperature, inputTemperatureScale, outputTemperatureScale);
+        double outputTemperature = controller.convertTemperature(inputTemperature, inputTemperatureScaleKey, outputTemperatureScaleKey);
 
         String inputTemperatureMessage = "Исходная температура: "
-                + getRoundedTemperatureLine(inputTemperature) + " " + inputTemperatureScale;
+                + getRoundedTemperatureLine(inputTemperature) + " " + inputTemperatureScaleKey;
         String outputTemperatureMessage = "Выходная температура: "
-                + getRoundedTemperatureLine(outputTemperature) + " " + outputTemperatureScale;
+                + getRoundedTemperatureLine(outputTemperature) + " " + outputTemperatureScaleKey;
 
         System.out.println(inputTemperatureMessage);
         System.out.println(outputTemperatureMessage);
@@ -72,7 +65,7 @@ public class TemperatureConsoleView {
         DecimalFormat temperatureFormat = new DecimalFormat("0.00E00");
 
         return temperature < 10000
-                ? String.valueOf(temperature)
+                ? String.valueOf((double) Math.round(temperature * 100) / 100)
                 : temperatureFormat.format(temperature);
     }
 }

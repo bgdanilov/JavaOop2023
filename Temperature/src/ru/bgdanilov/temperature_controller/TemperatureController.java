@@ -18,9 +18,37 @@ public class TemperatureController implements ITemperatureController {
     }
 
     @Override
-    public double getOutputTemperature(double temperature, char inputTemperatureScale, char outputTemperatureScale) {
-        return model.convertTemperature(temperature, inputTemperatureScale, outputTemperatureScale);
+    public boolean checkTemperatureScaleKey(char temperatureScaleKey) {
+        return model.checkTemperatureScaleKey(temperatureScaleKey);
     }
+
+    @Override
+    public boolean checkTemperatureScaleName(String temperatureScaleName) {
+        return model.checkTemperatureScaleName(temperatureScaleName);
+    }
+
+/*  Возможно, пригодится, если буду выбирать объект температурной шкалы в Представлении.
+    @Override
+    public ITemperature chooseTemperatureObject(char inputTemperatureScaleKey) {
+        return model.chooseTemperatureObject(inputTemperatureScaleKey);
+    }
+
+    @Override
+    public ITemperature chooseTemperatureObject(String inputTemperatureScaleName) {
+        return model.chooseTemperatureObject(inputTemperatureScaleName);
+    }
+*/
+    @Override
+    public double convertTemperature(double temperature, char inputTemperatureScaleKey, char outputTemperatureScaleKey) {
+        return model.convertTemperature(temperature, inputTemperatureScaleKey, outputTemperatureScaleKey);
+    }
+
+    @Override
+    public double convertTemperature(double temperature, String inputTemperatureScaleName, String outputTemperatureScaleName) {
+        return model.convertTemperature(temperature, inputTemperatureScaleName, outputTemperatureScaleName);
+    }
+
+
 }
 
 // Тезисы:
