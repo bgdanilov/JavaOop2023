@@ -137,6 +137,7 @@ public class TemperatureDesktopView {
                         showMessageDialog(frame, "Вы должны ввести число.");
                         header.setText("Введите температуру:");
                         textField.setText("0");
+                        textField.setEditable(true);
                     }
                 });
 
@@ -154,7 +155,6 @@ public class TemperatureDesktopView {
                     }
                 });
             }
-
         });
     }
 
