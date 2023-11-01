@@ -11,9 +11,9 @@ public interface ITemperatureModel {
 
     boolean checkTemperatureScaleKey(char temperatureScaleKey);
 
-    boolean checkTemperatureScaleName(String temperatureScaleName);
-
     double convertTemperature(double temperature, char inputTemperatureScaleKey, char outputTemperatureScaleKey);
 
     double convertTemperature(double temperature, String inputTemperatureScaleName, String outputTemperatureScaleName);
+
+    char getTemperatureScaleKey(String temperatureScaleName);
 }

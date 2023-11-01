@@ -22,22 +22,17 @@ public class TemperatureController implements ITemperatureController {
         return model.checkTemperatureScaleKey(temperatureScaleKey);
     }
 
-    @Override
-    public boolean checkTemperatureScaleName(String temperatureScaleName) {
-        return model.checkTemperatureScaleName(temperatureScaleName);
-    }
+    /*  Возможно, пригодится, если буду выбирать объект температурной шкалы в Представлении.
+        @Override
+        public ITemperature chooseTemperatureObject(char inputTemperatureScaleKey) {
+            return model.chooseTemperatureObject(inputTemperatureScaleKey);
+        }
 
-/*  Возможно, пригодится, если буду выбирать объект температурной шкалы в Представлении.
-    @Override
-    public ITemperature chooseTemperatureObject(char inputTemperatureScaleKey) {
-        return model.chooseTemperatureObject(inputTemperatureScaleKey);
-    }
-
-    @Override
-    public ITemperature chooseTemperatureObject(String inputTemperatureScaleName) {
-        return model.chooseTemperatureObject(inputTemperatureScaleName);
-    }
-*/
+        @Override
+        public ITemperature chooseTemperatureObject(String inputTemperatureScaleName) {
+            return model.chooseTemperatureObject(inputTemperatureScaleName);
+        }
+    */
     @Override
     public double convertTemperature(double temperature, char inputTemperatureScaleKey, char outputTemperatureScaleKey) {
         return model.convertTemperature(temperature, inputTemperatureScaleKey, outputTemperatureScaleKey);
@@ -46,6 +41,11 @@ public class TemperatureController implements ITemperatureController {
     @Override
     public double convertTemperature(double temperature, String inputTemperatureScaleName, String outputTemperatureScaleName) {
         return model.convertTemperature(temperature, inputTemperatureScaleName, outputTemperatureScaleName);
+    }
+
+    @Override
+    public char getTemperatureScaleKey(String temperatureScaleName) {
+        return model.getTemperatureScaleKey(temperatureScaleName);
     }
 
 
