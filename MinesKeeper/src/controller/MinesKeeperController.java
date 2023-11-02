@@ -20,8 +20,12 @@ public class MinesKeeperController {
         field.setMinesAroundAmount();
     }
 
-    public boolean checkLoose() {
-        return field.isLoose();
+    public char gameStatus() {
+        return field.getGameStatus();
+    }
+
+    public void setGameStatus(char gameStatus) {
+        field.setGameStatus(gameStatus);
     }
 
     public void makeAction(int action, int row, int columns) {

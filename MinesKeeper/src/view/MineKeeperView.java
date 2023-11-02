@@ -18,12 +18,14 @@ public class MineKeeperView {
         controller.addCells();
         // Получаем созданное минное поле.
         MineCell[][] mineField = controller.getField();
+        // Включаем режим игры;
+        controller.setGameStatus('P');
         // Отображаем первоначальное поле.
         displayMineField(mineField);
 
         Scanner scanner = new Scanner(System.in);
 
-        while (!controller.checkLoose()) {
+        while (controller.gameStatus() == 'P') {
             System.out.print("Введите row: ");
             int row = scanner.nextInt();
 
@@ -37,7 +39,11 @@ public class MineKeeperView {
             displayMineField(mineField);
         }
 
-        System.out.println("Вы проиграли!");
+        if (controller.gameStatus() == 'F') {
+            System.out.println("Вы проиграли!");
+        } else if (controller.gameStatus() == 'W') {
+            System.out.println("Вы выиграли!");
+        }
     }
 
 
@@ -63,7 +69,7 @@ public class MineKeeperView {
                 }
 
                 // Открыть все мины.
-                //if (cellsRow[i].isMine()) msg = "X";
+                if (cellsRow[i].isMine()) msg = "X";
                 System.out.print(msg + " | ");
             }
             System.out.println();
