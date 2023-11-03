@@ -4,12 +4,13 @@ import java.util.*;
 
 public class MinesKeeperField {
     private final MineCell[][] mineField;
-    private char gameStatus;
+    private char gameStatus; // P - play, L - loose, W - win.
     private int minesAmount;
     private int openedCells = 0;
 
-    public MinesKeeperField(int size1, int size2) {
+    public MinesKeeperField(int size1, int size2, int minesAmount) {
         mineField = new MineCell[size1][size2];
+        this.minesAmount = minesAmount;
     }
 
     public char getGameStatus() {
@@ -53,7 +54,7 @@ public class MinesKeeperField {
     }
 
     public void generateMines() {
-        int minesAmount = mineField.length;
+        int minesAmount = getMinesAmount();
         Random rd = new Random();
 
         for (int i = 0; i < minesAmount; i++) {
@@ -214,7 +215,7 @@ public class MinesKeeperField {
 
         setOpenedCells(openedCellsAmount);
 
-        if (getOpenedCells() == mineField[0].length * mineField.length - 5) {
+        if (getOpenedCells() == mineField[0].length * mineField.length - getMinesAmount()) {
             setGameStatus('W');
         }
     }

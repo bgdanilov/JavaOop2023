@@ -20,7 +20,7 @@ public class MinesKeeperController {
         field.setMinesAroundAmount();
     }
 
-    public char gameStatus() {
+    public char getGameStatus() {
         return field.getGameStatus();
     }
 
