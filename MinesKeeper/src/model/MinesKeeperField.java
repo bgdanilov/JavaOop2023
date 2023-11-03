@@ -141,7 +141,6 @@ public class MinesKeeperField {
             // Если попали в цифру, отличную от нуля,
             // открываем, отмечаем как проверенную и выходим.
             if (mineField[currentCell.row][currentCell.column].minesAroundAmount != 0) {
-                mineField[currentCell.row][currentCell.column].isChecked = true;
                 mineField[currentCell.row][currentCell.column].status = "O";
 
                 openedCellsAmount++;
@@ -176,7 +175,7 @@ public class MinesKeeperField {
                     }
 
                     // Если мина или уже открыта, пропускаем.
-                    if (mineField[i][j].status.equals("O") || mineField[i][i].isMine) {
+                    if (mineField[i][j].status.equals("O") || mineField[i][j].isMine) {
                         continue;
                     }
 

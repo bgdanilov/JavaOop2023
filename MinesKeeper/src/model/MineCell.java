@@ -7,7 +7,6 @@ public class MineCell {
     protected String status = "C"; // O - opened, C -closed, F - flag
     protected int minesAroundAmount;
     protected boolean isMine;
-    protected boolean isChecked;
 
     public MineCell(int row, int column) {
         this.row = row;
