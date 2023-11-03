@@ -25,7 +25,7 @@ public class MineKeeperView {
 
         Scanner scanner = new Scanner(System.in);
 
-        while (controller.gameStatus() == 'P') {
+        while (controller.getGameStatus() == 'P') {
             System.out.print("Введите row: ");
             int row = scanner.nextInt();
 
@@ -39,13 +39,12 @@ public class MineKeeperView {
             displayMineField(mineField);
         }
 
-        if (controller.gameStatus() == 'F') {
+        if (controller.getGameStatus() == 'F') {
             System.out.println("Вы проиграли!");
-        } else if (controller.gameStatus() == 'W') {
+        } else if (controller.getGameStatus() == 'W') {
             System.out.println("Вы выиграли!");
         }
     }
-
 
     public void displayMineField(MineCell[][] mineField) {
         for (MineCell[] cellsRow : mineField) {
