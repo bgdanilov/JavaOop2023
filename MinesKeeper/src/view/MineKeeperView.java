@@ -46,7 +46,6 @@ public class MineKeeperView {
         }
     }
 
-
     public void displayMineField(MineCell[][] mineField) {
         for (MineCell[] cellsRow : mineField) {
             for (int i = 0; i < mineField[0].length; i++) {
