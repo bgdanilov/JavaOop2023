@@ -4,7 +4,7 @@ public class MineCell {
     // Protected - доступны в пределах пакета. Ячейка доступна в field.
     protected final int row;
     protected final int column;
-    protected String status = "C"; // O - opened, C -closed, F - flag
+    protected char status = 'C'; // O - opened, C -closed, F - flag
     protected int minesAroundAmount;
     protected boolean isMine;
 
@@ -21,11 +21,15 @@ public class MineCell {
         return column;
     }
 
-    public String getStatus() {
+    public char getStatus() {
         return status;
     }
 
-    public boolean isMine() {
+    public void setStatus(char status) {
+        this.status = status;
+    }
+
+    public boolean getIsMine() {
         return isMine;
     }
 
@@ -33,12 +37,3 @@ public class MineCell {
         return minesAroundAmount;
     }
 }
-
-/* 1. Ну ладно. Начнем. Это модель - то, что меняет состояние и хранит его.
- *  Это клетка.
- *  2. У клетки могут быть свои методы. Что она может делать?
- *  - взорваться - закончить игру.
- *  - показать число мин рядом (вернее - выдать это число). Показывает View.
- *  - открыть другие клетки рядом.
- *
- */

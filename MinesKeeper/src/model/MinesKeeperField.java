@@ -6,48 +6,16 @@ public class MinesKeeperField {
     private final MineCell[][] mineField;
     private char gameStatus; // P - play, L - loose, W - win.
     private final int minesAmount;
+    private int flagsAmount;
     private int openedCellsAmount = 0;
 
     public MinesKeeperField(int size1, int size2, int minesAmount) {
         mineField = new MineCell[size1][size2];
         this.minesAmount = minesAmount;
+        this.flagsAmount = minesAmount;
     }
 
-    public char getGameStatus() {
-        return gameStatus;
-    }
-
-    public void setGameStatus(char gameStatus) {
-        this.gameStatus = gameStatus;
-    }
-
-/* Пока не нужно.
-
-    public int getMinesAmount() {
-        return minesAmount;
-    }
-    public void setMinesAmount(int minesAmount) {
-        this.minesAmount = minesAmount;
-    }
-
-    public int getOpenedCellsAmount() {
-        return openedCellsAmount;
-    }
-
-    public void setOpenedCellsAmount(int openedCellsAmount) {
-        this.openedCellsAmount = openedCellsAmount;
-    }
-*/
-
-    public MineCell[][] getMineField() {
-        return mineField;
-    }
-
-    public void setFlag(int row, int column) {
-        mineField[row][column].status = "F";
-    }
-
-    public void makeMineCells() {
+    public void makeCells() {
         for (int i = 0; i < mineField.length; i++) {
             for (int j = 0; j < mineField[0].length; j++) {
                 mineField[i][j] = new MineCell(i, j);
@@ -57,17 +25,18 @@ public class MinesKeeperField {
 
     public void generateMines() {
         int minesAmount = this.minesAmount;
-        Random rd = new Random();
+        Random random = new Random();
 
         for (int i = 0; i < minesAmount; i++) {
-            int rdRow = rd.nextInt(mineField.length);
-            int rdColumn = rd.nextInt(mineField[0].length);
+            int randomRow = random.nextInt(mineField.length);
+            int randomColumn = random.nextInt(mineField[0].length);
 
-            if (mineField[rdRow][rdColumn].isMine) {
+            if (mineField[randomRow][randomColumn].isMine) {
+                i--;
                 continue;
             }
 
-            mineField[rdRow][rdColumn].isMine = true;
+            mineField[randomRow][randomColumn].isMine = true;
         }
     }
 
@@ -109,7 +78,7 @@ public class MinesKeeperField {
         for (MineCell[] cellsRow : mineField) {
             for (int i = 0; i < mineField[0].length; i++) {
                 if (cellsRow[i].isMine) {
-                    cellsRow[i].status = "O";
+                    cellsRow[i].status = 'O';
                 }
             }
         }
@@ -124,6 +93,8 @@ public class MinesKeeperField {
             // Открыть все мины.
             openAllMines();
             gameStatus = 'L'; // Loose.
+
+            return;
         }
 
         // Проверяем клетки вокруг выбранной клетки. Создаем очередь.
@@ -141,7 +112,7 @@ public class MinesKeeperField {
             // Если попали в цифру, отличную от нуля,
             // открываем, отмечаем как проверенную и выходим.
             if (mineField[currentCell.row][currentCell.column].minesAroundAmount != 0) {
-                mineField[currentCell.row][currentCell.column].status = "O";
+                mineField[currentCell.row][currentCell.column].status = 'O';
 
                 openedCellsAmount++;
                 this.openedCellsAmount = openedCellsAmount;
@@ -156,8 +127,8 @@ public class MinesKeeperField {
 
             // Если не открыта,
             // Открываем клетку и забываем про нее. Вычеркиваем из очереди.
-            if (!mineField[currentCell.row][currentCell.column].status.equals("O")) {
-                mineField[currentCell.row][currentCell.column].status = "O";
+            if (mineField[currentCell.row][currentCell.column].status != 'O') {
+                mineField[currentCell.row][currentCell.column].status = 'O';
                 openedCellsAmount++;
             }
 
@@ -175,7 +146,7 @@ public class MinesKeeperField {
                     }
 
                     // Если мина или уже открыта, пропускаем.
-                    if (mineField[i][j].status.equals("O") || mineField[i][j].isMine) {
+                    if (mineField[i][j].status == 'O' || mineField[i][j].isMine || mineField[i][j].status == 'F') {
                         continue;
                     }
 
@@ -184,7 +155,7 @@ public class MinesKeeperField {
                         queue.add(new MineCell(i, j));
                     }
 
-                    mineField[i][j].status = "O";
+                    mineField[i][j].status = 'O';
                     openedCellsAmount++;
                 }
             }
@@ -197,4 +168,56 @@ public class MinesKeeperField {
             setGameStatus('W');
         }
     }
+
+    public char getGameStatus() {
+        return gameStatus;
+    }
+
+    public void setGameStatus(char gameStatus) {
+        this.gameStatus = gameStatus;
+    }
+
+    public MineCell[][] getMineField() {
+        return mineField;
+    }
+
+    public MineCell getCell(int row, int column) {
+        return mineField[row][column];
+    }
+
+    public void setCellFlag(int row, int column) {
+        if (mineField[row][column].status == 'F') {
+            mineField[row][column].status = 'C';
+            flagsAmount = flagsAmount + 1;
+        } else {
+            mineField[row][column].status = 'F';
+            flagsAmount = flagsAmount - 1;
+        }
+    }
+
+    public int getFlagsAmount() {
+        return flagsAmount;
+    }
+
+    public void setFlagsAmount(int flagsAmount) {
+        this.flagsAmount = flagsAmount;
+    }
+
+    /* Пока не нужно.
+
+    public int getMinesAmount() {
+        return minesAmount;
+    }
+    public void setMinesAmount(int minesAmount) {
+        this.minesAmount = minesAmount;
+    }
+
+    public int getOpenedCellsAmount() {
+        return openedCellsAmount;
+    }
+
+    public void setOpenedCellsAmount(int openedCellsAmount) {
+        this.openedCellsAmount = openedCellsAmount;
+    }
+*/
 }
