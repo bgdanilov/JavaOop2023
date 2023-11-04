@@ -10,14 +10,25 @@ public class MinesKeeperController {
         this.field = field;
     }
 
-    public MineCell[][] getField() {
-        return field.getMineField();
-    }
-
-    public void addCells() {
-        field.makeMineCells();
+    public void makeMineField() {
+        field.makeCells();
         field.generateMines();
         field.setMinesAroundAmount();
+    }
+
+    public void makeAction(int action, int row, int column) {
+        // Справедливо только для закрытых клеток.
+        if (field.getCell(row, column).getStatus() != 'O') {
+            if (action == 1) {
+                field.openCells(row, column);
+            } else if (action == 2) {
+                field.setCellFlag(row, column);
+            }
+        }
+    }
+
+    public MineCell[][] getMineField() {
+        return field.getMineField();
     }
 
     public char getGameStatus() {
@@ -28,24 +39,11 @@ public class MinesKeeperController {
         field.setGameStatus(gameStatus);
     }
 
-    public void makeAction(int action, int row, int columns) {
-        if (action == 1) {
-            field.openCells(row, columns);
-        } else if (action == 2) {
-            field.setFlag(row, columns);
-        }
+    public int getFlagsAmount() {
+        return field.getFlagsAmount();
+    }
+
+    public MineCell getCell(int row, int column) {
+        return field.getCell(row, column);
     }
 }
-
-/*
- * 1. Что делает Контроллер?
- * - Реагирует и обрабатывает действия пользователя во View/
- * - Сигнализирует об изменениях в состоянии модели и что она что-то выдает.
- * -
- *
- *
- *
- *
- *
- *
- */
