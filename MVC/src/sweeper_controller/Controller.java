@@ -1,6 +1,6 @@
-package controller;
+package sweeper_controller;
 
-import model.Model;
+import sweeper_model.Model;
 
 public class Controller {
     private final Model model;
