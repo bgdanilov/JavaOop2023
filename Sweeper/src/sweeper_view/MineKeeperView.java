@@ -1,20 +1,20 @@
-package view;
+package sweeper_view;
 
-import controller.MinesKeeperController;
-import model.MineKeeperCell;
+import sweeper_controller.SweeperController;
+import sweeper_model.SweeperCell;
 
 import java.util.Scanner;
 
 public class MineKeeperView {
-    private final MinesKeeperController controller;
+    private final SweeperController controller;
 
-    public MineKeeperView(MinesKeeperController controller) {
+    public MineKeeperView(SweeperController controller) {
         this.controller = controller;
     }
 
     public void execute() {
         // Действие пользователя без пользователя - создание поля с минами.
-        controller.makeMineField();
+        controller.fillingMineField();
         // Включаем режим игры;
         controller.setGameStatus('P');
         // Отображаем первоначальное поле.
@@ -32,7 +32,7 @@ public class MineKeeperView {
             System.out.println("Введите действие (1 - открыть, 2 - пометить): ");
             int action = scanner.nextInt();
 
-            controller.makeAction(action, row, column);
+            controller.processingUserActions(action, row, column);
             displayMineField(controller.getMineField());
         }
 
@@ -43,7 +43,7 @@ public class MineKeeperView {
         }
     }
 
-    public void displayMineField(MineKeeperCell[][] mineField) {
+    public void displayMineField(SweeperCell[][] mineField) {
         System.out.println("Мин / флагов осталось: " + controller.getFlagsAmount() + ".");
 
         System.out.print(":)| ");
@@ -64,7 +64,7 @@ public class MineKeeperView {
                     if (mineField[i][j].getIsMine()) {
                         msg = "X";
                     } else {
-                        int minesAmount = mineField[i][j].getMinesAroundAmount();
+                        int minesAmount = mineField[i][j].getAdjacentMinesAmount();
 
                         if (minesAmount == 0) {
                             msg = ".";

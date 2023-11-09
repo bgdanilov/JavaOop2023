@@ -1,4 +1,4 @@
-package model;
+package sweeper_model;
 
 public class Model {
     private double temperature;

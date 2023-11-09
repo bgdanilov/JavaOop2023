@@ -1,6 +1,6 @@
-package view;
+package sweeper_view;
 
-import controller.Controller;
+import sweeper_controller.Controller;
 
 import java.util.Scanner;
 

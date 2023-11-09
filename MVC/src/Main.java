@@ -1,6 +1,6 @@
-import controller.Controller;
-import model.Model;
-import view.ConsoleView;
+import sweeper_controller.Controller;
+import sweeper_model.Model;
+import sweeper_view.ConsoleView;
 
 public class Main {
     public static void main(String[] args) {
