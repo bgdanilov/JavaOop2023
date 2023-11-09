@@ -1,6 +1,6 @@
 package controller;
 
-import model.MineCell;
+import model.MineKeeperCell;
 import model.MinesKeeperField;
 
 public class MinesKeeperController {
@@ -10,38 +10,45 @@ public class MinesKeeperController {
         this.field = field;
     }
 
-    public MineCell[][] getField() {
-        return field.getMineField();
-    }
-
-    public void addCells() {
-        field.makeMineCells();
+    public void makeMineField() {
+        field.makeCells();
         field.generateMines();
         field.setMinesAroundAmount();
     }
 
-    public boolean checkLoose() {
-        return field.isLoose();
-    }
+    public void makeAction(int action, int row, int column) {
+        // Справедливо только для закрытых клеток.
+        if (field.getCell(row, column).getStatus() != 'O') {
+            if (action == 1) {
+                field.openCells(row, column);
 
-    public void makeAction(int action, int row, int columns) {
-        if (action == 1) {
-            field.openCells(row, columns);
-        } else if (action == 2) {
-            field.setFlag(row, columns);
+            } else if (action == 2) {
+                field.setCellFlag(row, column);
+            }
         }
-    }
-}
 
-/*
- * 1. Что делает Контроллер?
- * - Реагирует и обрабатывает действия пользователя во View/
- * - Сигнализирует об изменениях в состоянии модели и что она что-то выдает.
- * -
- *
- *
- *
- *
- *
- *
- */
+        field.checkWin();
+    }
+
+    public MineKeeperCell[][] getMineField() {
+        return field.getMineField();
+    }
+
+    public char getGameStatus() {
+        return field.getGameStatus();
+    }
+
+    public void setGameStatus(char gameStatus) {
+        field.setGameStatus(gameStatus);
+    }
+
+    public int getFlagsAmount() {
+        return field.getFlagsAmount();
+    }
+
+/* Не используется.
+    public MineKeeperCell getCell(int row, int column) {
+        return field.getCell(row, column);
+    }
+*/
+}

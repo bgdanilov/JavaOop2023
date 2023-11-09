@@ -1,9 +1,8 @@
 package view;
 
 import controller.MinesKeeperController;
-import model.MineCell;
+import model.MineKeeperCell;
 
-import java.util.Objects;
 import java.util.Scanner;
 
 public class MineKeeperView {
@@ -15,15 +14,15 @@ public class MineKeeperView {
 
     public void execute() {
         // Действие пользователя без пользователя - создание поля с минами.
-        controller.addCells();
-        // Получаем созданное минное поле.
-        MineCell[][] mineField = controller.getField();
+        controller.makeMineField();
+        // Включаем режим игры;
+        controller.setGameStatus('P');
         // Отображаем первоначальное поле.
-        displayMineField(mineField);
+        displayMineField(controller.getMineField());
 
         Scanner scanner = new Scanner(System.in);
 
-        while (!controller.checkLoose()) {
+        while (controller.getGameStatus() == 'P') {
             System.out.print("Введите row: ");
             int row = scanner.nextInt();
 
@@ -34,23 +33,38 @@ public class MineKeeperView {
             int action = scanner.nextInt();
 
             controller.makeAction(action, row, column);
-            displayMineField(mineField);
+            displayMineField(controller.getMineField());
         }
 
-        System.out.println("Вы проиграли!");
+        if (controller.getGameStatus() == 'L') {
+            System.out.println("Вы проиграли!");
+        } else if (controller.getGameStatus() == 'W') {
+            System.out.println("Вы выиграли!");
+        }
     }
 
+    public void displayMineField(MineKeeperCell[][] mineField) {
+        System.out.println("Мин / флагов осталось: " + controller.getFlagsAmount() + ".");
 
-    public void displayMineField(MineCell[][] mineField) {
-        for (MineCell[] cellsRow : mineField) {
-            for (int i = 0; i < mineField[0].length; i++) {
+        System.out.print(":)| ");
+
+        for (int columnNumber = 0; columnNumber < mineField[0].length; columnNumber++) {
+            System.out.print(columnNumber + " | ");
+        }
+
+        System.out.println();
+
+        for (int i = 0; i < mineField.length; i++) {
+            System.out.print(i + " | ");
+
+            for (int j = 0; j < mineField[0].length; j++) {
                 String msg = " ";
 
-                if (Objects.equals(cellsRow[i].getStatus(), "O")) {
-                    if (cellsRow[i].isMine()) {
+                if (mineField[i][j].getStatus() == 'O') {
+                    if (mineField[i][j].getIsMine()) {
                         msg = "X";
                     } else {
-                        int minesAmount = cellsRow[i].getMinesAroundAmount();
+                        int minesAmount = mineField[i][j].getMinesAroundAmount();
 
                         if (minesAmount == 0) {
                             msg = ".";
@@ -58,27 +72,16 @@ public class MineKeeperView {
                             msg = String.valueOf(minesAmount);
                         }
                     }
-                } else if (Objects.equals(cellsRow[i].getStatus(), "F")) {
+                } else if (mineField[i][j].getStatus() == 'F') {
                     msg = "F";
                 }
 
-                // Открыть все мины.
-                //if (cellsRow[i].isMine()) msg = "X";
+                // Сделать все мины видимыми для отладки.
+                //if (mineField[i][j].getIsMine()) msg = "X";
+
                 System.out.print(msg + " | ");
             }
             System.out.println();
         }
     }
 }
-
-
-/* 1. В идеале только то, что отображается и только.
- * 2. Мы создаем неизменный объект-массив клеток.
- * Где клетки тоже объекты. Этот массив клеток передаем в контроллер.
- * С помощью контроллера, во Вьюшку получаем этот массив.
- * Далее, в нем меняют состояние клетки, и мы их поля каждый раз выводим новые
- * при помощи функции displayMineField().
- *  Т.е. привязка у нас идет через конструктор.
- *
- *
- */
