@@ -1,12 +1,13 @@
 import controller.MinesKeeperController;
 import model.MinesKeeperField;
-import view.MineKeeperView;
+import view.MinesKeeperDesktopView;
 
-public class MinesKeeperMain {
+public class MineKeepersDesktopMain {
     public static void main(String[] args) {
-        MinesKeeperField field = new MinesKeeperField(4, 10, 5);
+        MinesKeeperField field = new MinesKeeperField(7, 7, 5);
         MinesKeeperController controller = new MinesKeeperController(field);
-        MineKeeperView userView = new MineKeeperView(controller);
+        MinesKeeperDesktopView userView = new MinesKeeperDesktopView(controller);
+
         userView.execute();
     }
 }

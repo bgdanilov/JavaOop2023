@@ -1,7 +1,7 @@
 package view;
 
 import controller.MinesKeeperController;
-import model.MineCell;
+import model.MineKeeperCell;
 
 import java.util.Scanner;
 
@@ -43,12 +43,12 @@ public class MineKeeperView {
         }
     }
 
-    public void displayMineField(MineCell[][] mineField) {
+    public void displayMineField(MineKeeperCell[][] mineField) {
         System.out.println("Мин / флагов осталось: " + controller.getFlagsAmount() + ".");
 
         System.out.print(":)| ");
 
-        for (int columnNumber = 0; columnNumber < mineField.length; columnNumber++) {
+        for (int columnNumber = 0; columnNumber < mineField[0].length; columnNumber++) {
             System.out.print(columnNumber + " | ");
         }
 

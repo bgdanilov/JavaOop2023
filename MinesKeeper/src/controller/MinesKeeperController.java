@@ -1,6 +1,6 @@
 package controller;
 
-import model.MineCell;
+import model.MineKeeperCell;
 import model.MinesKeeperField;
 
 public class MinesKeeperController {
@@ -21,13 +21,16 @@ public class MinesKeeperController {
         if (field.getCell(row, column).getStatus() != 'O') {
             if (action == 1) {
                 field.openCells(row, column);
+
             } else if (action == 2) {
                 field.setCellFlag(row, column);
             }
         }
+
+        field.checkWin();
     }
 
-    public MineCell[][] getMineField() {
+    public MineKeeperCell[][] getMineField() {
         return field.getMineField();
     }
 
@@ -43,7 +46,9 @@ public class MinesKeeperController {
         return field.getFlagsAmount();
     }
 
-    public MineCell getCell(int row, int column) {
+/* Не используется.
+    public MineKeeperCell getCell(int row, int column) {
         return field.getCell(row, column);
     }
+*/
 }
