@@ -38,7 +38,7 @@ public class MinesKeeperDesktopView {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setTitle("Sweeper");
         frame.setResizable(false);
-        frame.setVisible(true);
+        //frame.setVisible(true);
 
         // Header.
         JPanel headerPanel = new JPanel();
@@ -107,6 +107,9 @@ public class MinesKeeperDesktopView {
 
                 // Получаем размер внутренней панели и растягиваем frame ею.
                 frame.pack();
+                // Поставил включение видимости в конец, чтобы не видно было процессов применения размеров..
+                // Чтобы все посчиталось, создалось и готовое отобразилось.
+                frame.setVisible(true);
 
                 mineFieldPanel.addMouseListener(new MouseAdapter() {
                     @Override
