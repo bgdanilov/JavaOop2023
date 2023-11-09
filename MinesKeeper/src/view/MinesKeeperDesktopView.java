@@ -1,79 +1,169 @@
 package view;
 
 import controller.MinesKeeperController;
+import model.MineKeeperCell;
+import model.MineKeeperCellImage;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
 
 public class MinesKeeperDesktopView {
     private final MinesKeeperController controller;
-    private final int COLUMNS = 15;
-    private final int ROWS = 1;
-    private final int IMAGE_SIZE = 50;
 
     public MinesKeeperDesktopView(MinesKeeperController controller) {
         this.controller = controller;
     }
 
     public void execute() {
+        controller.makeMineField();
+        controller.setGameStatus('P');
+        MineKeeperCell[][] mineField = controller.getMineField();
+
+        int imageSize = 30;
+        int rowsAmount = mineField.length;
+        int columnsAmount = mineField[0].length;
+
+        // Создаем frame.
+        JFrame frame = new JFrame();
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenWidth = screenSize.width;
+        int screenHeight = screenSize.height;
+
+        frame.setLocation(
+                screenWidth / 2 - columnsAmount * imageSize / 2,
+                screenHeight / 2 - rowsAmount * imageSize / 2);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setTitle("Sweeper");
+        frame.setResizable(false);
+        frame.setVisible(true);
+
+        // Header.
+        JPanel headerPanel = new JPanel();
+        headerPanel.setPreferredSize(new Dimension(columnsAmount * imageSize, 30));
+        JLabel display = new JLabel();
+        headerPanel.add(display);
+        display.setText(getHeaderMessage());
+
+        // Загружаем enum с картинками.
+        setImages();
+
+        // Читал, что в invokeLater не нужно лишнее передавать?
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                JFrame frame = new JFrame("MinesKeeper");
-                frame.pack();
-                //frame.setSize(COLUMNS * IMAGE_SIZE, ROWS * IMAGE_SIZE);
-                frame.setSize(500, 500);
-                frame.setLocationRelativeTo(null);
-                frame.setResizable(false);
-                frame.setVisible(true);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-                final BufferedImage bomb;
-
-                try {
-                    bomb = ImageIO.read(new File("res/img/bomb.png"));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                JPanel panel = new JPanel() {
+                JPanel mineFieldPanel = new JPanel() {
                     @Override
                     protected void paintComponent(Graphics g) {
                         super.paintComponent(g);
-                        g.drawImage(bomb, 0, 0, null);
+
+                        for (int i = 0; i < rowsAmount; i++) {
+                            for (int j = 0; j < columnsAmount; j++) {
+                                String msg = "closed";
+
+                                if (mineField[i][j].getStatus() == 'O') {
+                                    if (mineField[i][j].getIsMine()) {
+                                        msg = "exploded";
+                                    } else {
+                                        int minesAmount = mineField[i][j].getMinesAroundAmount();
+
+                                        if (minesAmount == 0) {
+                                            msg = "opened";
+                                        } else {
+                                            msg = "number" + minesAmount;
+                                        }
+                                    }
+                                } else if (mineField[i][j].getStatus() == 'F') {
+                                    msg = "marked";
+                                }
+
+                                // Сделать все мины видимыми для отладки.
+                                // if (mineField[i][j].getIsMine()) msg = "exploded";
+                                g.drawImage(getImages(msg), imageSize * j, imageSize * i, this);
+                            }
+                        }
                     }
                 };
 
-                panel.setPreferredSize(new Dimension(COLUMNS * IMAGE_SIZE, ROWS * IMAGE_SIZE));
+                mineFieldPanel.setPreferredSize(new Dimension(
+                        imageSize * columnsAmount,
+                        imageSize * rowsAmount));
 
-                panel.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        int x = e.getX() / IMAGE_SIZE;
-                        int y = e.getY() / IMAGE_SIZE;
-                        //Coord coord = new Coord (x, y);
-                        if (e.getButton() == MouseEvent.BUTTON1) {
-                            // game.pressLeftButton (coord); //
-                            panel.repaint(); // Перерисовка панели.
-                        }
-                    }
+                JPanel bottomPanel = new JPanel();
+                // Кнопка новой игры. Пока не используется.
+                JButton button = new JButton("Новая игра");
+                bottomPanel.add(button);
+
+                button.addActionListener(e -> {
+                    controller.setGameStatus('P');
+                    execute();
                 });
 
-                frame.add(panel);
+                frame.add(headerPanel, BorderLayout.NORTH);
+                frame.add(mineFieldPanel, BorderLayout.CENTER);
+                frame.add(bottomPanel, BorderLayout.SOUTH);
+
+                // Получаем размер внутренней панели и растягиваем frame ею.
+                frame.pack();
+
+                mineFieldPanel.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        if (isGameOver()) {
+                            return;
+                        }
+
+                        int column = e.getX() / imageSize;
+                        int row = e.getY() / imageSize;
+                        if (e.getButton() == MouseEvent.BUTTON1) {
+                            controller.makeAction(1, row, column);
+                        } else if (e.getButton() == MouseEvent.BUTTON3) {
+                            controller.makeAction(2, row, column);
+                        }
+
+                        // Перерисовываем поле paintComponent().
+                        mineFieldPanel.repaint();
+                        display.setText(getHeaderMessage());
+                    }
+                });
             }
         });
     }
 
-//    public Image getImage(String imageName) {
-//        String fileName = "img/" + imageName.toLowerCase() + ".png";
-//        ImageIcon icon = new ImageIcon(getClass().getResource(imageName));
-//
-//        return icon.getImage();
-//    }
+    public boolean isGameOver() {
+        return controller.getGameStatus() != 'P';
+    }
+
+    private String getHeaderMessage() {
+        switch (controller.getGameStatus()) {
+            case 'P' -> {
+                return "Мин/флагов осталось: " + controller.getFlagsAmount();
+            }
+            case 'L' -> {
+                return "Вы проиграли!";
+            }
+            case 'W' -> {
+                return "Вы выиграли!";
+            }
+            default -> {
+                return "Добро пожаловать.";
+            }
+        }
+    }
+
+    private void setImages() {
+        for (MineKeeperCellImage cellImage : MineKeeperCellImage.values()) {
+            cellImage.image = getImages(cellImage.name().toLowerCase());
+        }
+    }
+
+    private Image getImages(String imageName) {
+        String fileName = imageName + ".png";
+        String imagesPath = System.getProperty("user.dir") + "/MinesKeeper/images/" + fileName;
+        ImageIcon icon = new ImageIcon(imagesPath);
+
+        return icon.getImage();
+    }
 }
