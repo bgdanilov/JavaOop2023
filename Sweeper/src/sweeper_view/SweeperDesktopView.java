@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class MinesKeeperDesktopView {
+public class SweeperDesktopView {
     private final SweeperController controller;
     private final SweeperCell[][] MINE_FIELD;
     private final int IMAGE_SIZE = 30;
@@ -16,7 +16,7 @@ public class MinesKeeperDesktopView {
     private final int COLUMNS_AMOUNT;
     private final JFrame GAME_FRAME;
 
-    public MinesKeeperDesktopView(SweeperController controller) {
+    public SweeperDesktopView(SweeperController controller) {
         // Конструируем фрейм один раз, чтобы "Новая игра" повторно этого не делала.
         this.controller = controller;
         // Получаем минное поле без клеток, для размера фрейма.
@@ -31,10 +31,8 @@ public class MinesKeeperDesktopView {
 
         // Первичное позиционирование игрового фрейма по центру экрана.
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int screenWidth = screenSize.width;
-        int screenHeight = screenSize.height;
-        GAME_FRAME.setLocation(screenWidth / 2 - IMAGE_SIZE * COLUMNS_AMOUNT / 2,
-                screenHeight / 2 - IMAGE_SIZE * ROWS_AMOUNT / 2);
+        GAME_FRAME.setLocation(screenSize.width / 2 - IMAGE_SIZE * COLUMNS_AMOUNT / 2,
+                screenSize.height / 2 - IMAGE_SIZE * ROWS_AMOUNT / 2);
     }
 
     public void execute() {
@@ -60,27 +58,27 @@ public class MinesKeeperDesktopView {
 
                         for (int i = 0; i < ROWS_AMOUNT; i++) {
                             for (int j = 0; j < COLUMNS_AMOUNT; j++) {
-                                String msg = "closed";
+                                String cellDisplaying = "closed";
 
                                 if (MINE_FIELD[i][j].getStatus() == 'O') {
                                     if (MINE_FIELD[i][j].getIsMine()) {
-                                        msg = "exploded";
+                                        cellDisplaying = "exploded";
                                     } else {
                                         int minesAmount = MINE_FIELD[i][j].getAdjacentMinesAmount();
 
                                         if (minesAmount == 0) {
-                                            msg = "opened";
+                                            cellDisplaying = "opened";
                                         } else {
-                                            msg = "number" + minesAmount;
+                                            cellDisplaying = "number" + minesAmount;
                                         }
                                     }
                                 } else if (MINE_FIELD[i][j].getStatus() == 'F') {
-                                    msg = "marked";
+                                    cellDisplaying = "marked";
                                 }
 
                                 // TODO: Сделать все мины видимыми для отладки (раскомментировать if).
-                                // if (MINE_FIELD[i][j].getIsMine()) msg = "exploded";
-                                g.drawImage(getCellImage(msg), IMAGE_SIZE * j, IMAGE_SIZE * i, this);
+                                // if (MINE_FIELD[i][j].getIsMine()) cellDisplaying = "exploded";
+                                g.drawImage(getCellImage(cellDisplaying), IMAGE_SIZE * j, IMAGE_SIZE * i, this);
                             }
                         }
                     }
