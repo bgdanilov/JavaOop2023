@@ -83,6 +83,10 @@ public class SweeperField {
     }
 
     public void openCells(int row, int column) {
+        // Возвращаем флаг обратно при открытии помеченной клетки.
+        if (MINE_FIELD[row][column].status == 'F') {
+            flagsAmount = flagsAmount + 1;
+        }
         // Счетчик открытых клеток.
         int openedCellsAmount = this.openedCellsAmount;
 

@@ -5,10 +5,10 @@ import sweeper_model.SweeperCell;
 
 import java.util.Scanner;
 
-public class MineKeeperView {
+public class SweeperConsoleView {
     private final SweeperController controller;
 
-    public MineKeeperView(SweeperController controller) {
+    public SweeperConsoleView(SweeperController controller) {
         this.controller = controller;
     }
 
@@ -58,28 +58,28 @@ public class MineKeeperView {
             System.out.print(i + " | ");
 
             for (int j = 0; j < mineField[0].length; j++) {
-                String msg = " ";
+                String cellDisplaying = " ";
 
                 if (mineField[i][j].getStatus() == 'O') {
                     if (mineField[i][j].getIsMine()) {
-                        msg = "X";
+                        cellDisplaying = "X";
                     } else {
                         int minesAmount = mineField[i][j].getAdjacentMinesAmount();
 
                         if (minesAmount == 0) {
-                            msg = ".";
+                            cellDisplaying = ".";
                         } else {
-                            msg = String.valueOf(minesAmount);
+                            cellDisplaying = String.valueOf(minesAmount);
                         }
                     }
                 } else if (mineField[i][j].getStatus() == 'F') {
-                    msg = "F";
+                    cellDisplaying = "F";
                 }
 
                 // Сделать все мины видимыми для отладки.
-                //if (mineField[i][j].getIsMine()) msg = "X";
+                //if (mineField[i][j].getIsMine()) cellDisplaying = "X";
 
-                System.out.print(msg + " | ");
+                System.out.print(cellDisplaying + " | ");
             }
             System.out.println();
         }
