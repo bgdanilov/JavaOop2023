@@ -1,6 +1,6 @@
 package ru.bgdanilov.temperature.model;
 
-public record ScaleCelsius(char key, String name) implements IScale {
+public record ScaleCelsius(char key, String name) implements ScaleInterface {
 
     @Override
     public double convertToCelsius(double temperature) {

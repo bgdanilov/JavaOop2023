@@ -1,7 +1,7 @@
 package ru.bgdanilov.temperature.view;
 
-import ru.bgdanilov.temperature.controller.IController;
-import ru.bgdanilov.temperature.model.IScale;
+import ru.bgdanilov.temperature.controller.ControllerInterface;
+import ru.bgdanilov.temperature.model.ScaleInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,10 +12,10 @@ import java.util.List;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
-public class DesktopView {
-    private final IController controller;
+public class DesktopOneInputField {
+    private final ControllerInterface controller;
 
-    public DesktopView(IController controller) {
+    public DesktopOneInputField(ControllerInterface controller) {
         this.controller = controller;
     }
 
@@ -38,13 +38,13 @@ public class DesktopView {
                 JTextField textField = new JTextField("0", 13);
 
                 // inputTemperatureComboBox, toText, outputTemperatureComboBox, buttons.
-                List<IScale> temperatureScales = controller.getTemperatureScales();
-                JComboBox<IScale> inputTemperatureComboBox = new JComboBox<>();
+                List<ScaleInterface> temperatureScales = controller.getTemperatureScales();
+                JComboBox<ScaleInterface> inputTemperatureComboBox = new JComboBox<>();
                 fillTemperatureScalesComboBox(inputTemperatureComboBox, temperatureScales);
 
                 JLabel toText = new JLabel("конвертировать в:");
 
-                JComboBox<IScale> outputTemperatureComboBox = new JComboBox<>();
+                JComboBox<ScaleInterface> outputTemperatureComboBox = new JComboBox<>();
                 fillTemperatureScalesComboBox(outputTemperatureComboBox, temperatureScales);
 
                 JButton convertButton = new JButton("Конвертировать");
@@ -115,8 +115,8 @@ public class DesktopView {
                 convertButton.addActionListener(event -> {
                     try {
                         inputTemperature[0] = Double.parseDouble(textField.getText());
-                        IScale inputScale = (IScale) inputTemperatureComboBox.getSelectedItem();
-                        IScale outputScale = (IScale) outputTemperatureComboBox.getSelectedItem();
+                        ScaleInterface inputScale = (ScaleInterface) inputTemperatureComboBox.getSelectedItem();
+                        ScaleInterface outputScale = (ScaleInterface) outputTemperatureComboBox.getSelectedItem();
 
                         double outputTemperature = controller
                                 .convertTemperature(inputTemperature[0], inputScale, outputScale);
@@ -156,9 +156,9 @@ public class DesktopView {
     }
 
     // Наполнение JComboBox.
-    private static void fillTemperatureScalesComboBox(JComboBox<IScale> temperatureJComboBox,
-                                                      List<IScale> temperatureScales) {
-        for (IScale item : temperatureScales) {
+    private static void fillTemperatureScalesComboBox(JComboBox<ScaleInterface> temperatureJComboBox,
+                                                      List<ScaleInterface> temperatureScales) {
+        for (ScaleInterface item : temperatureScales) {
             temperatureJComboBox.addItem(item);
         }
     }

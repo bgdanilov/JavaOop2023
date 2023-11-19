@@ -2,16 +2,16 @@ package ru.bgdanilov.temperature.model;
 
 import java.util.List;
 
-public record Model(List<IScale> temperatureScales) implements IModel {
+public record Model(List<ScaleInterface> temperatureScales) implements ModelInterface {
 
     @Override
-    public List<IScale> getTemperatureScales() {
+    public List<ScaleInterface> getTemperatureScales() {
         return temperatureScales;
     }
 
 
     @Override
-    public double convertTemperature(double temperature, IScale inputTemperatureRange, IScale outputTemperatureRange) {
+    public double convertTemperature(double temperature, ScaleInterface inputTemperatureRange, ScaleInterface outputTemperatureRange) {
         return outputTemperatureRange.covertFromCelsius(inputTemperatureRange.convertToCelsius(temperature));
     }
 }
