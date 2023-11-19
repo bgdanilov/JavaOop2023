@@ -1,27 +1,28 @@
-package ru.bgdanilov.temperature_view;
+package ru.bgdanilov.temperature.view;
 
-import ru.bgdanilov.temperature_controller.ITemperatureController;
-import ru.bgdanilov.temperature_model.ITemperature;
+import ru.bgdanilov.temperature.controller.IController;
+import ru.bgdanilov.temperature.model.IScale;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
+import java.util.List;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
-public class TemperatureDesktopView {
-    private final ITemperatureController controller;
+public class DesktopView {
+    private final IController controller;
 
-    public TemperatureDesktopView(ITemperatureController controller) {
+    public DesktopView(IController controller) {
         this.controller = controller;
     }
 
     public void execute() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                JFrame frame = new JFrame("iConvertTemperature");
+                JFrame frame = new JFrame("Конвертер температур");
                 frame.setSize(300, 300);
                 frame.setLocationRelativeTo(null);
                 frame.setResizable(false);
@@ -36,15 +37,16 @@ public class TemperatureDesktopView {
                 JLabel header = new JLabel("Введите температуру:");
                 JTextField textField = new JTextField("0", 13);
 
-                // Выбираем названия шкал для ComboBox.
-                String[] temperatureScales = controller.getTemperatureScales().stream()
-                        .map(ITemperature::name)
-                        .toArray(String[]::new);
-
                 // inputTemperatureComboBox, toText, outputTemperatureComboBox, buttons.
-                JComboBox<String> inputTemperatureComboBox = new JComboBox<>(temperatureScales);
+                List<IScale> temperatureScales = controller.getTemperatureScales();
+                JComboBox<IScale> inputTemperatureComboBox = new JComboBox<>();
+                fillTemperatureScalesComboBox(inputTemperatureComboBox, temperatureScales);
+
                 JLabel toText = new JLabel("конвертировать в:");
-                JComboBox<String> outputTemperatureComboBox = new JComboBox<>(temperatureScales);
+
+                JComboBox<IScale> outputTemperatureComboBox = new JComboBox<>();
+                fillTemperatureScalesComboBox(outputTemperatureComboBox, temperatureScales);
+
                 JButton convertButton = new JButton("Конвертировать");
                 JButton resetButton = new JButton("Назад / Сброс");
 
@@ -70,27 +72,22 @@ public class TemperatureDesktopView {
                 frame.add(header);
 
                 // textField.
-                bagConstraints.insets = new Insets(5, 0, 0, 0); //  отступы
                 bagLayout.setConstraints(textField, bagConstraints);
                 frame.add(textField);
 
                 // inputTemperatureComboBox.
-                bagConstraints.insets = new Insets(5, 0, 0, 0); //  отступы
                 bagLayout.setConstraints(inputTemperatureComboBox, bagConstraints);
                 frame.add(inputTemperatureComboBox);
 
                 // toText.
-                bagConstraints.insets = new Insets(5, 0, 0, 0); //  отступы
                 bagLayout.setConstraints(toText, bagConstraints);
                 frame.add(toText);
 
                 // outputTemperatureComboBox.
-                bagConstraints.insets = new Insets(5, 0, 0, 0); //  отступы
                 bagLayout.setConstraints(outputTemperatureComboBox, bagConstraints);
                 frame.add(outputTemperatureComboBox);
 
                 // resetButton.
-                bagConstraints.insets = new Insets(5, 0, 0, 0); //  отступы
                 bagLayout.setConstraints(resetButton, bagConstraints);
                 frame.add(resetButton);
 
@@ -112,23 +109,23 @@ public class TemperatureDesktopView {
 
                 // Хотел сделать замыкание для кнопки "Назад / Сброс", но работает только через Массив.
                 // Значения этих переменных должны быть доступны в resetButton.addActionListener ниже.
-                final double[] inputTemperature = {0};
-                final boolean[] isPressed = {false};
+                double[] inputTemperature = {0};
+                boolean[] isPressed = {false};
 
                 convertButton.addActionListener(event -> {
                     try {
                         inputTemperature[0] = Double.parseDouble(textField.getText());
-                        String inputTemperatureRange = (String) inputTemperatureComboBox.getSelectedItem();
-                        String outputTemperatureRange = ((String) outputTemperatureComboBox.getSelectedItem());
+                        IScale inputScale = (IScale) inputTemperatureComboBox.getSelectedItem();
+                        IScale outputScale = (IScale) outputTemperatureComboBox.getSelectedItem();
 
                         double outputTemperature = controller
-                                .convertTemperature(inputTemperature[0], inputTemperatureRange, outputTemperatureRange);
+                                .convertTemperature(inputTemperature[0], inputScale, outputScale);
 
                         // Формируем сообщение с данными исходной температуры.
-                        String inputTemperatureMessage = getRoundedTemperatureLine(inputTemperature[0])
-                                + " " + controller.getTemperatureScaleKey(inputTemperatureRange);
+                        assert inputScale != null;
+                        String inputTemperatureMessage = getRoundedTemperatureLine(inputTemperature[0]) + " " + inputScale.key();
                         String outputTemperatureMessage = getRoundedTemperatureLine(outputTemperature)
-                                + " " + controller.getTemperatureScaleKey(outputTemperatureRange);
+                                + " " + (outputScale != null ? outputScale.key() : ' '); // Был warning на key().
 
                         textField.setText(inputTemperatureMessage + " = " + outputTemperatureMessage);
                         textField.setEditable(false);
@@ -158,8 +155,16 @@ public class TemperatureDesktopView {
         });
     }
 
+    // Наполнение JComboBox.
+    private static void fillTemperatureScalesComboBox(JComboBox<IScale> temperatureJComboBox,
+                                                      List<IScale> temperatureScales) {
+        for (IScale item : temperatureScales) {
+            temperatureJComboBox.addItem(item);
+        }
+    }
+
     // Округление температуры.
-    public static String getRoundedTemperatureLine(double temperature) {
+    private static String getRoundedTemperatureLine(double temperature) {
         DecimalFormat temperatureFormat = new DecimalFormat("0.00E00");
 
         return temperature < 10000
