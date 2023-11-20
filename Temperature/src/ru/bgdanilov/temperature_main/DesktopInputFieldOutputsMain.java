@@ -7,7 +7,7 @@ import ru.bgdanilov.temperature.view.DesktopInputFieldOutputs;
 import java.util.Arrays;
 import java.util.List;
 
-public class DesktopOneInputFieldMain {
+public class DesktopInputFieldOutputsMain {
     public static void main(String[] args) {
 
         List<ScaleInterface> temperatureScales = Arrays.asList(
