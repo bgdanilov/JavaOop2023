@@ -32,7 +32,7 @@ public class SweeperConsoleView {
             System.out.println("Введите действие (1 - открыть, 2 - пометить): ");
             int action = scanner.nextInt();
 
-            controller.processingUserActions(action, row, column);
+            controller.processUserAction(action, row, column);
             displayMineField(controller.getMineField());
         }
 
@@ -61,7 +61,7 @@ public class SweeperConsoleView {
                 String cellDisplaying = " ";
 
                 if (mineField[i][j].getStatus() == 'O') {
-                    if (mineField[i][j].getIsMine()) {
+                    if (mineField[i][j].isMine()) {
                         cellDisplaying = "X";
                     } else {
                         int minesAmount = mineField[i][j].getAdjacentMinesAmount();

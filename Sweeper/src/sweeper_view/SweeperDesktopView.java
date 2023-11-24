@@ -61,7 +61,7 @@ public class SweeperDesktopView {
                                 String cellDisplaying = "closed";
 
                                 if (MINE_FIELD[i][j].getStatus() == 'O') {
-                                    if (MINE_FIELD[i][j].getIsMine()) {
+                                    if (MINE_FIELD[i][j].isMine()) {
                                         cellDisplaying = "exploded";
                                     } else {
                                         int minesAmount = MINE_FIELD[i][j].getAdjacentMinesAmount();
@@ -117,9 +117,9 @@ public class SweeperDesktopView {
                         int row = e.getY() / IMAGE_SIZE;
 
                         if (e.getButton() == MouseEvent.BUTTON1) {
-                            controller.processingUserActions(1, row, column);
+                            controller.processUserAction(1, row, column);
                         } else if (e.getButton() == MouseEvent.BUTTON3) {
-                            controller.processingUserActions(2, row, column);
+                            controller.processUserAction(2, row, column);
                         }
 
                         // Перерисовываем поле paintComponent().
@@ -136,20 +136,12 @@ public class SweeperDesktopView {
     }
 
     private String getHeaderMessage() {
-        switch (controller.getGameStatus()) {
-            case 'P' -> {
-                return "Мин/флагов осталось: " + controller.getFlagsAmount();
-            }
-            case 'L' -> {
-                return "Вы проиграли!";
-            }
-            case 'W' -> {
-                return "Вы выиграли!";
-            }
-            default -> {
-                return "Добро пожаловать.";
-            }
-        }
+        return switch (controller.getGameStatus()) {
+            case 'P' -> "Мин/флагов осталось: " + controller.getFlagsAmount();
+            case 'L' -> "Вы проиграли!";
+            case 'W' -> "Вы выиграли!";
+            default -> "Добро пожаловать.";
+        };
     }
 
     private Image getCellImage(String imageName) {

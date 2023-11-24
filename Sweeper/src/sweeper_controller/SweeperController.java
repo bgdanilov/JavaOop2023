@@ -20,12 +20,11 @@ public class SweeperController {
         mineField.setCellAdjacentMinesAmount();
     }
 
-    public void processingUserActions(int action, int row, int column) {
+    public void processUserAction(int action, int row, int column) {
         // Справедливо только для закрытых клеток.
         if (mineField.getCell(row, column).getStatus() != 'O') {
             if (action == 1) {
                 mineField.openCells(row, column);
-
             } else if (action == 2) {
                 mineField.setCellFlag(row, column);
             }
