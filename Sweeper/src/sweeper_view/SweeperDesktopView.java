@@ -2,6 +2,9 @@ package sweeper_view;
 
 import sweeper_controller.SweeperController;
 import sweeper_model.SweeperCell;
+import sweeper_model.SweeperCellImage;
+import sweeper_model.SweeperCellStatus;
+import sweeper_model.SweeperGameStatus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,61 +13,57 @@ import java.awt.event.MouseEvent;
 
 public class SweeperDesktopView {
     private final SweeperController controller;
-    private final SweeperCell[][] MINE_FIELD;
-    private final int IMAGE_SIZE = 30;
-    private final int ROWS_AMOUNT;
-    private final int COLUMNS_AMOUNT;
-    private final JFrame GAME_FRAME;
+    private final SweeperCell[][] mineField;
+    private final int imageSize = 30;
+    private final int rowsAmount;
+    private final int columnsAmount;
+    private JFrame gameFrame;
 
     public SweeperDesktopView(SweeperController controller) {
         // Конструируем фрейм один раз, чтобы "Новая игра" повторно этого не делала.
         this.controller = controller;
         // Получаем минное поле без клеток, для размера фрейма.
-        MINE_FIELD = controller.getMineField();
-        ROWS_AMOUNT = MINE_FIELD.length;
-        COLUMNS_AMOUNT = MINE_FIELD[0].length;
+        mineField = controller.getMineField();
+        rowsAmount = mineField.length;
+        columnsAmount = mineField[0].length;
 
-        GAME_FRAME = new JFrame();
-        GAME_FRAME.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        GAME_FRAME.setTitle("Сапёр");
-        GAME_FRAME.setResizable(false);
-
-        // Первичное позиционирование игрового фрейма по центру экрана.
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        GAME_FRAME.setLocation(screenSize.width / 2 - IMAGE_SIZE * COLUMNS_AMOUNT / 2,
-                screenSize.height / 2 - IMAGE_SIZE * ROWS_AMOUNT / 2);
+        loadCellImages();
     }
 
     public void execute() {
         controller.fillingMineField();
-        controller.setGameStatus('P');
+        // Включаем режим первого беспроигрышного клика.
+        controller.setGameStatus(SweeperGameStatus.FIRST_CLICK);
 
-        // headerPanel.
-        JPanel headerPanel = new JPanel();
-        headerPanel.setPreferredSize(new Dimension(COLUMNS_AMOUNT * IMAGE_SIZE, 30));
-        JLabel headerTextLabel = new JLabel();
-        headerPanel.add(headerTextLabel);
-        headerTextLabel.setText(getHeaderMessage());
-
-        // Читал, что в invokeLater не нужно лишнее передавать.
-        // Поэтому headerPanel и bottomPanel за его пределами.
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                // Создаем Фрейм только один раз.
+                if (gameFrame == null) {
+                    generateFrame();
+                }
+
+                // headerPanel.
+                JPanel headerPanel = new JPanel();
+                headerPanel.setPreferredSize(new Dimension(columnsAmount * imageSize, 30));
+                JLabel headerTextLabel = new JLabel();
+                headerPanel.add(headerTextLabel);
+                headerTextLabel.setText(getHeaderMessage());
+
                 JPanel mineFieldPanel = new JPanel() {
                     @Override
                     protected void paintComponent(Graphics g) {
                         super.paintComponent(g);
 
-                        for (int i = 0; i < ROWS_AMOUNT; i++) {
-                            for (int j = 0; j < COLUMNS_AMOUNT; j++) {
+                        for (int i = 0; i < rowsAmount; i++) {
+                            for (int j = 0; j < columnsAmount; j++) {
                                 String cellDisplaying = "closed";
 
-                                if (MINE_FIELD[i][j].getStatus() == 'O') {
-                                    if (MINE_FIELD[i][j].isMine()) {
+                                if (mineField[i][j].getStatus() == SweeperCellStatus.OPENED) {
+                                    if (mineField[i][j].isMine()) {
                                         cellDisplaying = "exploded";
                                     } else {
-                                        int minesAmount = MINE_FIELD[i][j].getAdjacentMinesAmount();
+                                        int minesAmount = mineField[i][j].getAdjacentMinesAmount();
 
                                         if (minesAmount == 0) {
                                             cellDisplaying = "opened";
@@ -72,19 +71,19 @@ public class SweeperDesktopView {
                                             cellDisplaying = "number" + minesAmount;
                                         }
                                     }
-                                } else if (MINE_FIELD[i][j].getStatus() == 'F') {
+                                } else if (mineField[i][j].getStatus() == SweeperCellStatus.MARKED) {
                                     cellDisplaying = "marked";
                                 }
 
                                 // TODO: Сделать все мины видимыми для отладки (раскомментировать if).
-                                // if (MINE_FIELD[i][j].getIsMine()) cellDisplaying = "exploded";
-                                g.drawImage(getCellImage(cellDisplaying), IMAGE_SIZE * j, IMAGE_SIZE * i, this);
+                                // if (MINE_FIELD[i][j].isMine()) cellDisplaying = "exploded";
+                                g.drawImage(SweeperCellImage.valueOf(cellDisplaying.toUpperCase()).getImage(), imageSize * j, imageSize * i, this);
                             }
                         }
                     }
                 };
 
-                mineFieldPanel.setPreferredSize(new Dimension(IMAGE_SIZE * COLUMNS_AMOUNT, IMAGE_SIZE * ROWS_AMOUNT));
+                mineFieldPanel.setPreferredSize(new Dimension(imageSize * columnsAmount, imageSize * rowsAmount));
 
                 // bottomPanel.
                 JPanel bottomPanel = new JPanel();
@@ -92,19 +91,19 @@ public class SweeperDesktopView {
                 bottomPanel.add(button);
 
                 button.addActionListener(e -> {
-                    controller.setGameStatus('P');
+                    controller.setGameStatus(SweeperGameStatus.FIRST_CLICK);
                     execute();
                 });
 
-                GAME_FRAME.add(headerPanel, BorderLayout.NORTH);
-                GAME_FRAME.add(mineFieldPanel, BorderLayout.CENTER);
-                GAME_FRAME.add(bottomPanel, BorderLayout.SOUTH);
+                gameFrame.add(headerPanel, BorderLayout.NORTH);
+                gameFrame.add(mineFieldPanel, BorderLayout.CENTER);
+                gameFrame.add(bottomPanel, BorderLayout.SOUTH);
 
                 // Получаем размер внутренней панели и растягиваем frame ею.
-                GAME_FRAME.pack();
+                gameFrame.pack();
                 // Поставил включение видимости в конец, чтобы не видно было процессов применения размеров.
                 // Чтобы все посчиталось, создалось и готовое отобразилось.
-                GAME_FRAME.setVisible(true);
+                gameFrame.setVisible(true);
 
                 mineFieldPanel.addMouseListener(new MouseAdapter() {
                     @Override
@@ -113,8 +112,8 @@ public class SweeperDesktopView {
                             return;
                         }
 
-                        int column = e.getX() / IMAGE_SIZE;
-                        int row = e.getY() / IMAGE_SIZE;
+                        int column = e.getX() / imageSize;
+                        int row = e.getY() / imageSize;
 
                         if (e.getButton() == MouseEvent.BUTTON1) {
                             controller.processUserAction(1, row, column);
@@ -128,18 +127,33 @@ public class SweeperDesktopView {
                     }
                 });
             }
+
+            public void generateFrame() {
+                gameFrame = new JFrame();
+                gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                gameFrame.setTitle("Сапёр");
+                gameFrame.setResizable(false);
+
+                // Первичное позиционирование игрового фрейма по центру экрана.
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                gameFrame.setLocation(screenSize.width / 2 - imageSize * columnsAmount / 2,
+                        screenSize.height / 2 - imageSize * rowsAmount / 2);
+
+                // TODO: Можно потом сюда перенести header.
+            }
         });
     }
 
     public boolean isGameOver() {
-        return controller.getGameStatus() != 'P';
+        return controller.getGameStatus() != SweeperGameStatus.PLAY
+                && controller.getGameStatus() != SweeperGameStatus.FIRST_CLICK;
     }
 
     private String getHeaderMessage() {
         return switch (controller.getGameStatus()) {
-            case 'P' -> "Мин/флагов осталось: " + controller.getFlagsAmount();
-            case 'L' -> "Вы проиграли!";
-            case 'W' -> "Вы выиграли!";
+            case PLAY -> "Мин/флагов осталось: " + controller.getFlagsAmount();
+            case LOOSE -> "Вы проиграли!";
+            case WIN -> "Вы выиграли!";
             default -> "Добро пожаловать.";
         };
     }
@@ -150,5 +164,11 @@ public class SweeperDesktopView {
         ImageIcon icon = new ImageIcon(imagesPath);
 
         return icon.getImage();
+    }
+
+    private void loadCellImages() {
+        for (SweeperCellImage cellImage : SweeperCellImage.values()) {
+            cellImage.setImage(getCellImage(cellImage.name().toLowerCase()));
+        }
     }
 }

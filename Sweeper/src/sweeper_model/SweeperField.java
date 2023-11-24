@@ -5,7 +5,7 @@ import java.util.*;
 public class SweeperField {
     private final SweeperCell[][] MINE_FIELD;
     private final int MINES_AMOUNT;
-    private char gameStatus; // P - play, L - loose, W - win.
+    private SweeperGameStatus gameStatus;
     private int flagsAmount;
     private int openedCellsAmount;
 
@@ -22,14 +22,14 @@ public class SweeperField {
         }
     }
 
-    public void generateMines() {
+    public void generateMines(int row, int column) {
         Random random = new Random();
 
         for (int i = 0; i < MINES_AMOUNT; i++) {
             int randomRow = random.nextInt(MINE_FIELD.length);
             int randomColumn = random.nextInt(MINE_FIELD[0].length);
 
-            if (MINE_FIELD[randomRow][randomColumn].isMine()) {
+            if (MINE_FIELD[randomRow][randomColumn].isMine() || (randomRow == row && randomColumn == column)) {
                 i--;
                 continue;
             }
@@ -76,7 +76,7 @@ public class SweeperField {
         for (SweeperCell[] cellsRow : MINE_FIELD) {
             for (int i = 0; i < MINE_FIELD[0].length; i++) {
                 if (cellsRow[i].isMine()) {
-                    cellsRow[i].setStatus('O');
+                    cellsRow[i].setStatus(SweeperCellStatus.OPENED);
                 }
             }
         }
@@ -84,7 +84,7 @@ public class SweeperField {
 
     public void openCells(int row, int column) {
         // Возвращаем флаг обратно при открытии помеченной клетки.
-        if (MINE_FIELD[row][column].getStatus() == 'F') {
+        if (MINE_FIELD[row][column].getStatus() == SweeperCellStatus.MARKED) {
             flagsAmount = flagsAmount + 1;
         }
         // Счетчик открытых клеток.
@@ -94,7 +94,7 @@ public class SweeperField {
         if (MINE_FIELD[row][column].isMine()) {
             // Открыть все мины.
             openAllMines();
-            gameStatus = 'L'; // Loose.
+            gameStatus = SweeperGameStatus.LOOSE; // Loose.
 
             return;
         }
@@ -113,7 +113,7 @@ public class SweeperField {
 
             // Если попали в цифру, отличную от нуля, открываем и выходим.
             if (MINE_FIELD[currentCellRow][currentCellColumn].getAdjacentMinesAmount() != 0) {
-                MINE_FIELD[currentCellRow][currentCellColumn].setStatus('O');
+                MINE_FIELD[currentCellRow][currentCellColumn].setStatus(SweeperCellStatus.OPENED);
 
                 openedCellsAmount++;
                 this.openedCellsAmount = openedCellsAmount;
@@ -123,8 +123,8 @@ public class SweeperField {
 
             // Если не открыта,
             // Открываем клетку и проверяем соседние клетки. Вычеркиваем из очереди.
-            if (MINE_FIELD[currentCellRow][currentCellColumn].getStatus() != 'O') {
-                MINE_FIELD[currentCellRow][currentCellColumn].setStatus('O');
+            if (MINE_FIELD[currentCellRow][currentCellColumn].getStatus() != SweeperCellStatus.OPENED) {
+                MINE_FIELD[currentCellRow][currentCellColumn].setStatus(SweeperCellStatus.OPENED);
                 openedCellsAmount++;
             }
 
@@ -142,7 +142,9 @@ public class SweeperField {
                     }
 
                     // Если мина или уже открыта, пропускаем.
-                    if (MINE_FIELD[i][j].getStatus() == 'O' || MINE_FIELD[i][j].isMine() || MINE_FIELD[i][j].getStatus() == 'F') {
+                    if (MINE_FIELD[i][j].getStatus() == SweeperCellStatus.OPENED
+                            || MINE_FIELD[i][j].isMine()
+                            || MINE_FIELD[i][j].getStatus() == SweeperCellStatus.MARKED) {
                         continue;
                     }
 
@@ -151,7 +153,7 @@ public class SweeperField {
                         queue.add(new SweeperCell(i, j));
                     }
 
-                    MINE_FIELD[i][j].setStatus('O');
+                    MINE_FIELD[i][j].setStatus(SweeperCellStatus.OPENED);
                     openedCellsAmount++;
                 }
             }
@@ -160,11 +162,11 @@ public class SweeperField {
         this.openedCellsAmount = openedCellsAmount;
     }
 
-    public char getGameStatus() {
+    public SweeperGameStatus getGameStatus() {
         return gameStatus;
     }
 
-    public void setGameStatus(char gameStatus) {
+    public void setGameStatus(SweeperGameStatus gameStatus) {
         this.gameStatus = gameStatus;
     }
 
@@ -177,11 +179,11 @@ public class SweeperField {
     }
 
     public void setCellFlag(int row, int column) {
-        if (MINE_FIELD[row][column].getStatus() == 'F') {
-            MINE_FIELD[row][column].setStatus('C');
+        if (MINE_FIELD[row][column].getStatus() == SweeperCellStatus.MARKED) {
+            MINE_FIELD[row][column].setStatus(SweeperCellStatus.CLOSED);
             flagsAmount = flagsAmount + 1;
         } else {
-            MINE_FIELD[row][column].setStatus('F');
+            MINE_FIELD[row][column].setStatus(SweeperCellStatus.MARKED);
             flagsAmount = flagsAmount - 1;
         }
     }
@@ -200,7 +202,7 @@ public class SweeperField {
         // И флаги расставлены правильно.
         if (openedCellsAmount == MINE_FIELD[0].length * MINE_FIELD.length - MINES_AMOUNT
                 && flagsAmount == 0) {
-            setGameStatus('W');
+            setGameStatus(SweeperGameStatus.WIN);
         }
     }
 

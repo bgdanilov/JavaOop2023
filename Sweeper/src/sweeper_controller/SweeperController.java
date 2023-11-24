@@ -1,7 +1,9 @@
 package sweeper_controller;
 
 import sweeper_model.SweeperCell;
+import sweeper_model.SweeperCellStatus;
 import sweeper_model.SweeperField;
+import sweeper_model.SweeperGameStatus;
 
 public class SweeperController {
     private final SweeperField mineField;
@@ -14,16 +16,19 @@ public class SweeperController {
         //  Установка/переустановка количества открытых клеток и флагов для новой игры.
         mineField.setOpenedCellsAmount(0);
         mineField.setFlagsAmount(mineField.getMinesAmount());
-
         mineField.generateCells();
-        mineField.generateMines();
-        mineField.setCellAdjacentMinesAmount();
     }
 
     public void processUserAction(int action, int row, int column) {
         // Справедливо только для закрытых клеток.
-        if (mineField.getCell(row, column).getStatus() != 'O') {
+        if (mineField.getCell(row, column).getStatus() != SweeperCellStatus.OPENED) {
             if (action == 1) {
+                if (mineField.getGameStatus() == SweeperGameStatus.FIRST_CLICK) {
+                    mineField.generateMines(row, column);
+                    mineField.setCellAdjacentMinesAmount();
+                }
+
+                mineField.setGameStatus(SweeperGameStatus.PLAY);
                 mineField.openCells(row, column);
             } else if (action == 2) {
                 mineField.setCellFlag(row, column);
@@ -37,11 +42,11 @@ public class SweeperController {
         return mineField.getMineField();
     }
 
-    public char getGameStatus() {
+    public SweeperGameStatus getGameStatus() {
         return mineField.getGameStatus();
     }
 
-    public void setGameStatus(char gameStatus) {
+    public void setGameStatus(SweeperGameStatus gameStatus) {
         mineField.setGameStatus(gameStatus);
     }
 

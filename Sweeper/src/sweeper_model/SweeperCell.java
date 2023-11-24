@@ -3,13 +3,14 @@ package sweeper_model;
 public class SweeperCell {
     private final int row;
     private final int column;
-    private char status = 'C'; // O - opened, C -closed, F - flag.
+    private SweeperCellStatus status;
     private int adjacentMinesAmount;
     private boolean isMine;
 
     public SweeperCell(int row, int column) {
         this.row = row;
         this.column = column;
+        status = SweeperCellStatus.CLOSED;
     }
 
     public  int getRow() {
@@ -20,11 +21,11 @@ public class SweeperCell {
         return column;
     }
 
-    public char getStatus() {
+    public SweeperCellStatus getStatus() {
         return status;
     }
 
-    public void setStatus(char status) {
+    public void setStatus(SweeperCellStatus status) {
         this.status = status;
     }
 
