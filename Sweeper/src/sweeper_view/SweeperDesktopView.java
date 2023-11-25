@@ -1,15 +1,15 @@
 package sweeper_view;
 
 import sweeper_controller.SweeperController;
-import sweeper_model.SweeperCell;
-import sweeper_model.SweeperCellImage;
-import sweeper_model.SweeperCellStatus;
-import sweeper_model.SweeperGameStatus;
+import sweeper_model.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class SweeperDesktopView {
     private final SweeperController controller;
@@ -18,6 +18,7 @@ public class SweeperDesktopView {
     private final int rowsAmount;
     private final int columnsAmount;
     private JFrame gameFrame;
+    private final SweeperTimer gameTimer = new SweeperTimer();
 
     public SweeperDesktopView(SweeperController controller) {
         // Конструируем фрейм один раз, чтобы "Новая игра" повторно этого не делала.
@@ -31,11 +32,13 @@ public class SweeperDesktopView {
     }
 
     public void execute() {
+
         controller.fillingMineField();
         // Включаем режим первого беспроигрышного клика.
         controller.setGameStatus(SweeperGameStatus.FIRST_CLICK);
 
         SwingUtilities.invokeLater(new Runnable() {
+
             @Override
             public void run() {
                 // Создаем Фрейм только один раз.
@@ -88,10 +91,13 @@ public class SweeperDesktopView {
                 // bottomPanel.
                 JPanel bottomPanel = new JPanel();
                 JButton button = new JButton("Новая игра");
+                JLabel gameTime = new JLabel("0");
+                bottomPanel.add(gameTime);
                 bottomPanel.add(button);
 
                 button.addActionListener(e -> {
                     controller.setGameStatus(SweeperGameStatus.FIRST_CLICK);
+                    gameTimer.stop();
                     execute();
                 });
 
@@ -104,6 +110,9 @@ public class SweeperDesktopView {
                 // Поставил включение видимости в конец, чтобы не видно было процессов применения размеров.
                 // Чтобы все посчиталось, создалось и готовое отобразилось.
                 gameFrame.setVisible(true);
+
+                // Запускаем таймер после полной отрисовки игры.
+                gameTimer.start(gameTime, 0);
 
                 mineFieldPanel.addMouseListener(new MouseAdapter() {
                     @Override
@@ -154,7 +163,7 @@ public class SweeperDesktopView {
             case PLAY -> "Мин/флагов осталось: " + controller.getFlagsAmount();
             case LOOSE -> "Вы проиграли!";
             case WIN -> "Вы выиграли!";
-            default -> "Добро пожаловать.";
+            default -> "Добро пожаловать. " + gameTimer.getYourTime();
         };
     }
 
