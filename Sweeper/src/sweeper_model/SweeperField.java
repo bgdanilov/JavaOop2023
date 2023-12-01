@@ -4,14 +4,25 @@ import java.util.*;
 
 public class SweeperField {
     private final SweeperCell[][] MINE_FIELD;
-    private final int MINES_AMOUNT;
+    private int rows = 10;
+    private int columns = 10;
+    private int minesAmount;
     private SweeperGameStatus gameStatus;
     private int flagsAmount;
     private int openedCellsAmount;
 
+    public SweeperField() {
+        MINE_FIELD = new SweeperCell[rows][columns];
+        this.minesAmount = 10;
+    }
+
     public SweeperField(int rows, int columns, int minesAmount) {
         MINE_FIELD = new SweeperCell[rows][columns];
-        this.MINES_AMOUNT = minesAmount;
+        this.minesAmount = minesAmount;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
     }
 
     public void generateCells() {
@@ -25,7 +36,7 @@ public class SweeperField {
     public void generateMines(int row, int column) {
         Random random = new Random();
 
-        for (int i = 0; i < MINES_AMOUNT; i++) {
+        for (int i = 0; i < minesAmount; i++) {
             int randomRow = random.nextInt(MINE_FIELD.length);
             int randomColumn = random.nextInt(MINE_FIELD[0].length);
 
@@ -197,17 +208,17 @@ public class SweeperField {
         this.flagsAmount = flagsAmount;
     }
 
-    public void checkWin() {
+    public void setWinGameStatus() {
         // Если число открытых клеток равно общему количеству клеток минус количество мин.
         // И флаги расставлены правильно.
-        if (openedCellsAmount == MINE_FIELD[0].length * MINE_FIELD.length - MINES_AMOUNT
+        if (openedCellsAmount == MINE_FIELD[0].length * MINE_FIELD.length - minesAmount
                 && flagsAmount == 0) {
             setGameStatus(SweeperGameStatus.WIN);
         }
     }
 
     public int getMinesAmount() {
-        return MINES_AMOUNT;
+        return minesAmount;
     }
 
     public void setOpenedCellsAmount(int openedCellsAmount) {

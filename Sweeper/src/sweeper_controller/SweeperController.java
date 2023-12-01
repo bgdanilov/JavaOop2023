@@ -6,10 +6,14 @@ import sweeper_model.SweeperField;
 import sweeper_model.SweeperGameStatus;
 
 public class SweeperController {
-    private final SweeperField mineField;
+    private SweeperField mineField;
 
     public SweeperController(SweeperField mineField) {
         this.mineField = mineField;
+    }
+
+    public void newMineField(int rows, int columns, int minesAmount) {
+        mineField = new SweeperField(rows, columns, minesAmount);
     }
 
     public void fillingMineField() {
@@ -35,7 +39,7 @@ public class SweeperController {
             }
         }
 
-        mineField.checkWin();
+        mineField.setWinGameStatus();
     }
 
     public SweeperCell[][] getMineField() {

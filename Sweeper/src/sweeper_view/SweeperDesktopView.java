@@ -7,8 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class SweeperDesktopView {
@@ -101,6 +99,7 @@ public class SweeperDesktopView {
                     execute();
                 });
 
+
                 gameFrame.add(headerPanel, BorderLayout.NORTH);
                 gameFrame.add(mineFieldPanel, BorderLayout.CENTER);
                 gameFrame.add(bottomPanel, BorderLayout.SOUTH);
@@ -163,7 +162,7 @@ public class SweeperDesktopView {
             case PLAY -> "Мин/флагов осталось: " + controller.getFlagsAmount();
             case LOOSE -> "Вы проиграли!";
             case WIN -> "Вы выиграли!";
-            default -> "Добро пожаловать. " + gameTimer.getYourTime();
+            default -> "Добро пожаловать. " + gameTimer.getYourTimeInLine();
         };
     }
 

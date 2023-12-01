@@ -6,14 +6,19 @@ import java.util.TimerTask;
 
 public class SweeperTimer {
     Timer timer;
-    String yourTime = "00:00";
+    String yourTimeInLine = "00:00";
+    int yourTimeInSeconds;
 
-    public void setYourTime(String timeLine) {
-        yourTime = timeLine;
+    public void setYourTimeInLine(String timeLine) {
+        yourTimeInLine = timeLine;
     }
 
-    public String getYourTime() {
-        return yourTime;
+    public String getYourTimeInLine() {
+        return yourTimeInLine;
+    }
+
+    public int getYourTimeInSeconds() {
+        return yourTimeInSeconds;
     }
 
     public void start(JLabel time, int startTime) {
@@ -26,14 +31,15 @@ public class SweeperTimer {
             @Override
             public void run() {
                 sec++;
-                yourTime = String.format("%02d:%02d", sec / 60, sec % 60);
-                time.setText(yourTime);
+                yourTimeInSeconds = sec;
+                yourTimeInLine = String.format("%02d:%02d", sec / 60, sec % 60);
+                time.setText(yourTimeInLine);
             }
         }, 0, 1000);
     }
 
     public void stop() {
-        setYourTime(yourTime);
+        setYourTimeInLine(yourTimeInLine);
 
         if (timer != null) {
             timer.cancel();
