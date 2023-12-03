@@ -1,35 +1,84 @@
 package sweeper_model;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
 public enum SweeperDifficultyLevel {
-    EASY ("Легкий", 10, 10, 1),
-    MEDIUM ("Средний", 15, 20, 20),
-    HARD ("Тяжелый", 20, 30, 60);
+    EASY("Легкий", 10, 10, 1, new String[4]),
+    MEDIUM("Средний", 15, 20, 30, new String[4]),
+    HARD("Тяжелый", 20, 30, 60, new String[4]);
 
     private final String label;
-    private final int rows;
-    private final int columns;
-    private final int mines;
+    private final int rowsAmount;
+    private final int columnsAmount;
+    private final int minesAmount;
+    private String[] recordEntry;
 
-    SweeperDifficultyLevel(String label, int rows, int columns, int mines) {
+    SweeperDifficultyLevel(String label, int rowsAmount, int columnsAmount, int minesAmount, String[] recordEntry) {
         this.label = label;
-        this.rows = rows;
-        this.columns = columns;
-        this.mines = mines;
+        this.rowsAmount = rowsAmount;
+        this.columnsAmount = columnsAmount;
+        this.minesAmount = minesAmount;
+        this.recordEntry = recordEntry;
     }
 
     public String getLabel() {
         return label;
     }
-    public int getRows() {
-        return rows;
+
+    public int getRowsAmount() {
+        return rowsAmount;
     }
 
-    public int getColumns() {
-        return columns;
+    public int getColumnsAmount() {
+        return columnsAmount;
     }
 
-    public int getMines() {
-        return mines;
+    public int getMinesAmount() {
+        return minesAmount;
+    }
+
+    public String[] getRecordEntry() {
+        return recordEntry;
+    }
+
+    public void setRecordEntry(String[] recordEntry) {
+        this.recordEntry = recordEntry;
+    }
+
+    public static void readFileToEnum() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("Sweeper/files/recordsEntries.txt"));
+            String recordEntry;
+            Scanner scanner = new Scanner(reader);
+
+            for (SweeperDifficultyLevel difficultyLevel : SweeperDifficultyLevel.values()) {
+                recordEntry = scanner.nextLine();
+                difficultyLevel.setRecordEntry(recordEntry.split(";"));
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace(); // Что это?
+        }
+    }
+
+    public static void writeEnumToFile() {
+        try {
+            FileWriter writer = new FileWriter("Sweeper/files/recordsEntries.txt");
+
+            for (SweeperDifficultyLevel difficultyLevel : SweeperDifficultyLevel.values()) {
+                writer.write(String.join(";", difficultyLevel.getRecordEntry()));
+                writer.write("\n");
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Возникла ошибка во время записи, проверьте данные.");
+        }
     }
 
     @Override

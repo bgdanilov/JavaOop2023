@@ -17,13 +17,13 @@ public enum SweeperCellImage {
     OPENED;
 
     // Соответствующая картинка - объект в памяти.
-    private Image image;
+    private Image cellImage;
 
-    public Image getImage() {
-        return image;
+    public Image getCellImage() {
+        return cellImage;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public void setCellImage(Image cellImage) {
+        this.cellImage = cellImage;
     }
 }

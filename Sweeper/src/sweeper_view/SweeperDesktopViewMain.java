@@ -6,7 +6,7 @@ import sweeper_controller.SweeperController;
 import javax.swing.*;
 
 public class SweeperDesktopViewMain {
-    private SweeperController controller;
+    private final SweeperController controller;
 
     public SweeperDesktopViewMain(SweeperController controller) {
         // Конструируем фрейм один раз, чтобы "Новая игра" повторно этого не делала.
@@ -14,12 +14,9 @@ public class SweeperDesktopViewMain {
     }
 
     public void execute() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                SweeperDesktopGame game = new SweeperDesktopGame(controller);
-                game.startGame();
-            }
+        SwingUtilities.invokeLater(() -> {
+            SweeperDesktopGame game = new SweeperDesktopGame(controller);
+            game.startGame();
         });
     }
 }

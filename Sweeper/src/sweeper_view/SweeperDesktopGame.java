@@ -7,41 +7,35 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileNotFoundException;
-import java.time.LocalDate;
-import java.util.List;
-
-import static java.awt.BorderLayout.NORTH;
 
 
 public class SweeperDesktopGame {
     private final SweeperController controller;
+    private final SweeperTimer gameTimer;
+    private SweeperDifficultyLevel difficultyLevel;
     private SweeperCell[][] mineField;
     private final int imageSize = 30;
     private int rowsAmount;
     private int columnsAmount;
     private JFrame gameFrame; // Это тут нужно.
-    private final SweeperTimer gameTimer = new SweeperTimer();
-
-    private SweeperDifficultyLevel difficultyLevel = SweeperDifficultyLevel.EASY;
-
-    private SweeperRecord record;
-
-    private String[][] matrix;
 
 
     public SweeperDesktopGame(SweeperController controller) {
         // Конструируем фрейм один раз, чтобы "Новая игра" повторно этого не делала.
         this.controller = controller;
+        gameTimer = new SweeperTimer();
+        difficultyLevel = SweeperDifficultyLevel.EASY;
         // Загружаем картинки.
         loadCellImages();
-        record = new SweeperRecord();
-        matrix = record.getMatrix();
+        // Загружаем рекорды из файла.
+        SweeperDifficultyLevel.readFileToEnum();
     }
 
     public void startGame() {
-        // Получаем минное поле без клеток, для размера фрейма.
+        // Получаем минное поле.
+        // А оно создается своим конструктором в зависимости от уровня сложности.
         mineField = controller.getMineField();
+        // Записываем в поля размеры минного поля.
         rowsAmount = mineField.length;
         columnsAmount = mineField[0].length;
         // Заполняем минное поле минами.
@@ -94,8 +88,8 @@ public class SweeperDesktopGame {
                         }
 
                         // TODO: Сделать все мины видимыми для отладки (раскомментировать if).
-                        // if (MINE_FIELD[i][j].isMine()) cellDisplaying = "exploded";
-                        g.drawImage(SweeperCellImage.valueOf(cellDisplaying.toUpperCase()).getImage(), imageSize * j, imageSize * i, this);
+                        // if (mineField[i][j].isMine()) cellDisplaying = "exploded";
+                        g.drawImage(SweeperCellImage.valueOf(cellDisplaying.toUpperCase()).getCellImage(), imageSize * j, imageSize * i, this);
                     }
                 }
             }
@@ -108,13 +102,14 @@ public class SweeperDesktopGame {
         bottomPanel.setSize(imageSize * columnsAmount, 80);
         JButton newGameButton = new JButton("Новая игра");
         JButton settingsButton = new JButton("Настройки");
-
         JLabel gameTime = new JLabel();
+
         bottomPanel.add(gameTime);
         bottomPanel.add(newGameButton);
         bottomPanel.add(settingsButton);
 
-        gameFrame.add(headerPanel, NORTH);
+        // Добавляем компоненты игрового поля на Фрейм.
+        gameFrame.add(headerPanel, BorderLayout.NORTH);
         gameFrame.add(mineFieldPanel, BorderLayout.CENTER);
         gameFrame.add(bottomPanel, BorderLayout.SOUTH);
         gameFrame.revalidate();
@@ -133,21 +128,18 @@ public class SweeperDesktopGame {
 
         // settingsButton.
         settingsButton.addActionListener(e -> {
-            SweeperSettingsDialog settingsDialog = new SweeperSettingsDialog(gameFrame, "Settings", true, this);
-            //settingsDialog.setParent(this);
+            SweeperSettingsDialog settingsDialog
+                    = new SweeperSettingsDialog(gameFrame, "Настройки", true, this);
             settingsDialog.setVisible(true); // отобразить диалог
         });
 
         // mouse.
+        // TODO: Как-то по-разному передаются parentObj.
+        SweeperRecordDialog recordDialog = new SweeperRecordDialog(gameFrame, "Рекорды", true);
+        recordDialog.setParentObject(this);
         mineFieldPanel.addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(MouseEvent e) {
-                // GameOver - это когда статус не PLAY и не FIRST_CLICK,
-                // т.е. это и выигрыш и проигрыш.
-                if (isGameOver()) {
-                    return;
-                }
-
+            public void mouseClicked(MouseEvent e) {
                 int column = e.getX() / imageSize;
                 int row = e.getY() / imageSize;
 
@@ -160,138 +152,25 @@ public class SweeperDesktopGame {
                 headerTextLabel.setText(generateHeaderMessage());
                 // Перерисовываем поле paintComponent().
                 mineFieldPanel.repaint();
-                // Записываем рекорд.
-                LocalDate currentDate = LocalDate.now();
 
-
-
-                if (controller.getGameStatus() == SweeperGameStatus.WIN) {
-                    // Ищем в матрице не побили ли мы рекорд.
-                    int newRecordRowIndex
-                            = getNewRecordRowIndex(difficultyLevel, matrix, gameTimer.getYourTimeInSeconds());
-
-                    System.out.println(newRecordRowIndex);
-                    // Зписываем рекорд в матрицу.
-                    if (newRecordRowIndex != -1) {
-                        writeInMatrix(newRecordRowIndex);
-                    }
+                // Проверяем статус игры.
+                // GameOver - это когда статус не PLAY и не FIRST_CLICK,
+                // т.е. это и выигрыш и проигрыш.
+                if (isGameOver()) {
+                    gameTimer.stop();
                 }
 
-
-//                // Зписываем рекорд в матрицу.
-//                if (controller.getGameStatus() == SweeperGameStatus.LOOSE) {
-//                    writeInMatrix(difficultyLevel, 0);
-//                }
-
-
-                writeRecord(gameTimer.getYourTimeInSeconds() + "; "
-                        + currentDate + "; "
-                        + difficultyLevel.getLabel() + "; "
-                        + "Безымянный");
+                // Проверка рекорда и вывод диалога.
+                if (controller.getGameStatus() == SweeperGameStatus.WIN) {
+                    // Фиксируем новое время.
+                    recordDialog.generateAndSetGameResults();
+                    recordDialog.setVisible(true);
+                }
             }
         });
 
         // Запускаем таймер после полной отрисовки игры.
         gameTimer.start(gameTime, 0);
-    }
-
-    public void generateFrame() {
-        gameFrame = new JFrame();
-        gameFrame.setSize(imageSize * columnsAmount, imageSize * rowsAmount + 100);
-        gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        gameFrame.setTitle("Сапёр");
-        gameFrame.setResizable(false);
-
-
-        // Первичное позиционирование игрового фрейма по центру экрана.
-//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//        gameFrame.setLocation(screenSize.width / 2 - imageSize * columnsAmount / 2,
-//                screenSize.height / 2 - imageSize * rowsAmount / 2);
-
-        // TODO: Можно потом сюда перенести header.
-        // Добавить позиционирование по центру только, если новый Фрейм создается.
-    }
-
-    private int getNewRecordRowIndex(SweeperDifficultyLevel level, String[][] matrix, int newTime) {
-        int rowFrom = 0;
-        int rowTo = 0;
-
-        if (level == SweeperDifficultyLevel.EASY) {
-            rowTo = 2;
-        } else if (level == SweeperDifficultyLevel.MEDIUM) {
-            rowFrom = 3;
-            rowTo = 5;
-        } else if (level == SweeperDifficultyLevel.HARD) {
-            rowFrom = 6;
-            rowTo = 8;
-        }
-
-        for (int i = rowFrom; i <= rowTo; i++) {
-            if (matrix[i][0] == null) {
-                return i;
-            }
-        }
-
-        int minRiznost = Integer.parseInt(matrix[rowFrom][0]) - newTime; // -1
-        int result = rowFrom; // [0]
-
-        if (minRiznost <= 0) {
-           minRiznost = Integer.parseInt(matrix[rowFrom][0]); // 4
-        }
-
-        for (int i = rowFrom + 1; i < rowTo; i++) {
-            if (Integer.parseInt(matrix[i][0]) - newTime <= 0) { // 5 no
-                minRiznost = Integer.parseInt(matrix[rowFrom][0]);
-            } else if (Integer.parseInt(matrix[i][0]) - newTime < minRiznost) { // 5 no
-                minRiznost = Integer.parseInt(matrix[i][0]); // 3
-                result = i; // [1]
-            }
-        }
-
-        return result;
-    }
-
-    private void writeInMatrix(int row) {
-        LocalDate currentDate = LocalDate.now();
-
-        matrix[row][0] = String.valueOf(getGameTimer().getYourTimeInSeconds());
-        matrix[row][1] = String.valueOf(currentDate);
-        matrix[row][2] = String.valueOf(difficultyLevel.getLabel());
-        matrix[row][3] = "Имя";
-
-        System.out.println(record.toString(matrix));
-        //System.out.println(matrix[0][0]);
-    }
-
-    private void writeRecord(String recordLine) {
-        // Запись в файл.
-        if (controller.getGameStatus() == SweeperGameStatus.LOOSE) {
-            SweeperRecord record = new SweeperRecord();
-
-            try {
-                record.writeToFile(recordLine);
-            } catch (FileNotFoundException ex) {
-                throw new RuntimeException(ex);
-            }
-
-            // Получение рекорда.
-            getBestRecord();
-        }
-    }
-
-    private void getBestRecord() {
-        if (controller.getGameStatus() == SweeperGameStatus.LOOSE) {
-            SweeperRecord eee = new SweeperRecord();
-
-            String line = eee.getBestRecord(difficultyLevel);
-            displayRecordDialog(line);
-        }
-    }
-
-    private void displayRecordDialog(String line) {
-        SweeperRecordDialog recordDialog = new SweeperRecordDialog(gameFrame, "Рекорды", true, this);
-        recordDialog.generateMessage(line);
-        recordDialog.setVisible(true); // отобразить диалог
     }
 
     public SweeperController getController() {
@@ -302,9 +181,27 @@ public class SweeperDesktopGame {
         return gameTimer;
     }
 
-    public boolean isGameOver() {
-        return controller.getGameStatus() != SweeperGameStatus.PLAY
-                && controller.getGameStatus() != SweeperGameStatus.FIRST_CLICK;
+    public SweeperDifficultyLevel getDifficultyLevel() {
+        return difficultyLevel;
+    }
+
+    public void setDifficultyLevel(SweeperDifficultyLevel difficultyLevel) {
+        this.difficultyLevel = difficultyLevel;
+    }
+
+    private void generateFrame() {
+        gameFrame = new JFrame();
+        gameFrame.setSize(imageSize * columnsAmount, imageSize * rowsAmount + 100);
+        gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        gameFrame.setTitle("Сапёр");
+        gameFrame.setResizable(false);
+
+        /*
+        TODO: Добавить позиционирование по центру только, если новый Фрейм создается.
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        gameFrame.setLocation(screenSize.width / 2 - imageSize * columnsAmount / 2,
+                screenSize.height / 2 - imageSize * rowsAmount / 2);
+        */
     }
 
     private String generateHeaderMessage() {
@@ -312,11 +209,16 @@ public class SweeperDesktopGame {
             case PLAY -> "Мин/флагов осталось: " + controller.getFlagsAmount();
             case LOOSE -> "Вы проиграли!";
             case WIN -> "Вы выиграли!";
-            default -> "Добро пожаловать.";
+            default -> "Добро пожаловать."; // FIRST_CLICK
         };
     }
 
-    private Image getCellImage(String imageName) {
+    private boolean isGameOver() {
+        return controller.getGameStatus() != SweeperGameStatus.PLAY
+                && controller.getGameStatus() != SweeperGameStatus.FIRST_CLICK;
+    }
+
+    private static Image getCellImage(String imageName) {
         String fileName = imageName + ".png";
         String imagesPath = System.getProperty("user.dir") + "/Sweeper/images/" + fileName;
         ImageIcon icon = new ImageIcon(imagesPath);
@@ -324,13 +226,9 @@ public class SweeperDesktopGame {
         return icon.getImage();
     }
 
-    private void loadCellImages() {
+    private static void loadCellImages() {
         for (SweeperCellImage cellImage : SweeperCellImage.values()) {
-            cellImage.setImage(getCellImage(cellImage.name().toLowerCase()));
+            cellImage.setCellImage(getCellImage(cellImage.name().toLowerCase()));
         }
-    }
-
-    public void setDifficultyLevel(SweeperDifficultyLevel difficultyLevel) {
-        this.difficultyLevel = difficultyLevel;
     }
 }
