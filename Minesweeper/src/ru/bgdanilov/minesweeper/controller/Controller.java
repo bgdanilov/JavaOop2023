@@ -1,48 +1,56 @@
-package sweeper_controller;
+package ru.bgdanilov.minesweeper.controller;
 
-import sweeper_model.SweeperCell;
-import sweeper_model.SweeperField;
+import ru.bgdanilov.minesweeper.model.Cell;
+import ru.bgdanilov.minesweeper.model.CellStatus;
+import ru.bgdanilov.minesweeper.model.Field;
+import ru.bgdanilov.minesweeper.model.GameStatus;
 
-public class SweeperController {
-    private final SweeperField mineField;
+public class Controller {
+    private Field mineField;
 
-    public SweeperController(SweeperField mineField) {
+    public Controller(Field mineField) {
         this.mineField = mineField;
+    }
+
+    public void newMineField(int rows, int columns, int minesAmount) {
+        mineField = new Field(rows, columns, minesAmount);
     }
 
     public void fillingMineField() {
         //  Установка/переустановка количества открытых клеток и флагов для новой игры.
         mineField.setOpenedCellsAmount(0);
         mineField.setFlagsAmount(mineField.getMinesAmount());
-
         mineField.generateCells();
-        mineField.generateMines();
-        mineField.setCellAdjacentMinesAmount();
     }
 
-    public void processingUserActions(int action, int row, int column) {
+    public void processUserAction(int action, int row, int column) {
         // Справедливо только для закрытых клеток.
-        if (mineField.getCell(row, column).getStatus() != 'O') {
+        if (mineField.getCell(row, column).getStatus() != CellStatus.OPENED) {
             if (action == 1) {
-                mineField.openCells(row, column);
+                if (mineField.getGameStatus() == GameStatus.FIRST_CLICK) {
+                    mineField.generateMines(row, column);
+                    mineField.setCellAdjacentMinesAmount();
+                }
 
+                mineField.setGameStatus(GameStatus.PLAY);
+                mineField.openCells(row, column);
             } else if (action == 2) {
                 mineField.setCellFlag(row, column);
             }
         }
 
-        mineField.checkWin();
+        mineField.setWinGameStatus();
     }
 
-    public SweeperCell[][] getMineField() {
+    public Cell[][] getMineField() {
         return mineField.getMineField();
     }
 
-    public char getGameStatus() {
+    public GameStatus getGameStatus() {
         return mineField.getGameStatus();
     }
 
-    public void setGameStatus(char gameStatus) {
+    public void setGameStatus(GameStatus gameStatus) {
         mineField.setGameStatus(gameStatus);
     }
 
