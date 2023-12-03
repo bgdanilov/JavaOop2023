@@ -1,15 +1,15 @@
-package sweeper_view;
+package ru.bgdanilov.minesweeper.view;
 
-import sweeper_model.SweeperDifficultyLevel;
+import ru.bgdanilov.minesweeper.model.DifficultyLevel;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SweeperSettingsDialog {
+public class DesktopSettingsDialog {
     JDialog dialog;
-    private final SweeperDesktopGame parentObject;
+    private final DesktopGame parentObject;
 
-    public SweeperSettingsDialog(JFrame frameOwner, String title, boolean modality, SweeperDesktopGame object) {
+    public DesktopSettingsDialog(JFrame frameOwner, String title, boolean modality, DesktopGame object) {
         parentObject = object; // Чтобы работать с методами игры.
         dialog = new JDialog(frameOwner, title, modality);
         dialog.setSize(250, 150);
@@ -44,7 +44,7 @@ public class SweeperSettingsDialog {
         c.gridy = 1;
         c.gridwidth = 1; // Количество занимаемых столбцов.
         c.insets = new Insets(0, 0, 5, 0); // Margin CSS.
-        JComboBox<SweeperDifficultyLevel> difficultyLevelComboBox = new JComboBox<>(SweeperDifficultyLevel.values());
+        JComboBox<DifficultyLevel> difficultyLevelComboBox = new JComboBox<>(DifficultyLevel.values());
         bagLayout.setConstraints(difficultyLevelComboBox, c);
 
         // ok.
@@ -57,8 +57,8 @@ public class SweeperSettingsDialog {
         ok.addActionListener(e -> {
             dialog.setVisible(false);
 
-            SweeperDifficultyLevel difficultyLevel
-                    = (SweeperDifficultyLevel) difficultyLevelComboBox.getSelectedItem();
+            DifficultyLevel difficultyLevel
+                    = (DifficultyLevel) difficultyLevelComboBox.getSelectedItem();
 
             // Считываем из выбранного уровня сложности
             // количества строк, столбцов и мин.
@@ -88,7 +88,7 @@ public class SweeperSettingsDialog {
     }
 
 /* Не используется.
-    public void setParentObj(SweeperDesktopGame parentObj) {
+    public void setParentObj(DesktopGame parentObj) {
         this.parentObj = parentObj;
     }
 */

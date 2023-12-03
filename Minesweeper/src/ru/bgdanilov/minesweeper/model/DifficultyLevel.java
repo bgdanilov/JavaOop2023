@@ -1,4 +1,4 @@
-package sweeper_model;
+package ru.bgdanilov.minesweeper.model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public enum SweeperDifficultyLevel {
+public enum DifficultyLevel {
     EASY("Легкий", 10, 10, 1, new String[4]),
     MEDIUM("Средний", 15, 20, 30, new String[4]),
     HARD("Тяжелый", 20, 30, 60, new String[4]);
@@ -17,7 +17,7 @@ public enum SweeperDifficultyLevel {
     private final int minesAmount;
     private String[] recordEntry;
 
-    SweeperDifficultyLevel(String label, int rowsAmount, int columnsAmount, int minesAmount, String[] recordEntry) {
+    DifficultyLevel(String label, int rowsAmount, int columnsAmount, int minesAmount, String[] recordEntry) {
         this.label = label;
         this.rowsAmount = rowsAmount;
         this.columnsAmount = columnsAmount;
@@ -51,11 +51,11 @@ public enum SweeperDifficultyLevel {
 
     public static void readFileToEnum() {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("Sweeper/files/recordsEntries.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("Minesweeper/src/files/recordsEntries.txt"));
             String recordEntry;
             Scanner scanner = new Scanner(reader);
 
-            for (SweeperDifficultyLevel difficultyLevel : SweeperDifficultyLevel.values()) {
+            for (DifficultyLevel difficultyLevel : DifficultyLevel.values()) {
                 recordEntry = scanner.nextLine();
                 difficultyLevel.setRecordEntry(recordEntry.split(";"));
             }
@@ -68,9 +68,9 @@ public enum SweeperDifficultyLevel {
 
     public static void writeEnumToFile() {
         try {
-            FileWriter writer = new FileWriter("Sweeper/files/recordsEntries.txt");
+            FileWriter writer = new FileWriter("Minesweeper/src/files/recordsEntries.txt");
 
-            for (SweeperDifficultyLevel difficultyLevel : SweeperDifficultyLevel.values()) {
+            for (DifficultyLevel difficultyLevel : DifficultyLevel.values()) {
                 writer.write(String.join(";", difficultyLevel.getRecordEntry()));
                 writer.write("\n");
             }

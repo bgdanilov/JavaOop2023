@@ -1,14 +1,14 @@
-package sweeper_view;
+package ru.bgdanilov.minesweeper.view;
 
-import sweeper_model.SweeperDifficultyLevel;
+import ru.bgdanilov.minesweeper.model.DifficultyLevel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
 
-public class SweeperRecordDialog {
+public class DesktopRecordDialog {
     private final JDialog dialog;
-    private SweeperDesktopGame parentObject;
+    private DesktopGame parentObject;
     private final JPanel contentPanel;
     private final JLabel dialogMessage;
     private final JTextField inputName;
@@ -18,7 +18,7 @@ public class SweeperRecordDialog {
     private int currentRecordTime;
     private String newGameDate;
 
-    public SweeperRecordDialog(JFrame frameOwner, String title, boolean modality) {
+    public DesktopRecordDialog(JFrame frameOwner, String title, boolean modality) {
         dialog = new JDialog(frameOwner, title, modality);
         dialog.setSize(250, 250);
         dialog.getRootPane().setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -86,7 +86,7 @@ public class SweeperRecordDialog {
         dialog.setVisible(b);
     }
 
-    public void setParentObject(SweeperDesktopGame parentObject) {
+    public void setParentObject(DesktopGame parentObject) {
         this.parentObject = parentObject;
     }
 
@@ -94,15 +94,14 @@ public class SweeperRecordDialog {
     // новое время и готовит соответствующее сообщение.
     // Записывать или нет рекорд решает пользователь далее.
     public void generateAndSetGameResults() {
-        // Фиксируем время нового рекорда и дату в поле объекта.
-        LocalDate currentDate = LocalDate.now();
-        newGameDate = String.valueOf(currentDate);
+        // Фиксируем новое время и дату в поле объекта.
+        newGameDate = String.valueOf(LocalDate.now());
         newGameTime = parentObject.getGameTimer().getYourTimeAtSeconds();
-        String newGameTimeAtWatch = formatTime(newGameTime);
+        String newGameTimeAtWatch = formatTimeToWatch(newGameTime);
 
         // Фиксируем время старого рекорда в поле объекта.
         currentRecordTime = Integer.parseInt(parentObject.getDifficultyLevel().getRecordEntry()[0]);
-        String currentRecordTimeAtWatch = formatTime(currentRecordTime);
+        String currentRecordTimeAtWatch = formatTimeToWatch(currentRecordTime);
 
         contentPanel.add(dialogMessage);
 
@@ -137,11 +136,12 @@ public class SweeperRecordDialog {
                     parentObject.getDifficultyLevel().getLabel(),
                     inputName.getText()});
 
-            SweeperDifficultyLevel.writeEnumToFile();
+            DifficultyLevel.writeEnumToFile();
         }
     }
 
-    private static String formatTime(int seconds) {
+    // Время на часах - время в формате: 00:00.
+    private static String formatTimeToWatch(int seconds) {
         return String.format("%02d:%02d", seconds / 60, seconds % 60);
     }
 }

@@ -1,8 +1,8 @@
-package sweeper_model;
+package ru.bgdanilov.minesweeper.model;
 
 import java.awt.*;
 
-public enum SweeperCellImage {
+public enum CellImage {
     CLOSED,
     EXPLODED,
     MARKED,

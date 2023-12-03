@@ -1,16 +1,16 @@
-package sweeper_view;
+package ru.bgdanilov.minesweeper.view;
 
-import sweeper_controller.SweeperController;
-import sweeper_model.SweeperCell;
-import sweeper_model.SweeperCellStatus;
-import sweeper_model.SweeperGameStatus;
+import ru.bgdanilov.minesweeper.controller.Controller;
+import ru.bgdanilov.minesweeper.model.Cell;
+import ru.bgdanilov.minesweeper.model.CellStatus;
+import ru.bgdanilov.minesweeper.model.GameStatus;
 
 import java.util.Scanner;
 
-public class SweeperConsoleView {
-    private final SweeperController controller;
+public class Console {
+    private final Controller controller;
 
-    public SweeperConsoleView(SweeperController controller) {
+    public Console(Controller controller) {
         this.controller = controller;
     }
 
@@ -18,14 +18,14 @@ public class SweeperConsoleView {
         // Действие пользователя без пользователя - создание поля с минами.
         controller.fillingMineField();
         // Включаем режим первого беспроигрышного клика.
-        controller.setGameStatus(SweeperGameStatus.FIRST_CLICK);
+        controller.setGameStatus(GameStatus.FIRST_CLICK);
         // Отображаем первоначальное поле.
         displayMineField(controller.getMineField());
 
         Scanner scanner = new Scanner(System.in);
 
-        while (controller.getGameStatus() == SweeperGameStatus.PLAY
-                || controller.getGameStatus() == SweeperGameStatus.FIRST_CLICK) {
+        while (controller.getGameStatus() == GameStatus.PLAY
+                || controller.getGameStatus() == GameStatus.FIRST_CLICK) {
             System.out.print("Введите row: ");
             int row = scanner.nextInt();
 
@@ -39,14 +39,14 @@ public class SweeperConsoleView {
             displayMineField(controller.getMineField());
         }
 
-        if (controller.getGameStatus() == SweeperGameStatus.LOOSE) {
+        if (controller.getGameStatus() == GameStatus.LOOSE) {
             System.out.println("Вы проиграли!");
-        } else if (controller.getGameStatus() == SweeperGameStatus.WIN) {
+        } else if (controller.getGameStatus() == GameStatus.WIN) {
             System.out.println("Вы выиграли!");
         }
     }
 
-    public void displayMineField(SweeperCell[][] mineField) {
+    public void displayMineField(Cell[][] mineField) {
         System.out.println("Мин / флагов осталось: " + controller.getFlagsAmount() + ".");
 
         System.out.print(":)| ");
@@ -63,7 +63,7 @@ public class SweeperConsoleView {
             for (int j = 0; j < mineField[0].length; j++) {
                 String cellDisplaying = " ";
 
-                if (mineField[i][j].getStatus() == SweeperCellStatus.OPENED) {
+                if (mineField[i][j].getStatus() == CellStatus.OPENED) {
                     if (mineField[i][j].isMine()) {
                         cellDisplaying = "X";
                     } else {
@@ -75,7 +75,7 @@ public class SweeperConsoleView {
                             cellDisplaying = String.valueOf(minesAmount);
                         }
                     }
-                } else if (mineField[i][j].getStatus() == SweeperCellStatus.MARKED) {
+                } else if (mineField[i][j].getStatus() == CellStatus.MARKED) {
                     cellDisplaying = "F";
                 }
 

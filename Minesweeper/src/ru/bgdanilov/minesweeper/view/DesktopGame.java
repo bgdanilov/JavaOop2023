@@ -1,7 +1,8 @@
-package sweeper_view;
+package ru.bgdanilov.minesweeper.view;
 
-import sweeper_controller.SweeperController;
-import sweeper_model.*;
+import ru.bgdanilov.minesweeper.controller.Controller;
+import ru.bgdanilov.minesweeper.model.*;
+import ru.bgdanilov.minesweeper.model.Timer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,39 +10,39 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 
-public class SweeperDesktopGame {
-    private final SweeperController controller;
-    private final SweeperTimer gameTimer;
-    private SweeperDifficultyLevel difficultyLevel;
-    private SweeperCell[][] mineField;
+public class DesktopGame {
+    private final Controller controller;
+    private final Timer gameTimer;
+    private DifficultyLevel difficultyLevel;
+    private Cell[][] mineField;
     private final int imageSize = 30;
     private int rowsAmount;
     private int columnsAmount;
     private JFrame gameFrame; // Это тут нужно.
 
 
-    public SweeperDesktopGame(SweeperController controller) {
+    public DesktopGame(Controller controller) {
         // Конструируем фрейм один раз, чтобы "Новая игра" повторно этого не делала.
         this.controller = controller;
-        gameTimer = new SweeperTimer();
-        difficultyLevel = SweeperDifficultyLevel.EASY;
+        gameTimer = new Timer();
+        difficultyLevel = DifficultyLevel.EASY;
         // Загружаем картинки.
         loadCellImages();
-        // Загружаем рекорды из файла.
-        SweeperDifficultyLevel.readFileToEnum();
+        // Загружаем рекорды из файла в объект Enum.
+        DifficultyLevel.readFileToEnum();
     }
 
     public void startGame() {
         // Получаем минное поле.
         // А оно создается своим конструктором в зависимости от уровня сложности.
         mineField = controller.getMineField();
-        // Записываем в поля размеры минного поля.
+        // Записываем в поля этого объекта игры размеры минного поля.
         rowsAmount = mineField.length;
         columnsAmount = mineField[0].length;
         // Заполняем минное поле минами.
         controller.fillingMineField();
         // Включаем режим первого беспроигрышного клика.
-        controller.setGameStatus(SweeperGameStatus.FIRST_CLICK);
+        controller.setGameStatus(GameStatus.FIRST_CLICK);
 
         // Создаем Фрейм только один раз. Далее только обновляем.
         if (gameFrame == null) {
@@ -71,7 +72,7 @@ public class SweeperDesktopGame {
                     for (int j = 0; j < columnsAmount; j++) {
                         String cellDisplaying = "closed";
 
-                        if (mineField[i][j].getStatus() == SweeperCellStatus.OPENED) {
+                        if (mineField[i][j].getStatus() == CellStatus.OPENED) {
                             if (mineField[i][j].isMine()) {
                                 cellDisplaying = "exploded";
                             } else {
@@ -83,13 +84,13 @@ public class SweeperDesktopGame {
                                     cellDisplaying = "number" + minesAmount;
                                 }
                             }
-                        } else if (mineField[i][j].getStatus() == SweeperCellStatus.MARKED) {
+                        } else if (mineField[i][j].getStatus() == CellStatus.MARKED) {
                             cellDisplaying = "marked";
                         }
 
                         // TODO: Сделать все мины видимыми для отладки (раскомментировать if).
                         // if (mineField[i][j].isMine()) cellDisplaying = "exploded";
-                        g.drawImage(SweeperCellImage.valueOf(cellDisplaying.toUpperCase()).getCellImage(), imageSize * j, imageSize * i, this);
+                        g.drawImage(CellImage.valueOf(cellDisplaying.toUpperCase()).getCellImage(), imageSize * j, imageSize * i, this);
                     }
                 }
             }
@@ -120,7 +121,7 @@ public class SweeperDesktopGame {
 
         // newGameButton.
         newGameButton.addActionListener(e -> {
-            controller.setGameStatus(SweeperGameStatus.FIRST_CLICK);
+            controller.setGameStatus(GameStatus.FIRST_CLICK);
             headerTextLabel.setText(generateHeaderMessage());
             gameTimer.stop();
             startGame();
@@ -128,15 +129,15 @@ public class SweeperDesktopGame {
 
         // settingsButton.
         settingsButton.addActionListener(e -> {
-            SweeperSettingsDialog settingsDialog
-                    = new SweeperSettingsDialog(gameFrame, "Настройки", true, this);
-            settingsDialog.setVisible(true); // отобразить диалог
+            DesktopSettingsDialog desktopSettingsDialog
+                    = new DesktopSettingsDialog(gameFrame, "Настройки", true, this);
+            desktopSettingsDialog.setVisible(true); // отобразить диалог
         });
 
         // mouse.
         // TODO: Как-то по-разному передаются parentObj.
-        SweeperRecordDialog recordDialog = new SweeperRecordDialog(gameFrame, "Рекорды", true);
-        recordDialog.setParentObject(this);
+        DesktopRecordDialog desktopRecordDialog = new DesktopRecordDialog(gameFrame, "Рекорды", true);
+        desktopRecordDialog.setParentObject(this);
         mineFieldPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -161,10 +162,10 @@ public class SweeperDesktopGame {
                 }
 
                 // Проверка рекорда и вывод диалога.
-                if (controller.getGameStatus() == SweeperGameStatus.WIN) {
+                if (controller.getGameStatus() == GameStatus.WIN) {
                     // Фиксируем новое время.
-                    recordDialog.generateAndSetGameResults();
-                    recordDialog.setVisible(true);
+                    desktopRecordDialog.generateAndSetGameResults();
+                    desktopRecordDialog.setVisible(true);
                 }
             }
         });
@@ -173,19 +174,19 @@ public class SweeperDesktopGame {
         gameTimer.start(gameTime, 0);
     }
 
-    public SweeperController getController() {
+    public Controller getController() {
         return controller;
     }
 
-    public SweeperTimer getGameTimer() {
+    public Timer getGameTimer() {
         return gameTimer;
     }
 
-    public SweeperDifficultyLevel getDifficultyLevel() {
+    public DifficultyLevel getDifficultyLevel() {
         return difficultyLevel;
     }
 
-    public void setDifficultyLevel(SweeperDifficultyLevel difficultyLevel) {
+    public void setDifficultyLevel(DifficultyLevel difficultyLevel) {
         this.difficultyLevel = difficultyLevel;
     }
 
@@ -214,20 +215,20 @@ public class SweeperDesktopGame {
     }
 
     private boolean isGameOver() {
-        return controller.getGameStatus() != SweeperGameStatus.PLAY
-                && controller.getGameStatus() != SweeperGameStatus.FIRST_CLICK;
+        return controller.getGameStatus() != GameStatus.PLAY
+                && controller.getGameStatus() != GameStatus.FIRST_CLICK;
     }
 
     private static Image getCellImage(String imageName) {
         String fileName = imageName + ".png";
-        String imagesPath = System.getProperty("user.dir") + "/Sweeper/images/" + fileName;
+        String imagesPath = System.getProperty("user.dir") + "/Minesweeper/src/images/" + fileName;
         ImageIcon icon = new ImageIcon(imagesPath);
 
         return icon.getImage();
     }
 
     private static void loadCellImages() {
-        for (SweeperCellImage cellImage : SweeperCellImage.values()) {
+        for (CellImage cellImage : CellImage.values()) {
             cellImage.setCellImage(getCellImage(cellImage.name().toLowerCase()));
         }
     }

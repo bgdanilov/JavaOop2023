@@ -1,21 +1,20 @@
-package sweeper_view;
+package ru.bgdanilov.minesweeper.view;
 
-import sweeper_controller.SweeperController;
-
+import ru.bgdanilov.minesweeper.controller.Controller;
 
 import javax.swing.*;
 
-public class SweeperDesktopViewMain {
-    private final SweeperController controller;
+public class Desktop {
+    private final Controller controller;
 
-    public SweeperDesktopViewMain(SweeperController controller) {
+    public Desktop(Controller controller) {
         // Конструируем фрейм один раз, чтобы "Новая игра" повторно этого не делала.
         this.controller = controller;
     }
 
     public void execute() {
         SwingUtilities.invokeLater(() -> {
-            SweeperDesktopGame game = new SweeperDesktopGame(controller);
+            DesktopGame game = new DesktopGame(controller);
             game.startGame();
         });
     }

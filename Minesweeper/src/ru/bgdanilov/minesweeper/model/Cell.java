@@ -1,16 +1,16 @@
-package sweeper_model;
+package ru.bgdanilov.minesweeper.model;
 
-public class SweeperCell {
+public class Cell {
     private final int row;
     private final int column;
-    private SweeperCellStatus status;
+    private CellStatus status;
     private int adjacentMinesAmount;
     private boolean isMine;
 
-    public SweeperCell(int row, int column) {
+    public Cell(int row, int column) {
         this.row = row;
         this.column = column;
-        status = SweeperCellStatus.CLOSED;
+        status = CellStatus.CLOSED;
     }
 
     public  int getRow() {
@@ -21,11 +21,11 @@ public class SweeperCell {
         return column;
     }
 
-    public SweeperCellStatus getStatus() {
+    public CellStatus getStatus() {
         return status;
     }
 
-    public void setStatus(SweeperCellStatus status) {
+    public void setStatus(CellStatus status) {
         this.status = status;
     }
 
