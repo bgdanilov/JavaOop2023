@@ -1,53 +1,60 @@
-package sweeper_model;
+package ru.bgdanilov.minesweeper.model;
 
 import java.util.*;
 
-public class SweeperField {
-    private final SweeperCell[][] MINE_FIELD;
-    private final int MINES_AMOUNT;
-    private char gameStatus; // P - play, L - loose, W - win.
+public class Field {
+    private final Cell[][] mineField;
+    private final int minesAmount;
+    private GameStatus gameStatus;
     private int flagsAmount;
     private int openedCellsAmount;
 
-    public SweeperField(int rows, int columns, int minesAmount) {
-        MINE_FIELD = new SweeperCell[rows][columns];
-        this.MINES_AMOUNT = minesAmount;
+    public Field(DifficultyLevel level) {
+        int rows = level.getRowsAmount();
+        int columns = level.getColumnsAmount();
+        minesAmount = level.getMinesAmount();
+        mineField = new Cell[rows][columns];
+    }
+
+    public Field(int rows, int columns, int minesAmount) {
+        mineField = new Cell[rows][columns];
+        this.minesAmount = minesAmount;
     }
 
     public void generateCells() {
-        for (int i = 0; i < MINE_FIELD.length; i++) {
-            for (int j = 0; j < MINE_FIELD[0].length; j++) {
-                MINE_FIELD[i][j] = new SweeperCell(i, j);
+        for (int i = 0; i < mineField.length; i++) {
+            for (int j = 0; j < mineField[0].length; j++) {
+                mineField[i][j] = new Cell(i, j);
             }
         }
     }
 
-    public void generateMines() {
+    public void generateMines(int row, int column) {
         Random random = new Random();
 
-        for (int i = 0; i < MINES_AMOUNT; i++) {
-            int randomRow = random.nextInt(MINE_FIELD.length);
-            int randomColumn = random.nextInt(MINE_FIELD[0].length);
+        for (int i = 0; i < minesAmount; i++) {
+            int randomRow = random.nextInt(mineField.length);
+            int randomColumn = random.nextInt(mineField[0].length);
 
-            if (MINE_FIELD[randomRow][randomColumn].isMine) {
+            if (mineField[randomRow][randomColumn].isMine() || (randomRow == row && randomColumn == column)) {
                 i--;
                 continue;
             }
 
-            MINE_FIELD[randomRow][randomColumn].isMine = true;
+            mineField[randomRow][randomColumn].setMine(true);
         }
     }
 
     public void setCellAdjacentMinesAmount() {
         int adjacentMinesAmount = 0;
 
-        for (int i = 0; i < MINE_FIELD.length; i++) {
-            for (int j = 0; j < MINE_FIELD[0].length; j++) {
-                if (!MINE_FIELD[i][j].isMine) {
+        for (int i = 0; i < mineField.length; i++) {
+            for (int j = 0; j < mineField[0].length; j++) {
+                if (!mineField[i][j].isMine()) {
                     adjacentMinesAmount += countCellAdjacentMinesAmount(i, j);
                 }
 
-                MINE_FIELD[i][j].adjacentMinesAmount = adjacentMinesAmount;
+                mineField[i][j].setAdjacentMinesAmount(adjacentMinesAmount);
                 adjacentMinesAmount = 0;
             }
         }
@@ -57,15 +64,15 @@ public class SweeperField {
         int adjacentMinesAmount = 0;
 
         for (int i = row - 1; i < row + 2; i++) {
-            if (i < 0 || i == MINE_FIELD.length) {
+            if (i < 0 || i == mineField.length) {
                 continue;
             }
             for (int j = column - 1; j < column + 2; j++) {
-                if (j < 0 || j == MINE_FIELD[0].length) {
+                if (j < 0 || j == mineField[0].length) {
                     continue;
                 }
 
-                if (MINE_FIELD[i][j].isMine) adjacentMinesAmount++;
+                if (mineField[i][j].isMine()) adjacentMinesAmount++;
             }
         }
 
@@ -73,10 +80,10 @@ public class SweeperField {
     }
 
     public void openAllMines() {
-        for (SweeperCell[] cellsRow : MINE_FIELD) {
-            for (int i = 0; i < MINE_FIELD[0].length; i++) {
-                if (cellsRow[i].isMine) {
-                    cellsRow[i].status = 'O';
+        for (Cell[] cellsRow : mineField) {
+            for (int i = 0; i < mineField[0].length; i++) {
+                if (cellsRow[i].isMine()) {
+                    cellsRow[i].setStatus(CellStatus.OPENED);
                 }
             }
         }
@@ -84,34 +91,36 @@ public class SweeperField {
 
     public void openCells(int row, int column) {
         // Возвращаем флаг обратно при открытии помеченной клетки.
-        if (MINE_FIELD[row][column].status == 'F') {
+        if (mineField[row][column].getStatus() == CellStatus.MARKED) {
             flagsAmount = flagsAmount + 1;
         }
         // Счетчик открытых клеток.
         int openedCellsAmount = this.openedCellsAmount;
 
         // Если мина - на выход!
-        if (MINE_FIELD[row][column].isMine) {
+        if (mineField[row][column].isMine()) {
             // Открыть все мины.
             openAllMines();
-            gameStatus = 'L'; // Loose.
+            gameStatus = GameStatus.LOOSE; // Loose.
 
             return;
         }
 
         // Проверяем клетки вокруг выбранной клетки. Создаем очередь.
-        ArrayList<SweeperCell> queue = new ArrayList<>();
+        ArrayList<Cell> queue = new ArrayList<>();
         // Помещаем в очередь выбранную клетку.
-        queue.add(new SweeperCell(row, column));
+        queue.add(new Cell(row, column));
 
         // Пока в очереди есть ожидающие проверки клетки.
         while (queue.size() != 0) {
             // Берем выбранную из очереди - всегда первая.
-            SweeperCell currentCell = queue.get(0);
+            Cell currentCell = queue.get(0);
+            int currentCellRow = currentCell.getRow();
+            int currentCellColumn = currentCell.getColumn();
 
             // Если попали в цифру, отличную от нуля, открываем и выходим.
-            if (MINE_FIELD[currentCell.row][currentCell.column].adjacentMinesAmount != 0) {
-                MINE_FIELD[currentCell.row][currentCell.column].status = 'O';
+            if (mineField[currentCellRow][currentCellColumn].getAdjacentMinesAmount() != 0) {
+                mineField[currentCellRow][currentCellColumn].setStatus(CellStatus.OPENED);
 
                 openedCellsAmount++;
                 this.openedCellsAmount = openedCellsAmount;
@@ -121,35 +130,37 @@ public class SweeperField {
 
             // Если не открыта,
             // Открываем клетку и проверяем соседние клетки. Вычеркиваем из очереди.
-            if (MINE_FIELD[currentCell.row][currentCell.column].status != 'O') {
-                MINE_FIELD[currentCell.row][currentCell.column].status = 'O';
+            if (mineField[currentCellRow][currentCellColumn].getStatus() != CellStatus.OPENED) {
+                mineField[currentCellRow][currentCellColumn].setStatus(CellStatus.OPENED);
                 openedCellsAmount++;
             }
 
             queue.remove(0);
 
             // Проверяем восемь клеток вокруг.
-            for (int i = currentCell.row - 1; i < currentCell.row + 2; i++) {
-                if (i < 0 || i == MINE_FIELD.length) {
+            for (int i = currentCellRow - 1; i < currentCellRow + 2; i++) {
+                if (i < 0 || i == mineField.length) {
                     continue;
                 }
 
-                for (int j = currentCell.column - 1; j < currentCell.column + 2; j++) {
-                    if (j < 0 || j == MINE_FIELD[0].length) {
+                for (int j = currentCellColumn - 1; j < currentCellColumn + 2; j++) {
+                    if (j < 0 || j == mineField[0].length) {
                         continue;
                     }
 
                     // Если мина или уже открыта, пропускаем.
-                    if (MINE_FIELD[i][j].status == 'O' || MINE_FIELD[i][j].isMine || MINE_FIELD[i][j].status == 'F') {
+                    if (mineField[i][j].getStatus() == CellStatus.OPENED
+                            || mineField[i][j].isMine()
+                            || mineField[i][j].getStatus() == CellStatus.MARKED) {
                         continue;
                     }
 
                     // Если пустая, добавляем в очередь и открываем иначе просто открываем.
-                    if (MINE_FIELD[i][j].adjacentMinesAmount == 0) {
-                        queue.add(new SweeperCell(i, j));
+                    if (mineField[i][j].getAdjacentMinesAmount() == 0) {
+                        queue.add(new Cell(i, j));
                     }
 
-                    MINE_FIELD[i][j].status = 'O';
+                    mineField[i][j].setStatus(CellStatus.OPENED);
                     openedCellsAmount++;
                 }
             }
@@ -158,28 +169,28 @@ public class SweeperField {
         this.openedCellsAmount = openedCellsAmount;
     }
 
-    public char getGameStatus() {
+    public GameStatus getGameStatus() {
         return gameStatus;
     }
 
-    public void setGameStatus(char gameStatus) {
+    public void setGameStatus(GameStatus gameStatus) {
         this.gameStatus = gameStatus;
     }
 
-    public SweeperCell[][] getMineField() {
-        return MINE_FIELD;
+    public Cell[][] getMineField() {
+        return mineField;
     }
 
-    public SweeperCell getCell(int row, int column) {
-        return MINE_FIELD[row][column];
+    public Cell getCell(int row, int column) {
+        return mineField[row][column];
     }
 
     public void setCellFlag(int row, int column) {
-        if (MINE_FIELD[row][column].status == 'F') {
-            MINE_FIELD[row][column].status = 'C';
+        if (mineField[row][column].getStatus() == CellStatus.MARKED) {
+            mineField[row][column].setStatus(CellStatus.CLOSED);
             flagsAmount = flagsAmount + 1;
         } else {
-            MINE_FIELD[row][column].status = 'F';
+            mineField[row][column].setStatus(CellStatus.MARKED);
             flagsAmount = flagsAmount - 1;
         }
     }
@@ -193,17 +204,17 @@ public class SweeperField {
         this.flagsAmount = flagsAmount;
     }
 
-    public void checkWin() {
+    public void setWinGameStatus() {
         // Если число открытых клеток равно общему количеству клеток минус количество мин.
         // И флаги расставлены правильно.
-        if (openedCellsAmount == MINE_FIELD[0].length * MINE_FIELD.length - MINES_AMOUNT
+        if (openedCellsAmount == mineField[0].length * mineField.length - minesAmount
                 && flagsAmount == 0) {
-            setGameStatus('W');
+            setGameStatus(GameStatus.WIN);
         }
     }
 
     public int getMinesAmount() {
-        return MINES_AMOUNT;
+        return minesAmount;
     }
 
     public void setOpenedCellsAmount(int openedCellsAmount) {
