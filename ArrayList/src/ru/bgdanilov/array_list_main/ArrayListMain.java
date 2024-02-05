@@ -39,9 +39,36 @@ public class ArrayListMain {
         System.out.println(strings);
 
         strings.add(1, null);
+        strings.add(1, null);
         System.out.println(strings);
 
+        System.out.println("contains null");
         System.out.println(strings.contains(null));
+
+        System.out.println(strings.indexOf(null));
+
+        System.out.println(strings.lastIndexOf(null));
+        System.out.println(strings);
+
+       System.out.println(strings.remove("Три"));
+       System.out.println(strings);
+
+       strings.add("Четыре");
+        System.out.println(strings);
+
+        String[] a = new String[] {"4", "5", "6", "7", "8", "9", "10"};
+
+        System.out.println(Arrays.toString(strings.toArray(a)));
+
+        ArrayListCustom<Integer> ints = new ArrayListCustom<>();
+        ints.add(1);
+        ints.add(2);
+
+        Integer[] i = new Integer[] {3, 4, 5, 6, 7};
+        System.out.println(Arrays.toString(ints.toArray(i)));
+
+        ints.clear();
+        System.out.println(ints);
 
         ArrayList<String> boris = new ArrayList<>();
     }

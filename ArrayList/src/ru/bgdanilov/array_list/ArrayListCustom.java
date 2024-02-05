@@ -77,25 +77,7 @@ public class ArrayListCustom<E> implements List<E> {
     // 4. Метод. Содержится ли элемент в списке?
     @Override
     public boolean contains(Object o) {
-        boolean result = false;
-
-        if (o == null) {
-            for (int i = 0; i < size; i++) {
-                if (items[i] == null) {
-                    result = true;
-                    break;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (items[i].equals(o)) {
-                    result = true;
-                    break;
-                }
-            }
-        }
-
-        return result;
+        return indexOf(o) != -1;
     }
 
     @Override
@@ -110,9 +92,24 @@ public class ArrayListCustom<E> implements List<E> {
         return Arrays.copyOf(items, size);
     }
 
+    // Возвращает из списка массив в указанный массив.
+    // Если указанный массив имеет достаточную длину,
+    // он заполняется элементами списка, а излишки длины - пустыми объектами null.
+    // В противном случае создается массив с длинной исходного.
     @Override
+    @SuppressWarnings (value="unchecked")
     public <T> T[] toArray(T[] ts) {
-        return null;
+        if (ts.length < size) {
+            return (T[]) toArray();
+        }
+
+        if (ts.length > size) {
+            T[] resultArray = (T[]) toArray();
+            Arrays.fill(ts, null);
+            System.arraycopy(resultArray,0, ts, 0, size);
+        }
+
+        return ts;
     }
 
     // 8. Метод. Добавление элемента в конец списка.
@@ -127,9 +124,17 @@ public class ArrayListCustom<E> implements List<E> {
         return true;
     }
 
+    // Удаляет первый попавшийся указанный элемент, если он есть в списке.
     @Override
     public boolean remove(Object o) {
-        return false;
+        int indexOfRemoved = indexOf(o);
+
+        if (indexOfRemoved != -1) {
+            remove(indexOfRemoved);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -157,9 +162,12 @@ public class ArrayListCustom<E> implements List<E> {
         return false;
     }
 
+    // Удаляет все элементы из списка.
     @Override
     public void clear() {
-
+        for (int i = 0; i < size; i++, size--) {
+            items[i] = null;
+        }
     }
 
     @Override
@@ -204,7 +212,7 @@ public class ArrayListCustom<E> implements List<E> {
         }
 
         oldItem = get(i);
-        int copiedSize = size - 2;
+        int copiedSize = size - i - 1;
 
         System.arraycopy(items, i + 1, items, i, copiedSize);
         size--;
@@ -214,14 +222,52 @@ public class ArrayListCustom<E> implements List<E> {
         return oldItem;
     }
 
+    // Возвращает индекс первого вхождения переданного элемента или -1, если элемента в списке нет.
     @Override
     public int indexOf(Object o) {
-        return 0;
+        int indexOf = -1;
+
+        if (o == null) {
+            for (int i = 0; i < size; i++) {
+                if (items[i] == null) {
+                    indexOf = i;
+                    break;
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (o.equals(items[i])) {
+                    indexOf = i;
+                    break;
+                }
+            }
+        }
+
+        return indexOf;
     }
 
+    // Возвращает индекс последнего вхождения переданного элемента или -1, если элемента в списке нет.
     @Override
     public int lastIndexOf(Object o) {
-        return 0;
+        int lastIndexOf = -1;
+
+        if (o == null) {
+            for (int i = size - 1; i >= 0; i--) {
+                if (items[i] == null) {
+                    lastIndexOf = i;
+                    break;
+                }
+            }
+        } else {
+            for (int i = size - 1; i >= 0; i--) {
+                if (o.equals(items[i])) {
+                    lastIndexOf = i;
+                    break;
+                }
+            }
+        }
+
+        return lastIndexOf;
     }
 
     @Override
