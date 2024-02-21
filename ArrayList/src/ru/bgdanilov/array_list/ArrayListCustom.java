@@ -13,7 +13,6 @@ public class ArrayListCustom<E> implements List<E> {
         size = 0;
         //noinspection unchecked
         items = (E[]) new Object[10];
-        // items = (E[]) new Object[1];
     }
 
     // Конструктор, принимающий capacity - вместимость.
@@ -145,9 +144,9 @@ public class ArrayListCustom<E> implements List<E> {
         for (E item : collection) {
             items[size] = item;
             size++;
-            modCount++;
         }
 
+        modCount++;
         return true;
     }
 
@@ -182,9 +181,9 @@ public class ArrayListCustom<E> implements List<E> {
         for (E item : collection) {
             items[i] = item;
             i++;
-            modCount++;
         }
 
+        modCount++;
         return true;
     }
 
@@ -235,9 +234,9 @@ public class ArrayListCustom<E> implements List<E> {
     public void clear() {
         for (int i = 0; i < size; i++) {
             items[i] = null;
-            modCount++;
         }
 
+        modCount++;
         size = 0;
     }
 
@@ -293,14 +292,15 @@ public class ArrayListCustom<E> implements List<E> {
 
         oldItem = get(i);
 
-        if (i <= size - 1) {
+        if (i < size - 1) {
             int copiedSize = size - i - 1;
 
             System.arraycopy(items, i + 1, items, i, copiedSize);
-            items[size - 1] = null;
-            size--;
-            modCount++;
         }
+
+        items[size - 1] = null;
+        size--;
+        modCount++;
 
         return oldItem;
     }
@@ -403,6 +403,8 @@ public class ArrayListCustom<E> implements List<E> {
         if (size >= getCapacity()) {
             items = Arrays.copyOf(items, (3 * size) / 2 + 1);
         }
+
+        modCount++;
     }
 
     public void ensureCapacity(int number) {
@@ -413,6 +415,8 @@ public class ArrayListCustom<E> implements List<E> {
         if (getCapacity() > size) {
             items = Arrays.copyOf(items, size);
         }
+
+        modCount++;
     }
 
     @Override
@@ -428,11 +432,40 @@ public class ArrayListCustom<E> implements List<E> {
 }
 
 /* Описание класса.
-    1. Длина нового массива рассчитывается так (3*n)/2+1,
+    1. Список методов.
+    1.1.  size():int
+    2.2.  isEmpty:boolean
+    2.3.  contains(o Object):boolean
+    2.4.  iterator():Iterator<E>
+    2.5.  toArray():Object[]
+    2.6.  toArray(a[T]):T[]
+    2.7.  add(e:E):boolean
+    2.8.  remove(o:Object):boolean
+    2.9.  containsAll(o:Collection<?>):boolean
+    2.11. addAll(o:Collection<?>):boolean
+    2.11. addAll(index:int, o:Collection<?>):boolean
+    2.12. removeAll(o:Collection<?>):boolean
+    2.13. retainAll(o:Collection<?>):boolean
+    2.14. clear():void
+    2.15. get(index:int):E
+    2.16. set(index:int, e:E):E
+    2.17. add(index:int, e:E):void
+    2.18. remove(index:int):E
+    2.19. indexOf(o:Object):int
+    2.20. lastIndexOf(o:Object):int
+
+    getCapacity():int
+    ensureCapacity():void
+    ensureCapacity(int number):void
+    trimToSize():void
+    toString():String
+
+
+    2. Длина нового массива рассчитывается так (3*n)/2+1,
     где n – это длина старого массива.
     Т.е. если старый массив был длиной 100 элементов, то новый будет 300/2+1 = 151.
 
-    2. Справка по System.arraycopy:
+    3. Справка по System.arraycopy:
     Из исходного массива (src),
     начиная с начальной позиции (srcPos),
     нужно скопировать данные в другой массив (dest),
