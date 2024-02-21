@@ -1,6 +1,7 @@
 package ru.bgdanilov.array_list_main;
 
 import ru.bgdanilov.array_list.ArrayListCustom;
+
 import java.util.Arrays;
 
 public class ArrayListMain {
@@ -24,6 +25,14 @@ public class ArrayListMain {
             System.out.println("Вместимость списка: " + strings.getCapacity());
             System.out.println("Пуст ли список? " + strings.isEmpty());
             System.out.println("Наш список: " + strings);
+            System.out.println();
+
+            // Подгоняем вместимость списка под его размер.
+            System.out.println("Подгоняем вместимость списка под его размер:");
+            strings.trimToSize();
+            System.out.println("Наш список: " + strings);
+            System.out.println("Размер списка: " + strings.size());
+            System.out.println("Вместимость списка: " + strings.getCapacity());
             System.out.println();
 
             System.out.println("Добавляем еще элементы.");
@@ -178,7 +187,8 @@ public class ArrayListMain {
 
             // 18. Удалить элемент по указанному индексу.
             System.out.println("18. Удалить элемент по указанному индексу.");
-            System.out.println("Удаляем элемент с индексом 2, его значение: " + strings.remove(3));
+            System.out.println("Наш список: " + strings);
+            System.out.println("Удаляем элемент с индексом 3, его значение: " + strings.remove(3));
             System.out.println("Итого: " + strings);
             System.out.println();
 
