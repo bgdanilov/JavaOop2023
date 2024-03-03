@@ -1,14 +1,14 @@
 package ru.bgdanilov.array_list_main;
 
-import ru.bgdanilov.array_list.ArrayListCustom;
+import ru.bgdanilov.array_list.CustomArrayList;
 
 import java.util.Arrays;
 
-public class ArrayListMain {
+public class CustomArrayListMain {
     public static void main(String[] args) {
         try {
             // Создаем список по-умолчанию - массив с длинной 10.
-            ArrayListCustom<String> strings = new ArrayListCustom<>();
+            CustomArrayList<String> strings = new CustomArrayList<>();
             System.out.println(strings);
 
             // 1. Возвращает количество элементов списка.
@@ -72,7 +72,7 @@ public class ArrayListMain {
             // 9. Содержатся ли элементы указанного списка в нашем списке?
             System.out.println("9. Содержатся ли элементы указанного списка в нашем списке?");
 
-            ArrayListCustom<String> specifiedList = new ArrayListCustom<>();
+            CustomArrayList<String> specifiedList = new CustomArrayList<>();
             specifiedList.add("zero");
             specifiedList.add("Два");
             //specifiedList.add("два"); // А так - true.
@@ -85,7 +85,7 @@ public class ArrayListMain {
 
             // 10. Добавляет все элементы из указанной коллекции в конец этого списка.
             System.out.println("10. Добавляет все элементы из указанной коллекции в конец этого списка.");
-            ArrayListCustom<String> destinationList = new ArrayListCustom<>();
+            CustomArrayList<String> destinationList = new CustomArrayList<>();
             destinationList.add("1");
             destinationList.add("2");
             destinationList.add("3");
