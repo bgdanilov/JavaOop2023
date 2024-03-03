@@ -56,7 +56,7 @@ public class CustomArrayListMain {
             System.out.println();
 
             // 6. Возвращает из списка массив в указанный массив.
-            String[] destinationArray = new String[]{"4", "5", "6", "7", "8", "9", "10"};
+            String[] destinationArray = {"4", "5", "6", "7", "8", "9", "10"};
             System.out.println("6. Возвращает из списка массив в указанный массив.");
             System.out.println("Указанный массив: " + Arrays.toString(destinationArray));
             System.out.println("Итого: " + Arrays.toString(strings.toArray(destinationArray)));
@@ -210,6 +210,16 @@ public class CustomArrayListMain {
 
             // 20. Возвращает индекс последнего вхождения переданного элемента или -1, если элемента в списке нет.
             System.out.println("20. Индекс последнего вхождения элемента \"Zero\": " + strings.lastIndexOf("Zero"));
+            System.out.println();
+
+            // Проверим toString
+            System.out.println("Проверим toString");
+            CustomArrayList<String> someStrings = new CustomArrayList<>(0);
+            //someStrings = null;
+            someStrings.add("zero");
+            System.out.println("Размер списка: " + someStrings.size());
+            System.out.println("Вместимость списка: " + someStrings.getCapacity());
+            System.out.println(someStrings);
             System.out.println();
         } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
             System.out.println("Ошибка! " + e.getMessage());
