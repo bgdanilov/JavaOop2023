@@ -1,14 +1,14 @@
 package ru.bgdanilov.array_list_main;
 
-import ru.bgdanilov.array_list.ArrayListCustom;
+import ru.bgdanilov.array_list.CustomArrayList;
 
 import java.util.Arrays;
 
-public class ArrayListMain {
+public class CustomArrayListMain {
     public static void main(String[] args) {
         try {
             // Создаем список по-умолчанию - массив с длинной 10.
-            ArrayListCustom<String> strings = new ArrayListCustom<>();
+            CustomArrayList<String> strings = new CustomArrayList<>();
             System.out.println(strings);
 
             // 1. Возвращает количество элементов списка.
@@ -56,7 +56,8 @@ public class ArrayListMain {
             System.out.println();
 
             // 6. Возвращает из списка массив в указанный массив.
-            String[] destinationArray = new String[]{"4", "5", "6", "7", "8", "9", "10"};
+            String[] destinationArray = {"4", "5", "6", "7", "8", "9", "10"};
+            //String[] destinationArray = {"1", "2", "3"};
             System.out.println("6. Возвращает из списка массив в указанный массив.");
             System.out.println("Указанный массив: " + Arrays.toString(destinationArray));
             System.out.println("Итого: " + Arrays.toString(strings.toArray(destinationArray)));
@@ -72,7 +73,7 @@ public class ArrayListMain {
             // 9. Содержатся ли элементы указанного списка в нашем списке?
             System.out.println("9. Содержатся ли элементы указанного списка в нашем списке?");
 
-            ArrayListCustom<String> specifiedList = new ArrayListCustom<>();
+            CustomArrayList<String> specifiedList = new CustomArrayList<>();
             specifiedList.add("zero");
             specifiedList.add("Два");
             //specifiedList.add("два"); // А так - true.
@@ -85,7 +86,7 @@ public class ArrayListMain {
 
             // 10. Добавляет все элементы из указанной коллекции в конец этого списка.
             System.out.println("10. Добавляет все элементы из указанной коллекции в конец этого списка.");
-            ArrayListCustom<String> destinationList = new ArrayListCustom<>();
+            CustomArrayList<String> destinationList = new CustomArrayList<>();
             destinationList.add("1");
             destinationList.add("2");
             destinationList.add("3");
@@ -93,6 +94,7 @@ public class ArrayListMain {
             destinationList.add("5");
             System.out.println("Указанный список: " + destinationList);
             System.out.println("Наш список: " + strings);
+            System.out.println("Вместимость списка: " + strings.getCapacity());
             System.out.println(strings.addAll(destinationList));
             System.out.println("Итого: " + strings);
             System.out.println("Размер списка: " + strings.size());
@@ -210,6 +212,16 @@ public class ArrayListMain {
 
             // 20. Возвращает индекс последнего вхождения переданного элемента или -1, если элемента в списке нет.
             System.out.println("20. Индекс последнего вхождения элемента \"Zero\": " + strings.lastIndexOf("Zero"));
+            System.out.println();
+
+            // Проверим toString
+            System.out.println("Проверим toString");
+            CustomArrayList<String> someStrings = new CustomArrayList<>(0);
+            //someStrings = null;
+            someStrings.add("zero");
+            System.out.println("Размер списка: " + someStrings.size());
+            System.out.println("Вместимость списка: " + someStrings.getCapacity());
+            System.out.println(someStrings);
             System.out.println();
         } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
             System.out.println("Ошибка! " + e.getMessage());
