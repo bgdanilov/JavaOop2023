@@ -56,9 +56,10 @@ public class CustomArrayList<E> implements List<E> {
     }
 
     // 6. Возвращает из списка массив в переданный массив.
-    // Если указанный массив имеет достаточную длину,
-    // он заполняется элементами списка, а излишки длины - пустыми объектами null.
-    // В противном случае создается массив с длинной исходного.
+    // Если переданный массив имеет достаточную длину, он заполняется элементами списка.
+    // При наличии излишка длины переданного массива, элементу полученного массива,
+    // следующему за последним элементом списка присваивается null.
+    // Если переданный массив короче списка, создается массив с длиной, равной длине списка.
     @Override
     public <T> T[] toArray(T[] array) {
         if (size >= array.length) {
@@ -96,7 +97,7 @@ public class CustomArrayList<E> implements List<E> {
         return false;
     }
 
-    // 9. Содержатся ли элементы переданного списка в нашем списке?
+    // 9. Содержатся ли элементы переданной коллекции в нашем списке?
     // Возвращает true, если все элементы переданной коллекции содержатся в рассматриваемом списке.
     @Override
     public boolean containsAll(Collection<?> collection) {
@@ -125,7 +126,7 @@ public class CustomArrayList<E> implements List<E> {
     // 11. Вставляет все элементы из переданной коллекции в этот список, начиная с указанной позиции.
     // Перемещает элемент, находящийся в данный момент (если есть) и любые последующие элементы вправо
     // (увеличивает их индексы). Новые элементы будут отображаться в списке
-    // в порядке их возврата итератором указанной коллекции.
+    // в порядке их возврата итератором переданной коллекции.
     @Override
     public boolean addAll(int index, Collection<? extends E> collection) {
         checkCollection(collection);
@@ -213,7 +214,7 @@ public class CustomArrayList<E> implements List<E> {
         return items[index];
     }
 
-    // 16. Замещает элемент по переданному индексу переданным элементом. Возвращает старое значение.
+    // 16. Замещает элемент по переданному индексу переданным элементом. Возвращает значение замещенного элемента.
     @Override
     public E set(int index, E item) {
         checkIndex(index);
@@ -305,22 +306,19 @@ public class CustomArrayList<E> implements List<E> {
         }
     }
 
-    // Не нужно делать.
     @Override
     public ListIterator<E> listIterator() {
-        return null;
+        throw new UnsupportedOperationException("Метод не используется.");
     }
 
-    // Не нужно делать.
     @Override
     public ListIterator<E> listIterator(int index) {
-        return null;
+        throw new UnsupportedOperationException("Метод не используется.");
     }
 
-    // Не нужно делать.
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
-        return null;
+        throw new UnsupportedOperationException("Метод не используется.");
     }
 
     // Возвращает вместимость списка.
@@ -414,12 +412,7 @@ public class CustomArrayList<E> implements List<E> {
     checkCollection(Collection<?> collection):void
     checkIndex(int index):void
 
-
-    2. Длина нового массива рассчитывается так (3*n)/2+1,
-    где n – это длина старого массива.
-    Т.е. если старый массив был длиной 100 элементов, то новый будет 300/2+1 = 151.
-
-    3. Справка по System.arraycopy:
+    2. Справка по System.arraycopy:
     Из исходного массива (src),
     начиная с начальной позиции (srcPos),
     нужно скопировать данные в другой массив (dest),
