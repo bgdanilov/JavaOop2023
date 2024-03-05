@@ -60,20 +60,19 @@ public class CustomArrayList<E> implements List<E> {
     // он заполняется элементами списка, а излишки длины - пустыми объектами null.
     // В противном случае создается массив с длинной исходного.
     @Override
-    public <T> T[] toArray(T[] ts) {
-        if (ts.length < size) {
+    public <T> T[] toArray(T[] array) {
+        if (size >= array.length) {
             //noinspection unchecked
-            return (T[]) toArray();
+            return Arrays.copyOf(items, size, (Class<? extends T[]>) array.getClass());
         }
 
-        if (ts.length > size) {
-            //noinspection unchecked
-            T[] resultArray = (T[]) toArray();
-            Arrays.fill(ts, null);
-            System.arraycopy(resultArray, 0, ts, 0, size);
-        }
+        // array у нас T[], а мы ему назначаем E[] поэтому нужно приведение items к 'T'.
+        // Почему в arraycopy (T[]) помечено как redundant?
+        //noinspection unchecked
+        System.arraycopy((T[]) items, 0, array, 0, size);
+        array[size] = null;
 
-        return ts;
+        return array;
     }
 
     // 7. Добавление элемента в конец списка.
@@ -101,9 +100,7 @@ public class CustomArrayList<E> implements List<E> {
     // Возвращает true, если все элементы переданной коллекции содержатся в рассматриваемом списке.
     @Override
     public boolean containsAll(Collection<?> collection) {
-        if (collection == null) {
-            throw new NullPointerException("Переданная коллекция отсутствует.");
-        }
+        checkCollection(collection);
 
         for (Object item : collection) {
             if (!contains(item)) {
@@ -117,14 +114,9 @@ public class CustomArrayList<E> implements List<E> {
     // 10. Добавляет все элементы из переданной коллекции в конец этого списка
     // в порядке их возврата Iterator переданной коллекции.
     // Поведение этой операции не определено, если указанная коллекция изменяется во время выполнения операции.
-    // (Это означает, что поведение этого вызова не определено,
-    // если переданной коллекцией является этот список, и этот список не является пустым.)
     @Override
     public boolean addAll(Collection<? extends E> collection) {
-        if (collection == null) {
-            throw new NullPointerException("Переданная коллекция отсутствует.");
-        }
-
+        checkCollection(collection);
         addAll(size, collection);
 
         return true;
@@ -136,13 +128,8 @@ public class CustomArrayList<E> implements List<E> {
     // в порядке их возврата итератором указанной коллекции.
     @Override
     public boolean addAll(int index, Collection<? extends E> collection) {
-        if (collection == null) {
-            throw new NullPointerException("Переданная коллекция отсутствует.");
-        }
-
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException("Индекс: (" + index + "), за пределами индексов списка: (0, " + size + ").");
-        }
+        checkCollection(collection);
+        checkIndex(index);
 
         int collectionSize = collection.size();
 
@@ -166,6 +153,7 @@ public class CustomArrayList<E> implements List<E> {
         }
 
         modCount++;
+
         return true;
     }
 
@@ -173,61 +161,54 @@ public class CustomArrayList<E> implements List<E> {
     // Выдает true, если список изменился в результате.
     @Override
     public boolean removeAll(Collection<?> collection) {
-        if (collection == null) {
-            throw new NullPointerException("Переданная коллекция отсутствует.");
-        }
+        checkCollection(collection);
 
-        boolean result = false;
+        boolean isListChanged = false;
 
-        for (int i = 0; i < size; i++) {
+        for (int i = size - 1; i >= 0; i--) {
             if (collection.contains(items[i])) {
-                remove(items[i]);
-                result = true;
-                i--;
+                remove(i);
+                isListChanged = true;
+                i++;
             }
         }
 
-        return result;
+        return isListChanged;
     }
 
     // 13. Сохраняет только те элементы в этом списке, которые содержатся в переданной коллекции.
     // Другими словами, удаляет из этого списка все его элементы, которые не содержатся в переданной коллекции.
     @Override
     public boolean retainAll(Collection<?> collection) {
-        if (collection == null) {
-            throw new NullPointerException("Переданная коллекция отсутствует.");
-        }
+        checkCollection(collection);
 
-        boolean result = false;
+        boolean isListChanged = false;
 
-        for (int i = 0; i < size; i++) {
+        for (int i = size - 1; i >= 0; i--) {
             if (!collection.contains(items[i])) {
-                remove(items[i]);
-                result = true;
-                i--;
+                remove(i);
+                isListChanged = true;
+                i++;
             }
         }
 
-        return result;
+        return isListChanged;
     }
 
     // 14. Удаляет все элементы из списка.
     @Override
     public void clear() {
-        for (int i = 0; i < size; i++) {
-            items[i] = null;
+        if (!isEmpty()) {
+            Arrays.fill(items, null);
+            modCount++;
+            size = 0;
         }
-
-        modCount++;
-        size = 0;
     }
 
     // 15. Возвращает элемент списка по индексу.
     @Override
     public E get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Индекс: (" + index + "), за пределами индексов списка: (0, " + size + ").");
-        }
+        checkIndex(index);
 
         return items[index];
     }
@@ -235,22 +216,18 @@ public class CustomArrayList<E> implements List<E> {
     // 16. Замещает элемент по переданному индексу переданным элементом. Возвращает старое значение.
     @Override
     public E set(int index, E item) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Индекс: (" + index + "), за пределами индексов списка: (0, " + size + ").");
-        }
+        checkIndex(index);
 
-        add(index, item);
+        E replacedItem = items[index];
+        items[index] = item;
 
-        return remove(index + 1);
+        return replacedItem;
     }
 
     // 17. Вставить элемент по переданному индексу.
     @Override
     public void add(int index, E item) {
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException("Индекс: (" + index + "), за пределами индексов списка: (0, " + size + ").");
-        }
-
+        checkIndex(index);
         increaseCapacity();
 
         // Скопировать последние size-i элементов исходного массива
@@ -264,10 +241,7 @@ public class CustomArrayList<E> implements List<E> {
     // 18. Удалить элемент по переданному индексу.
     @Override
     public E remove(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException("Индекс: (" + index + "), за пределами индексов списка: (0, " + size + ").");
-        }
-
+        checkIndex(index);
         E removedItem = items[index];
 
         if (index < size - 1) {
@@ -286,55 +260,31 @@ public class CustomArrayList<E> implements List<E> {
     // 19. Возвращает индекс первого вхождения переданного элемента или -1, если элемента в списке нет.
     @Override
     public int indexOf(Object o) {
-        int indexOf = -1;
-
-        if (o == null) {
-            for (int i = 0; i < size; i++) {
-                if (items[i] == null) {
-                    indexOf = i;
-                    break;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (o.equals(items[i])) {
-                    indexOf = i;
-                    break;
-                }
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(o, items[i])) {
+                return i;
             }
         }
 
-        return indexOf;
+        return -1;
     }
 
     // 20. Возвращает индекс последнего вхождения переданного элемента или -1, если элемента в списке нет.
     @Override
     public int lastIndexOf(Object o) {
-        int lastIndexOf = -1;
-
-        if (o == null) {
-            for (int i = size - 1; i >= 0; i--) {
-                if (items[i] == null) {
-                    lastIndexOf = i;
-                    break;
-                }
-            }
-        } else {
-            for (int i = size - 1; i >= 0; i--) {
-                if (o.equals(items[i])) {
-                    lastIndexOf = i;
-                    break;
-                }
+        for (int i = size - 1; i >= 0; i--) {
+            if (Objects.equals(o, items[i])) {
+                return i;
             }
         }
 
-        return lastIndexOf;
+        return -1;
     }
 
     // Вложенный класс для итератора.
     private class CustomListIterator implements Iterator<E> {
         private int currentIndex = -1; // текущий индекс в списке.
-        private final int modCount = CustomArrayList.this.modCount; // количество изменений.
+        private final int initialModCount = modCount; // Исходное количество изменений.
 
         public boolean hasNext() {
             return currentIndex < size - 1;
@@ -344,11 +294,13 @@ public class CustomArrayList<E> implements List<E> {
             if (!hasNext()) {
                 throw new NoSuchElementException("Коллекция закончилась.");
             }
-            if (modCount != CustomArrayList.this.modCount) {
+
+            if (initialModCount != modCount) {
                 throw new ConcurrentModificationException("Зафиксированы изменения коллекции в процессе перебора элементов.");
             }
 
             currentIndex++;
+
             return items[currentIndex];
         }
     }
@@ -376,8 +328,8 @@ public class CustomArrayList<E> implements List<E> {
         return items.length;
     }
 
-    private boolean checkCapacity() {
-        return size >= items.length;
+    private boolean isEnoughCapacity() {
+        return size < items.length;
     }
 
     // Увеличить вместимость списка при необходимости.
@@ -386,13 +338,15 @@ public class CustomArrayList<E> implements List<E> {
             items = Arrays.copyOf(items, 1);
         }
 
-        if (checkCapacity()) {
+        if (!isEnoughCapacity()) {
             items = Arrays.copyOf(items, 2 * size);
         }
     }
 
-    private void increaseCapacity(int number) {
-        items = Arrays.copyOf(items, number);
+    private void increaseCapacity(int capacityNumber) {
+        if (capacityNumber > items.length) {
+            items = Arrays.copyOf(items, capacityNumber);
+        }
     }
 
     public void trimToSize() {
@@ -414,6 +368,18 @@ public class CustomArrayList<E> implements List<E> {
         }
 
         return sb.append(']').toString();
+    }
+
+    private void checkCollection(Collection<?> collection) {
+        if (collection == null) {
+            throw new NullPointerException("Переданная коллекция отсутствует.");
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException("Индекс: (" + index + "), за пределами индексов списка: (0, " + size + ").");
+        }
     }
 }
 
@@ -441,10 +407,12 @@ public class CustomArrayList<E> implements List<E> {
     1.20. lastIndexOf(o:Object):int
 
     getCapacity():int
-    ensureCapacity():void
-    ensureCapacity(int number):void
+    increaseCapacity():void
+    increaseCapacity(int number):void
     trimToSize():void
     toString():String
+    checkCollection(Collection<?> collection):void
+    checkIndex(int index):void
 
 
     2. Длина нового массива рассчитывается так (3*n)/2+1,

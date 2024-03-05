@@ -57,6 +57,7 @@ public class CustomArrayListMain {
 
             // 6. Возвращает из списка массив в указанный массив.
             String[] destinationArray = {"4", "5", "6", "7", "8", "9", "10"};
+            //String[] destinationArray = {"1", "2", "3"};
             System.out.println("6. Возвращает из списка массив в указанный массив.");
             System.out.println("Указанный массив: " + Arrays.toString(destinationArray));
             System.out.println("Итого: " + Arrays.toString(strings.toArray(destinationArray)));
@@ -93,6 +94,7 @@ public class CustomArrayListMain {
             destinationList.add("5");
             System.out.println("Указанный список: " + destinationList);
             System.out.println("Наш список: " + strings);
+            System.out.println("Вместимость списка: " + strings.getCapacity());
             System.out.println(strings.addAll(destinationList));
             System.out.println("Итого: " + strings);
             System.out.println("Размер списка: " + strings.size());
