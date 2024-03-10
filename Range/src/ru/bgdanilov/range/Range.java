@@ -6,6 +6,10 @@ public class Range {
 
     // 1. Конструктор.
     public Range(double from, double to) {
+        if (from > to) {
+            throw new IllegalArgumentException("Начало [" + from + "] не может быть больше конца [" + to + "].");
+        }
+
         this.from = from;
         this.to = to;
     }
@@ -47,6 +51,11 @@ public class Range {
     // - интервал, принадлежат те и только те элементы, которые одновременно принадлежат всем данным интервалам.
     // (по одной точке пересечение НЕ засчитываем).
     public Range calcIntersection(Range range) {
+        // Пересечение с пустым множеством.
+        if (range == null) {
+            return null;
+        }
+
         if (to <= range.from || range.to <= from || range.to == range.from) {
             return null;
         }
@@ -60,6 +69,11 @@ public class Range {
     // 7. Объединение двух интервалов.
     // - интервал, содержащий в себе все элементы исходных интервалов.
     public Range[] calcUnion(Range range) {
+        // Объединение с пустым множеством.
+        if (range == null) {
+            return new Range[]{this};
+        }
+
         // Интервалы вообще не пересекаются (по одной точке - пересечение засчитываем).
         if (this.to < range.from || range.to < this.from) {
             return new Range[]{new Range(from, to), new Range(range.from, range.to)};
@@ -75,6 +89,11 @@ public class Range {
     // 8. Разность.
     // - интервал (интервалы), в который входят все элементы первого интервала, не входящие во второй.
     public Range[] calcDifference(Range range) {
+        // Вычитание пустого множества.
+        if (range == null) {
+            return new Range[]{this};
+        }
+
         // Интервалы не пересекаются.
         if (calcIntersection(range) == null) {
             return new Range[]{this};
@@ -100,7 +119,7 @@ public class Range {
 
     public static String composeLine(Range range) {
         if (range == null) {
-            return "[null]";
+            return "[]";
         }
 
         return "[" + range.from + ", " + range.to + "]";
@@ -108,7 +127,7 @@ public class Range {
 
     public static String composeLine(Range[] ranges) {
         if (ranges == null) {
-            return "[null]";
+            return "[]";
         }
         StringBuilder sb = new StringBuilder().append('{');
 
