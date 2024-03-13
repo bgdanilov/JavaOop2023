@@ -2,7 +2,6 @@ package ru.bgdanilov.array_list;
 
 import java.util.*;
 
-
 public class CustomArrayList<E> implements List<E> {
     private E[] items;
     private int size; // количество реальных элементов, не путать с вместимостью.
