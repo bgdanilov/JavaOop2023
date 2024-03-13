@@ -171,6 +171,8 @@ public class CustomArrayListMain {
             // 15. Возвращает элемент списка по индексу.
             System.out.println("15. Возвращает элемент списка по индексу.");
             System.out.println("Элемент с индексом 1: " + strings.get(1));
+            // Проверка исключения.
+            //System.out.println("Элемент с индексом 3: " + strings.get(3));
             System.out.println();
 
             // 16. Замещает элемент по указанному индексу указанным элементом. Возвращает старое значение.
@@ -223,7 +225,7 @@ public class CustomArrayListMain {
             System.out.println("Вместимость списка: " + someStrings.getCapacity());
             System.out.println(someStrings);
             System.out.println();
-        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+        } catch (IllegalArgumentException e) {
             System.out.println("Ошибка! " + e.getMessage());
         }
     }
