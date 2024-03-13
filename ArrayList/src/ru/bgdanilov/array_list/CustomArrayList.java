@@ -62,15 +62,14 @@ public class CustomArrayList<E> implements List<E> {
     // Если переданный массив короче списка, создается массив с длиной, равной длине списка.
     @Override
     public <T> T[] toArray(T[] array) {
-        if (size >= array.length) {
+        if (size > array.length) {
             //noinspection unchecked
             return Arrays.copyOf(items, size, (Class<? extends T[]>) array.getClass());
         }
 
         // array у нас T[], а мы ему назначаем E[] поэтому нужно приведение items к 'T'.
         // Почему в arraycopy (T[]) помечено как redundant?
-        //noinspection unchecked
-        System.arraycopy((T[]) items, 0, array, 0, size);
+        System.arraycopy(items, 0, array, 0, size);
         array[size] = null;
 
         return array;
@@ -117,10 +116,7 @@ public class CustomArrayList<E> implements List<E> {
     // Поведение этой операции не определено, если указанная коллекция изменяется во время выполнения операции.
     @Override
     public boolean addAll(Collection<? extends E> collection) {
-        // checkCollection(collection);
-        addAll(size, collection);
-
-        return true;
+        return addAll(size, collection);
     }
 
     // 11. Вставляет все элементы из переданной коллекции в этот список, начиная с указанной позиции.
@@ -234,15 +230,10 @@ public class CustomArrayList<E> implements List<E> {
             increaseCapacity();
         }
 
-//        if (size == 0) {
-//            items[size] = item;
-//        } else {
         // Скопировать последние size - index элементов исходного массива
         // в конечный массив (в него же), начиная с определенного индекса i + 1:
         System.arraycopy(items, index, items, index + 1, size - index);
         items[index] = item;
-        // }
-
         size++;
         modCount++;
     }
@@ -346,9 +337,7 @@ public class CustomArrayList<E> implements List<E> {
     }
 
     public void provideCapacity(int enoughCapacity) {
-        if (enoughCapacity > items.length) {
-            items = Arrays.copyOf(items, enoughCapacity);
-        }
+        items = Arrays.copyOf(items, enoughCapacity);
     }
 
     public void trimToSize() {
@@ -410,11 +399,11 @@ public class CustomArrayList<E> implements List<E> {
 
     getCapacity():int
     increaseCapacity():void
-    increaseCapacity(int number):void
+    provideCapacity(int enoughCapacity):void
     trimToSize():void
     toString():String
     checkCollection(Collection<?> collection):void
-    checkIndex(int index):void
+    checkIndex(int index, int lastItemIndex):void
 
     2. Справка по System.arraycopy:
     Из исходного массива (src),
