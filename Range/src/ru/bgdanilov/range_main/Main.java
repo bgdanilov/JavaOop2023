@@ -1,9 +1,12 @@
 package ru.bgdanilov.range_main;
 
 import ru.bgdanilov.range.Range;
+
 import java.util.Scanner;
 
 public class Main {
+    private static final double EPSILON = 1.0e-10;
+
     public static void main(String[] args) {
         // Создаем объект класса.
         Range myRange = new Range(2.34, 9.76);
@@ -36,14 +39,13 @@ public class Main {
         double rangeMiddle = myRange.getMiddle();
         System.out.printf("Середина диапазона: %.3f.%n", rangeMiddle);
 
-        double epsilon = 1.0e-10;
         boolean isNumber1Inside = myRange.isInside(number1);
         boolean isNumber2Inside = myRange.isInside(number2);
 
         if (isNumber1Inside || isNumber2Inside) {
-            if ((Math.abs(rangeMiddle - number1) - Math.abs(rangeMiddle - number2)) > epsilon) {
+            if ((Math.abs(rangeMiddle - number1) - Math.abs(rangeMiddle - number2)) > EPSILON) {
                 System.out.printf("Число %.3f ближе к середине диапазона.%n", number2);
-            } else if ((Math.abs(rangeMiddle - number2) - Math.abs(rangeMiddle - number1)) > epsilon) {
+            } else if ((Math.abs(rangeMiddle - number2) - Math.abs(rangeMiddle - number1)) > EPSILON) {
                 System.out.printf("Число %.3f ближе к середине диапазона.%n", number1);
             } else {
                 System.out.printf("Оба числа %.3f и %.3f равноудалены от середины диапазона.%n", number1, number2);

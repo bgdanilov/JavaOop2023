@@ -20,6 +20,10 @@ public class Range {
     }
 
     public void setFrom(double from) {
+        if (from > this.to) {
+            throw new IllegalArgumentException("Начало [" + from + "] не может быть больше конца [" + to + "].");
+        }
+
         this.from = from;
     }
 
@@ -28,6 +32,10 @@ public class Range {
     }
 
     public void setTo(double to) {
+        if (to < this.from) {
+            throw new IllegalArgumentException("Конец [" + to + "] не может быть меньше начала [" + from + "].");
+        }
+
         this.to = to;
     }
 
@@ -50,20 +58,18 @@ public class Range {
     // 6. Пересечение двух интервалов.
     // - интервал, принадлежат те и только те элементы, которые одновременно принадлежат всем данным интервалам.
     // (по одной точке пересечение НЕ засчитываем).
-    public Range calcIntersection(Range range) {
-        // Пересечение с пустым множеством.
-        if (range == null) {
-            return null;
-        }
+    public Range[] calcIntersection(Range range) {
+        // Пересечение с пустым множеством - бросает NullPointerException.
 
+        // Пересечение с непустым множеством или одной точкой.
         if (to <= range.from || range.to <= from || range.to == range.from) {
-            return null;
+            return new Range[0];
         }
 
         double from = Math.max(this.from, range.from);
         double to = Math.min(this.to, range.to);
 
-        return new Range(from, to);
+        return new Range[]{new Range(from, to)};
     }
 
     // 7. Объединение двух интервалов.
@@ -71,19 +77,19 @@ public class Range {
     public Range[] calcUnion(Range range) {
         // Объединение с пустым множеством.
         if (range == null) {
-            return new Range[]{this};
+            return new Range[]{new Range(from, to)};
         }
 
         // Интервалы вообще не пересекаются (по одной точке - пересечение засчитываем).
         if (this.to < range.from || range.to < this.from) {
             return new Range[]{new Range(from, to), new Range(range.from, range.to)};
-        } else {
-            // Интервалы пересекаются.
-            double from = Math.min(this.from, range.from);
-            double to = Math.max(this.to, range.to);
-
-            return new Range[]{new Range(from, to)};
         }
+
+        // Интервалы пересекаются.
+        double unitedRangeFrom = Math.min(this.from, range.from);
+        double unitedRangeTo = Math.max(this.to, range.to);
+
+        return new Range[]{new Range(unitedRangeFrom, unitedRangeTo)};
     }
 
     // 8. Разность.
@@ -91,54 +97,35 @@ public class Range {
     public Range[] calcDifference(Range range) {
         // Вычитание пустого множества.
         if (range == null) {
-            return new Range[]{this};
+            return new Range[]{new Range(from, to)};
         }
 
         // Интервалы не пересекаются.
-        if (calcIntersection(range) == null) {
-            return new Range[]{this};
+        if (to <= range.from || range.to <= from || range.to == range.from) {
+            return new Range[]{new Range(from, to)};
         }
 
         // Интервал лежит внутри другого интервала:
         // - интервалы совпадают или исходный интервал внутри вычитаемого.
         if (from >= range.from && to <= range.to) {
-            return null;
-        } else {
-            // - перекрытие слева.
-            if (range.from <= from) {
-                return new Range[]{new Range(range.to, to)};
-                // - перекрытие справа.
-            } else if (range.to >= to) {
-                return new Range[]{new Range(from, range.from)};
-            }
-
-            //  - перекрытие по середине.
-            return new Range[]{new Range(from, range.from), new Range(range.to, to)};
+            //return null;
+            return new Range[0];
         }
+
+        // - перекрытие слева.
+        if (range.from <= from) {
+            return new Range[]{new Range(range.to, to)};
+            // - перекрытие справа.
+        } else if (range.to >= to) {
+            return new Range[]{new Range(from, range.from)};
+        }
+
+        //  - перекрытие по середине.
+        return new Range[]{new Range(from, range.from), new Range(range.to, to)};
     }
 
-    public static String composeLine(Range range) {
-        if (range == null) {
-            return "[]";
-        }
-
-        return "[" + range.from + ", " + range.to + "]";
-    }
-
-    public static String composeLine(Range[] ranges) {
-        if (ranges == null) {
-            return "[]";
-        }
-        StringBuilder sb = new StringBuilder().append('{');
-
-        for (Range range : ranges) {
-            sb.append('[').append(range.from).append(", ").append(range.to).append(']')
-                    .append(", ");
-        }
-
-        sb.setLength(sb.length() - 2);
-        sb.append('}');
-
-        return sb.toString();
+    @Override
+    public String toString() {
+        return "[(" + from + "; " + to + ")]";
     }
 }
