@@ -9,10 +9,11 @@ public class MainWithStar {
         try {
             // Проверка исключения:
             // Range wrongRange = new Range(100, 10);
+            // Range wrongRange = new Range(10, 10);
 
             // Исходный интервал.
             Range initialRange = new Range(0, 10);
-            //Range initialRange = null;
+            // Range initialRange = null;
 
             // Проверка Сеттеров на неправильное значение.
             // initialRange.setFrom(11); // - начало больше конца.
@@ -23,23 +24,23 @@ public class MainWithStar {
             System.out.println("Исходный интервал: " + initialRange);
             Range intersectingRange = new Range(-10, 0);
             System.out.println("Интервал для пересечения: " + intersectingRange);
-            System.out.println("Пересечение: " + Arrays.toString(initialRange.calcIntersection(intersectingRange)));
+            System.out.println("Пересечение: " + initialRange.getIntersection(intersectingRange));
             System.out.println();
 
             // Объединение:
             System.out.println("Объединение:");
             System.out.println("Исходный интервал: " + initialRange);
-            Range uniteWithRange = new Range(0, 0);
+            Range uniteWithRange = new Range(15, 20);
             System.out.println("Интервал для объединения: " + uniteWithRange);
-            System.out.println("Объединение: " + Arrays.toString(initialRange.calcUnion(uniteWithRange)));
+            System.out.println("Объединение: " + Arrays.toString(initialRange.getUnion(uniteWithRange)));
             System.out.println();
 
             // Разность:
             System.out.println("Разность:");
             System.out.println("Исходный интервал: " + initialRange);
-            Range subtractedRange = new Range(2, 6);
+            Range subtractedRange = new Range(3, 5);
             System.out.println("Интервал для разности: " + subtractedRange);
-            System.out.println("Разность: " + Arrays.toString(initialRange.calcDifference(subtractedRange)));
+            System.out.println("Разность: " + Arrays.toString(initialRange.getDifference(subtractedRange)));
             System.out.println();
         } catch (IllegalArgumentException | NullPointerException e) {
             System.out.println("Ошибка! " + e.getMessage());

@@ -6,8 +6,8 @@ public class Range {
 
     // 1. Конструктор.
     public Range(double from, double to) {
-        if (from > to) {
-            throw new IllegalArgumentException("Начало [" + from + "] не может быть больше конца [" + to + "].");
+        if (from >= to) {
+            throw new IllegalArgumentException("Начало \"" + from + "\" должно быть меньше конца \"" + to + "\".");
         }
 
         this.from = from;
@@ -20,8 +20,8 @@ public class Range {
     }
 
     public void setFrom(double from) {
-        if (from > this.to) {
-            throw new IllegalArgumentException("Начало [" + from + "] не может быть больше конца [" + to + "].");
+        if (from >= to) {
+            throw new IllegalArgumentException("Начало \"" + from + "\" должно быть меньше конца \"" + to + "\".");
         }
 
         this.from = from;
@@ -32,8 +32,8 @@ public class Range {
     }
 
     public void setTo(double to) {
-        if (to < this.from) {
-            throw new IllegalArgumentException("Конец [" + to + "] не может быть меньше начала [" + from + "].");
+        if (to < from) {
+            throw new IllegalArgumentException("Конец \"" + to + "\" должен быть больше начала \"" + from + "\".");
         }
 
         this.to = to;
@@ -58,27 +58,25 @@ public class Range {
     // 6. Пересечение двух интервалов.
     // - интервал, принадлежат те и только те элементы, которые одновременно принадлежат всем данным интервалам.
     // (по одной точке пересечение НЕ засчитываем).
-    public Range[] calcIntersection(Range range) {
+    public Range getIntersection(Range range) {
         // Пересечение с пустым множеством - бросает NullPointerException.
 
-        // Пересечение с непустым множеством или одной точкой.
-        if (to <= range.from || range.to <= from || range.to == range.from) {
-            return new Range[0];
+        // Пересечения нет.
+        if (to <= range.from || range.to <= from) {
+            return null;
         }
 
-        double from = Math.max(this.from, range.from);
-        double to = Math.min(this.to, range.to);
+        // Пересечение есть.
+        double intersectionRangeFrom = Math.max(this.from, range.from);
+        double intersectionRangeTo = Math.min(this.to, range.to);
 
-        return new Range[]{new Range(from, to)};
+        return new Range(intersectionRangeFrom, intersectionRangeTo);
     }
 
     // 7. Объединение двух интервалов.
     // - интервал, содержащий в себе все элементы исходных интервалов.
-    public Range[] calcUnion(Range range) {
-        // Объединение с пустым множеством.
-        if (range == null) {
-            return new Range[]{new Range(from, to)};
-        }
+    public Range[] getUnion(Range range) {
+        // Объединение с пустым множеством - бросает NullPointerException.
 
         // Интервалы вообще не пересекаются (по одной точке - пересечение засчитываем).
         if (this.to < range.from || range.to < this.from) {
@@ -94,21 +92,17 @@ public class Range {
 
     // 8. Разность.
     // - интервал (интервалы), в который входят все элементы первого интервала, не входящие во второй.
-    public Range[] calcDifference(Range range) {
-        // Вычитание пустого множества.
-        if (range == null) {
-            return new Range[]{new Range(from, to)};
-        }
+    public Range[] getDifference(Range range) {
+        // Разность с пустым множеством - бросает NullPointerException.
 
         // Интервалы не пересекаются.
-        if (to <= range.from || range.to <= from || range.to == range.from) {
+        if (to <= range.from || range.to <= from) {
             return new Range[]{new Range(from, to)};
         }
 
         // Интервал лежит внутри другого интервала:
         // - интервалы совпадают или исходный интервал внутри вычитаемого.
         if (from >= range.from && to <= range.to) {
-            //return null;
             return new Range[0];
         }
 
@@ -126,6 +120,6 @@ public class Range {
 
     @Override
     public String toString() {
-        return "[(" + from + "; " + to + ")]";
+        return "(" + from + "; " + to + ")";
     }
 }
