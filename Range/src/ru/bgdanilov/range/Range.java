@@ -32,7 +32,7 @@ public class Range {
     }
 
     public void setTo(double to) {
-        if (to < from) {
+        if (to <= from) {
             throw new IllegalArgumentException("Конец \"" + to + "\" должен быть больше начала \"" + from + "\".");
         }
 

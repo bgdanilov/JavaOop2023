@@ -17,7 +17,7 @@ public class MainWithStar {
 
             // Проверка Сеттеров на неправильное значение.
             // initialRange.setFrom(11); // - начало больше конца.
-            // initialRange.setTo(-11); // - конец меньше начала.
+            // initialRange.setTo(0); // - конец равен началу.
 
             // Пересечение:
             System.out.println("Пересечение:");
