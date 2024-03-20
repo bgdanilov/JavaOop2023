@@ -4,7 +4,7 @@ import java.util.*;
 
 public class CustomHashTable<E> implements Collection<E> {
     ArrayList<E>[] hashTable; // массив параметризованных списков.
-    private static final int DEFAULT_CAPACITY = 20;
+    private static final int DEFAULT_CAPACITY = 4;
     private int size;
     private int modCount;
 
@@ -52,8 +52,7 @@ public class CustomHashTable<E> implements Collection<E> {
     // 4. Итератор.
     @Override
     public Iterator<E> iterator() {
-        CustomHashTableIterator iterator;
-        return iterator = new CustomHashTableIterator();
+        return new CustomHashTableIterator();
     }
 
     // 5. Создать массив из значений таблицы.
@@ -71,10 +70,24 @@ public class CustomHashTable<E> implements Collection<E> {
         return array;
     }
 
-    // 6.
+    // 6. Возвращает из значений таблицы массив в переданный массив.
+    // Если переданный массив имеет достаточную длину, он заполняется значениями таблицы.
+    // При наличии излишка длины переданного массива, элементу полученного массива,
+    // следующему за последним элементом таблицы присваивается null.
+    // Если переданный массив короче размера таблицы, создается массив с длиной, равной размеру таблицы.
     @Override
-    public <T> T[] toArray(T[] a) {
-        return null;
+    public <T> T[] toArray(T[] array) {
+        if (size > array.length) {
+            //noinspection unchecked
+            return Arrays.copyOf(hashTable, size, (Class<? extends T[]>) array.getClass());
+        }
+
+        // array у нас T[], а мы ему назначаем E[] поэтому нужно приведение items к 'T'.
+        // Почему в arraycopy (T[]) помечено как redundant?
+        System.arraycopy(toArray(), 0, array, 0, size);
+        array[size] = null;
+
+        return array;
     }
 
     // 7. Добавить объект в таблицу.
@@ -111,28 +124,83 @@ public class CustomHashTable<E> implements Collection<E> {
         return hashTable[calcIndex(o)].remove(o);
     }
 
-    // 9.
+    // 9. Содержатся ли элементы переданной коллекции в нашей таблице?
+    // Возвращает true, если все элементы переданной коллекции содержатся в рассматриваемой таблице.
     @Override
-    public boolean containsAll(Collection<?> c) {
-        return false;
+    public boolean containsAll(Collection<?> collection) {
+        checkCollection(collection);
+
+        for (Object item : collection) {
+            if (!contains(item)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     // 10.
     @Override
-    public boolean addAll(Collection<? extends E> c) {
-        return false;
+    public boolean addAll(Collection<? extends E> collection) {
+        checkCollection(collection);
+
+        boolean isChanged = false;
+
+        for (E item : collection) {
+
+            if (add(item)) {
+                isChanged = true;
+            }
+        }
+
+        return isChanged;
     }
 
-    // 11.
+    // 11. Удаляет из таблицы все ее элементы, содержащиеся в указанной коллекции.
     @Override
-    public boolean removeAll(Collection<?> c) {
-        return false;
+    public boolean removeAll(Collection<?> collection) {
+        if (collection.isEmpty()) {
+            return true;
+        }
+
+        boolean isChanged = false;
+
+        // Обходим указанную коллекцию.
+        // Тут итератор подходит, т.к. указанную коллекцию мы не меняем.
+        for (Object item : collection) {
+            isChanged = remove(item);
+        }
+
+        return isChanged;
     }
 
-    // 12.
+    // 12. Сохраняет только те элементы в таблице, которые содержатся в переданной коллекции.
+    // Другими словами, удаляет из таблицы все элементы, которые не содержатся в переданной коллекции.
     @Override
-    public boolean retainAll(Collection<?> c) {
-        return false;
+    public boolean retainAll(Collection<?> collection) {
+        checkCollection(collection);
+
+        boolean isChanged = false;
+
+        // Обходим каждый элемент таблицы.
+        // Тут наш итератор не подходит!
+        for (ArrayList<E> list : hashTable) {
+            if (list != null) {
+                
+            }
+
+
+//
+//            if (list != null) {
+//
+//
+//                isChanged = list.retainAll(collection);
+//                size -= list.size();
+//                modCount++;
+//            }
+        }
+
+        return isChanged;
     }
 
     // 13. Удаляем все элементы из таблицы.
@@ -153,9 +221,9 @@ public class CustomHashTable<E> implements Collection<E> {
         private int currentListIndex = -1; // текущий индекс элементов в списке.
         private final int initialModCount = modCount; // исходное количество изменений.
 
-        public int getItemsCount() {
-            return itemsCount;
-        }
+//        public int getItemsCount() {
+//            return itemsCount;
+//        }
 
         @Override
         public boolean hasNext() {
@@ -172,19 +240,30 @@ public class CustomHashTable<E> implements Collection<E> {
                 throw new ConcurrentModificationException("Зафиксированы изменения Таблицы в процессе перебора элементов.");
             }
 
-            for (; currentHashIndex < hashTable.length - 1; currentHashIndex++) {
+            for (; currentHashIndex < hashTable.length; currentHashIndex++) {
                 if (hashTable[currentHashIndex] == null) {
                     continue;
                 }
 
                 if (currentListIndex < hashTable[currentHashIndex].size() - 1) {
                     currentListIndex++;
+                    break;
+                }
+                else {
+                    currentListIndex = -1;
                 }
             }
 
             itemsCount++;
             return hashTable[currentHashIndex].get(currentListIndex);
         }
+    }
+
+    public void add(E e, int hashIndex) {
+        hashTable[hashIndex].add(e);
+
+        modCount++;
+        size++;
     }
 
 
@@ -203,9 +282,9 @@ public class CustomHashTable<E> implements Collection<E> {
 
         int index = 0;
 
-        for (ArrayList<E> arrayList : hashTable) {
-            if (arrayList != null) {
-                sb.append(index).append(arrayList).append(", ");
+        for (ArrayList<E> list : hashTable) {
+            if (list != null) {
+                sb.append(index).append(list).append(", ");
             } else {
                 sb.append(index).append("[], ");
             }
@@ -217,5 +296,11 @@ public class CustomHashTable<E> implements Collection<E> {
         sb.append(" ]");
 
         return sb.toString();
+    }
+
+    private static void checkCollection(Collection<?> collection) {
+        if (collection == null) {
+            throw new NullPointerException("Переданная коллекция равна null.");
+        }
     }
 }
