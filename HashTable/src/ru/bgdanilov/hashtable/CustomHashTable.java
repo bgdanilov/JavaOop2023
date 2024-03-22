@@ -32,15 +32,14 @@ public class CustomHashTable<E> implements Collection<E> {
 
     // 3. Есть ли элемент в таблице.
     @Override
-    // TODO: на null - дает исключение!
-    public boolean contains(Object o) {
-        int index = calcIndex(o);
+    public boolean contains(Object object) {
+        int index = calcIndex(object);
 
         if (hashTable[index] == null) {
             return false;
         } else {
             for (E item : hashTable[index]) {
-                if (item.equals(o)) {
+                if (item.equals(object)) {
                     return true;
                 }
             }
@@ -82,8 +81,9 @@ public class CustomHashTable<E> implements Collection<E> {
             return Arrays.copyOf(hashTable, size, (Class<? extends T[]>) array.getClass());
         }
 
-        // array у нас T[], а мы ему назначаем E[] поэтому нужно приведение items к 'T'.
-        // Почему в arraycopy (T[]) помечено как redundant?
+        // Как заглушить этот warning?
+        // Я ставлю "noinspection unchecked"
+        // перед arraycopy - у меня выделяется слово "unchecked".
         System.arraycopy(toArray(), 0, array, 0, size);
         array[size] = null;
 
@@ -92,19 +92,19 @@ public class CustomHashTable<E> implements Collection<E> {
 
     // 7. Добавить элемент в таблицу.
     @Override
-    public boolean add(E e) {
-        if (contains(e)) {
+    public boolean add(E item) {
+        if (contains(item)) {
             return false;
         }
 
-        int index = calcIndex(e);
+        int index = calcIndex(item);
 
         // Создаем по индексу-хэшу объект-список, если его еще там нет.
         if (hashTable[index] == null) {
             hashTable[index] = new ArrayList<>();
         }
 
-        hashTable[index].add(e);
+        hashTable[index].add(item);
         modCount++;
         size++;
 
@@ -113,15 +113,15 @@ public class CustomHashTable<E> implements Collection<E> {
 
     // 8. Удаление элемента из таблицы.
     @Override
-    public boolean remove(Object o) {
-        if (!contains(o)) {
+    public boolean remove(Object object) {
+        if (!contains(object)) {
             return false;
         }
 
         modCount++;
         size--;
 
-        return hashTable[calcIndex(o)].remove(o);
+        return hashTable[calcIndex(object)].remove(object);
     }
 
     // 9. Содержатся ли элементы переданной коллекции в нашей таблице?
@@ -159,6 +159,8 @@ public class CustomHashTable<E> implements Collection<E> {
     // 11. Удаляет из таблицы все ее элементы, содержащиеся в указанной коллекции.
     @Override
     public boolean removeAll(Collection<?> collection) {
+        checkCollection(collection);
+
         if (collection.isEmpty()) {
             return true;
         }
