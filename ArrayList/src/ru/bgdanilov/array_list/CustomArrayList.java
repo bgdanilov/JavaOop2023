@@ -175,6 +175,7 @@ public class CustomArrayList<E> implements List<E> {
 
     // 13. Сохраняет только те элементы в этом списке, которые содержатся в переданной коллекции.
     // Другими словами, удаляет из этого списка все его элементы, которые не содержатся в переданной коллекции.
+    // Выдает true, если таблица изменилась в результате.
     @Override
     public boolean retainAll(Collection<?> collection) {
         checkCollection(collection);

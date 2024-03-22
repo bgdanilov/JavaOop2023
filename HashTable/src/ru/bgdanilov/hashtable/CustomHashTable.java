@@ -4,7 +4,7 @@ import java.util.*;
 
 public class CustomHashTable<E> implements Collection<E> {
     ArrayList<E>[] hashTable; // массив параметризованных списков.
-    private static final int DEFAULT_CAPACITY = 4;
+    private static final int DEFAULT_CAPACITY = 20;
     private int size;
     private int modCount;
 
@@ -90,7 +90,7 @@ public class CustomHashTable<E> implements Collection<E> {
         return array;
     }
 
-    // 7. Добавить объект в таблицу.
+    // 7. Добавить элемент в таблицу.
     @Override
     public boolean add(E e) {
         if (contains(e)) {
@@ -139,7 +139,7 @@ public class CustomHashTable<E> implements Collection<E> {
         return true;
     }
 
-    // 10.
+    // 10. Добавляет все элементы из переданной коллекции в таблицу.
     @Override
     public boolean addAll(Collection<? extends E> collection) {
         checkCollection(collection);
@@ -182,22 +182,17 @@ public class CustomHashTable<E> implements Collection<E> {
 
         boolean isChanged = false;
 
-        // Обходим каждый элемент таблицы.
         // Тут наш итератор не подходит!
+        // Делаем retainAll() для каждого списка в таблице.
         for (ArrayList<E> list : hashTable) {
             if (list != null) {
-                
+                if (list.retainAll(collection)) {
+                    isChanged = true;
+
+                    modCount++;
+                    size -= list.size();
+                }
             }
-
-
-//
-//            if (list != null) {
-//
-//
-//                isChanged = list.retainAll(collection);
-//                size -= list.size();
-//                modCount++;
-//            }
         }
 
         return isChanged;
@@ -221,9 +216,6 @@ public class CustomHashTable<E> implements Collection<E> {
         private int currentListIndex = -1; // текущий индекс элементов в списке.
         private final int initialModCount = modCount; // исходное количество изменений.
 
-//        public int getItemsCount() {
-//            return itemsCount;
-//        }
 
         @Override
         public boolean hasNext() {
@@ -248,8 +240,7 @@ public class CustomHashTable<E> implements Collection<E> {
                 if (currentListIndex < hashTable[currentHashIndex].size() - 1) {
                     currentListIndex++;
                     break;
-                }
-                else {
+                } else {
                     currentListIndex = -1;
                 }
             }
@@ -258,14 +249,6 @@ public class CustomHashTable<E> implements Collection<E> {
             return hashTable[currentHashIndex].get(currentListIndex);
         }
     }
-
-    public void add(E e, int hashIndex) {
-        hashTable[hashIndex].add(e);
-
-        modCount++;
-        size++;
-    }
-
 
     // Получение индекса для вставки по нему объекта. Индекс - хэш-код.
     private int calcIndex(Object object) {
@@ -278,7 +261,7 @@ public class CustomHashTable<E> implements Collection<E> {
             return "[]";
         }
         StringBuilder sb = new StringBuilder();
-        sb.append("[ ");
+        sb.append("[");
 
         int index = 0;
 
@@ -293,7 +276,7 @@ public class CustomHashTable<E> implements Collection<E> {
         }
 
         sb.setLength(sb.length() - 2);
-        sb.append(" ]");
+        sb.append("]");
 
         return sb.toString();
     }
