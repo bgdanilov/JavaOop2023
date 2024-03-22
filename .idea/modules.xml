@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/CSV/CSV.iml" filepath="$PROJECT_DIR$/CSV/CSV.iml" />
       <module fileurl="file://$PROJECT_DIR$/Deminer/Deminer.iml" filepath="$PROJECT_DIR$/Deminer/Deminer.iml" />
       <module fileurl="file://$PROJECT_DIR$/Deniner/Deniner.iml" filepath="$PROJECT_DIR$/Deniner/Deniner.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HashTable/HashTable.iml" filepath="$PROJECT_DIR$/HashTable/HashTable.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/JavaOop2023.iml" filepath="$PROJECT_DIR$/.idea/JavaOop2023.iml" />
       <module fileurl="file://$PROJECT_DIR$/Lambdas/Lambdas.iml" filepath="$PROJECT_DIR$/Lambdas/Lambdas.iml" />
       <module fileurl="file://$PROJECT_DIR$/Learn/Learn.iml" filepath="$PROJECT_DIR$/Learn/Learn.iml" />
