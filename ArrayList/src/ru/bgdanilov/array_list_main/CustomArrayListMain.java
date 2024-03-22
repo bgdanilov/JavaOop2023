@@ -216,16 +216,18 @@ public class CustomArrayListMain {
             System.out.println("20. Индекс последнего вхождения элемента \"Zero\": " + strings.lastIndexOf("Zero"));
             System.out.println();
 
-            // Проверим toString
-            System.out.println("Проверим toString");
-            CustomArrayList<String> someStrings = new CustomArrayList<>(0);
-            //someStrings = null;
-            someStrings.add("zero");
-            System.out.println("Размер списка: " + someStrings.size());
-            System.out.println("Вместимость списка: " + someStrings.getCapacity());
-            System.out.println(someStrings);
+            // Проверим увеличение вместимости.
+            System.out.println("* Проверим увеличение вместимости.");
+            strings.ensureCapacity(13);
+            //strings.ensureCapacity(1);
             System.out.println();
-        } catch (IllegalArgumentException e) {
+
+            // Конструктор с пользовательской вместимостью чтобы не было warning.
+            System.out.println("* Конструктор с пользовательской вместимостью чтобы не было warning.");
+            CustomArrayList<String> userCapacityStrings = new CustomArrayList<>(100500);
+            userCapacityStrings.add("One");
+            System.out.println("Наш пользовательский список: " + userCapacityStrings);
+        } catch (IllegalArgumentException | IndexOutOfBoundsException | NullPointerException e) {
             System.out.println("Ошибка! " + e.getMessage());
         }
     }
