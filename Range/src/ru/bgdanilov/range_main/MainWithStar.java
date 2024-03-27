@@ -7,40 +7,36 @@ import java.util.Arrays;
 public class MainWithStar {
     public static void main(String[] args) {
         try {
+            Range range1 = new Range(0, 10);
+            Range range2 = new Range(-10, 1);
+            // Range range1 = null;
+
             // Проверка исключения:
             // Range wrongRange = new Range(100, 10);
-            // Range wrongRange = new Range(10, 10);
-
-            // Исходный интервал.
-            Range initialRange = new Range(0, 10);
-            // Range initialRange = null;
 
             // Проверка Сеттеров на неправильное значение.
-            // initialRange.setFrom(11); // - начало больше конца.
-            // initialRange.setTo(0); // - конец равен началу.
+            // range1.setFrom(11); // - начало больше конца.
+            // range1.setTo(0); // - конец равен началу.
 
             // Пересечение:
             System.out.println("Пересечение:");
-            System.out.println("Исходный интервал: " + initialRange);
-            Range intersectingRange = new Range(-10, 0);
-            System.out.println("Интервал для пересечения: " + intersectingRange);
-            System.out.println("Пересечение: " + initialRange.getIntersection(intersectingRange));
+            System.out.println("Интервал 1: " + range1);
+            System.out.println("Интервал 2: " + range2);
+            System.out.println("Пересечение интервалов 1 и 2: " + range1.getIntersection(range2));
             System.out.println();
 
             // Объединение:
             System.out.println("Объединение:");
-            System.out.println("Исходный интервал: " + initialRange);
-            Range uniteWithRange = new Range(15, 20);
-            System.out.println("Интервал для объединения: " + uniteWithRange);
-            System.out.println("Объединение: " + Arrays.toString(initialRange.getUnion(uniteWithRange)));
+            System.out.println("Интервал 1: " + range1);
+            System.out.println("Интервал 2: " + range2);
+            System.out.println("Объединение интервалов 1 и 2: " + Arrays.toString(range1.getUnion(range2)));
             System.out.println();
 
             // Разность:
             System.out.println("Разность:");
-            System.out.println("Исходный интервал: " + initialRange);
-            Range subtractedRange = new Range(3, 5);
-            System.out.println("Интервал для разности: " + subtractedRange);
-            System.out.println("Разность: " + Arrays.toString(initialRange.getDifference(subtractedRange)));
+            System.out.println("Интервал 1: " + range1);
+            System.out.println("Интервал 2: " + range2);
+            System.out.println("Разность интервалов 1 и 2: " + Arrays.toString(range1.getDifference(range2)));
             System.out.println();
         } catch (IllegalArgumentException | NullPointerException e) {
             System.out.println("Ошибка! " + e.getMessage());
