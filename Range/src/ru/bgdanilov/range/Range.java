@@ -52,49 +52,43 @@ public class Range {
 
     // 5. Принадлежит ли число диапазону?
     public boolean isInside(double number) {
-        return from <= number && to >= number;
+        return number >= from && number <= to;
     }
 
     // 6. Пересечение двух интервалов.
     // - интервал, принадлежат те и только те элементы, которые одновременно принадлежат всем данным интервалам.
     // (по одной точке пересечение НЕ засчитываем).
     public Range getIntersection(Range range) {
-        // Пересечение с пустым множеством - бросает NullPointerException.
-
         // Пересечения нет.
-        if (to <= range.from || range.to <= from) {
+        if (range.from >= to || range.to <= from) {
             return null;
         }
 
         // Пересечение есть.
-        double intersectionRangeFrom = Math.max(this.from, range.from);
-        double intersectionRangeTo = Math.min(this.to, range.to);
+        double resultFrom = Math.max(this.from, range.from);
+        double resultTo = Math.min(this.to, range.to);
 
-        return new Range(intersectionRangeFrom, intersectionRangeTo);
+        return new Range(resultFrom, resultTo);
     }
 
     // 7. Объединение двух интервалов.
     // - интервал, содержащий в себе все элементы исходных интервалов.
     public Range[] getUnion(Range range) {
-        // Объединение с пустым множеством - бросает NullPointerException.
-
         // Интервалы вообще не пересекаются (по одной точке - пересечение засчитываем).
-        if (this.to < range.from || range.to < this.from) {
+        if (range.from > to || range.to < from) {
             return new Range[]{new Range(from, to), new Range(range.from, range.to)};
         }
 
         // Интервалы пересекаются.
-        double unitedRangeFrom = Math.min(this.from, range.from);
-        double unitedRangeTo = Math.max(this.to, range.to);
+        double resultFrom = Math.min(this.from, range.from);
+        double resultTo = Math.max(this.to, range.to);
 
-        return new Range[]{new Range(unitedRangeFrom, unitedRangeTo)};
+        return new Range[]{new Range(resultFrom, resultTo)};
     }
 
     // 8. Разность.
     // - интервал (интервалы), в который входят все элементы первого интервала, не входящие во второй.
     public Range[] getDifference(Range range) {
-        // Разность с пустым множеством - бросает NullPointerException.
-
         // Интервалы не пересекаются.
         if (to <= range.from || range.to <= from) {
             return new Range[]{new Range(from, to)};
@@ -102,19 +96,21 @@ public class Range {
 
         // Интервал лежит внутри другого интервала:
         // - интервалы совпадают или исходный интервал внутри вычитаемого.
-        if (from >= range.from && to <= range.to) {
+        if (range.from <= from && range.to >= to) {
             return new Range[0];
         }
 
         // - перекрытие слева.
         if (range.from <= from) {
             return new Range[]{new Range(range.to, to)};
-            // - перекрытие справа.
-        } else if (range.to >= to) {
+        }
+
+        // - перекрытие справа.
+        if (range.to >= to) {
             return new Range[]{new Range(from, range.from)};
         }
 
-        //  - перекрытие по середине.
+        // - перекрытие по середине.
         return new Range[]{new Range(from, range.from), new Range(range.to, to)};
     }
 
@@ -123,3 +119,5 @@ public class Range {
         return "(" + from + "; " + to + ")";
     }
 }
+
+// NullPointerException (range == null) - генерируется самой системой и ловится в main.

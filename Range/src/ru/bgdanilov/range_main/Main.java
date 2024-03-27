@@ -9,19 +9,19 @@ public class Main {
 
     public static void main(String[] args) {
         // Создаем объект класса.
-        Range myRange = new Range(2.34, 9.76);
+        Range range = new Range(2.34, 9.76);
 
-        System.out.printf("Диапазон: от %.3f до %.3f.%n", myRange.getFrom(), myRange.getTo());
-        System.out.printf("Длина диапазона: %.3f.%n", myRange.getLength());
+        System.out.printf("Диапазон: от %.3f до %.3f.%n", range.getFrom(), range.getTo());
+        System.out.printf("Длина диапазона: %.3f.%n", range.getLength());
         System.out.println("-----------");
 
-        myRange.setFrom(-3); // Меняем поле from.
-        myRange.setTo(1); // Меняем поле to.
-        System.out.printf("Измененный диапазон: от %.3f до %.3f.%n", myRange.getFrom(), myRange.getTo());
+        range.setFrom(-3); // Меняем поле from.
+        range.setTo(1); // Меняем поле to.
+        System.out.printf("Измененный диапазон: от %.3f до %.3f.%n", range.getFrom(), range.getTo());
 
         // Проверяем, лежит ли число в диапазоне.
         double number = -3;
-        System.out.printf("Лежит ли число %.3f в диапазоне? %b%n", number, myRange.isInside(number));
+        System.out.printf("Лежит ли число %.3f в диапазоне? %b%n", number, range.isInside(number));
         System.out.println("-----------");
 
         // Программа. Какое из двух чисел лежит ближе к середине диапазона?
@@ -36,11 +36,11 @@ public class Main {
         System.out.println("-----------");
 
         // Ищем середину диапазона.
-        double rangeMiddle = myRange.getMiddle();
+        double rangeMiddle = range.getMiddle();
         System.out.printf("Середина диапазона: %.3f.%n", rangeMiddle);
 
-        boolean isNumber1Inside = myRange.isInside(number1);
-        boolean isNumber2Inside = myRange.isInside(number2);
+        boolean isNumber1Inside = range.isInside(number1);
+        boolean isNumber2Inside = range.isInside(number2);
 
         if (isNumber1Inside || isNumber2Inside) {
             if ((Math.abs(rangeMiddle - number1) - Math.abs(rangeMiddle - number2)) > EPSILON) {
