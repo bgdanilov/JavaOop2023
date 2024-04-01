@@ -17,7 +17,7 @@ public class CustomArrayList<E> implements List<E> {
     // Конструктор, принимающий capacity - вместимость.
     public CustomArrayList(int capacity) {
         if (capacity < 0) {
-            throw new IllegalArgumentException("Вместимость списка [" + capacity + "] не может быть отрицательной.");
+            throw new IllegalArgumentException("Вместимость списка \"" + capacity + "\" не может быть отрицательной.");
         }
 
         //noinspection unchecked
@@ -61,15 +61,17 @@ public class CustomArrayList<E> implements List<E> {
     // Если переданный массив короче списка, создается массив с длиной, равной длине списка.
     @Override
     public <T> T[] toArray(T[] array) {
-        if (size >= array.length) {
+        if (size > array.length) {
             //noinspection unchecked
             return Arrays.copyOf(items, size, (Class<? extends T[]>) array.getClass());
         }
 
-        // array у нас T[], а мы ему назначаем E[] поэтому нужно приведение items к 'T'.
-        // Почему в arraycopy (T[]) помечено как redundant?
+        //noinspection SuspiciousSystemArraycopy
         System.arraycopy(items, 0, array, 0, size);
-        array[size] = null;
+
+        if (size < array.length) {
+            array[size] = null;
+        }
 
         return array;
     }
@@ -133,10 +135,7 @@ public class CustomArrayList<E> implements List<E> {
             return false;
         }
 
-        // Проверка целесообразности увеличения вместимости и ее увеличение.
-        if (items.length < size + collectionSize) {
-            ensureCapacity(size + collectionSize);
-        }
+        ensureCapacity(size + collectionSize);
 
         // Расширяем список под вставку переданной коллекции в нужном месте.
         System.arraycopy(items, index, items, index + collectionSize, size - index);
@@ -160,7 +159,7 @@ public class CustomArrayList<E> implements List<E> {
         checkCollection(collection);
 
         if (collection.isEmpty()) {
-            return true;
+            return false;
         }
 
         boolean isChanged = false;
@@ -243,13 +242,13 @@ public class CustomArrayList<E> implements List<E> {
     // 18. Удалить элемент по переданному индексу.
     @Override
     public E remove(int index) {
-        checkIndex(index, size - 1);
+        int maxIndex = size - 1;
 
+        checkIndex(index, maxIndex);
         E removedItem = items[index];
 
-        if (index < size - 1) {
-            int copiedSize = size - index - 1;
-            System.arraycopy(items, index + 1, items, index, copiedSize);
+        if (index < maxIndex) {
+            System.arraycopy(items, index + 1, items, index, maxIndex - index);
         }
 
         items[size - 1] = null;
@@ -340,11 +339,9 @@ public class CustomArrayList<E> implements List<E> {
 
     // Этот метод публичный, т.к. он нужен для эффективного использования списка его пользователем.
     public void ensureCapacity(int capacity) {
-        if (capacity <= items.length) {
-            throw new IllegalArgumentException("Переданная вместимость: \"" + capacity + "\", должна быть больше текущей вместимости списка: \"" + items.length + "\".");
+        if (items.length < capacity) {
+            items = Arrays.copyOf(items, capacity);
         }
-
-        items = Arrays.copyOf(items, capacity);
     }
 
     public void trimToSize() {
@@ -355,7 +352,7 @@ public class CustomArrayList<E> implements List<E> {
 
     @Override
     public String toString() {
-        if (items.length == 0) {
+        if (size == 0) {
             return "[]";
         }
 
@@ -374,9 +371,9 @@ public class CustomArrayList<E> implements List<E> {
         }
     }
 
-    private static void checkIndex(int index, int maxItemIndex) {
-        if (index < 0 || index > maxItemIndex) {
-            throw new IndexOutOfBoundsException("Индекс: \"" + index + "\", за пределами индексов списка: \"0, " + maxItemIndex + "\".");
+    private static void checkIndex(int index, int maxIndex) {
+        if (index < 0 || index > maxIndex) {
+            throw new IndexOutOfBoundsException("Индекс: \"" + index + "\", за пределами индексов списка: \"0, " + maxIndex + "\".");
         }
     }
 }
