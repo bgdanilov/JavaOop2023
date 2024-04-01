@@ -5,7 +5,7 @@ import ru.bgdanilov.hashtable.CustomHashTable;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-public class CustomHashTable_main {
+public class CustomHashTableMain {
     public static void main(String[] args) {
         try {
             CustomHashTable<String> hashTable = new CustomHashTable<>(4);
@@ -26,8 +26,10 @@ public class CustomHashTable_main {
             System.out.println("7. Добавить объекты \"One\" и \"Two\" в таблицу.");
             hashTable.add("One");
             hashTable.add("Two");
-            System.out.println("   - есть ли элемент \"One\" в таблице? " + hashTable.contains("One"));
-            System.out.println("Итого: " + hashTable);
+            hashTable.add(null);
+            hashTable.add(null);
+            System.out.println("   Итого: " + hashTable);
+            System.out.println("   - есть ли элемент null в таблице? " + hashTable.contains("hfjsdhfgjs"));
             System.out.println();
 
             // 5. Создать массив из значений таблицы.
@@ -37,45 +39,44 @@ public class CustomHashTable_main {
             // 6. Возвращает из значений таблицы массив в переданный массив.
             System.out.println("6. Возвращает из значений таблицы массив в переданный массив.");
             String[] destinationArray = {"4", "5", "6", "7", "8", "9", "10"};
-            System.out.println("Указанный массив: " + Arrays.toString(destinationArray));
-            System.out.println("Итого: " + Arrays.toString(hashTable.toArray(destinationArray)));
+            System.out.println("   Указанный массив: " + Arrays.toString(destinationArray));
+            System.out.println("   Итого: " + Arrays.toString(hashTable.toArray(destinationArray)));
             System.out.println();
 
             // 8. Удаление элемента из таблицы.
-            System.out.println("8. Удаляем объект \"One\" из таблицы.");
-            System.out.println("Итого: " + hashTable.remove("One") + ", " + hashTable);
+            System.out.println("8. Удаляем объект null из таблицы.");
+            System.out.println("   Итого: " + hashTable.remove(null) + ", " + hashTable);
             System.out.println();
 
-            // 9. Содержатся ли элементы указанной коллекции в нашей таблице?
-            System.out.println("9. Содержатся ли элементы указанной коллекции в нашей таблице?");
+            // 9. Содержатся ли все элементы указанной коллекции в нашей таблице?
+            System.out.println("9. Содержатся ли все элементы указанной коллекции в нашей таблице?");
             ArrayList<String> specifiedList = new ArrayList<>();
             specifiedList.add("Boris");
             specifiedList.add("Two");
-            //specifiedList.add("два"); // А так - false.
 
-            System.out.println("Указанный список: " + specifiedList);
-            System.out.println("Наша таблица: " + hashTable);
-            System.out.println(hashTable.containsAll(specifiedList));
+            System.out.println("   Указанный список: " + specifiedList);
+            System.out.println("   Наша таблица: " + hashTable.containsAll(specifiedList) + ", " + hashTable);
             System.out.println();
 
             // 10. Добавляет все элементы из переданной коллекции в таблицу.
             System.out.println("10. Добавляет все элементы из переданной коллекции в таблицу.");
             specifiedList.clear();
             specifiedList.add("Kate");
-            specifiedList.add("Boris");
+            specifiedList.add(null);
             specifiedList.add("Jane");
             specifiedList.add("Bob");
             specifiedList.add("Ivan");
-            System.out.println("Указанный список: " + specifiedList);
-            System.out.println("Наша таблица: " + hashTable);
-            System.out.println("Итого: " + hashTable.addAll(specifiedList) + ", " + hashTable);
+            System.out.println("    Указанный список: " + specifiedList);
+            System.out.println("    Наша таблица: " + hashTable);
+            System.out.println("    Итого: " + hashTable.addAll(specifiedList) + ", " + hashTable);
             System.out.println();
 
             // 11. Удаляет из таблицы все элементы, содержащиеся в указанной коллекции.
             System.out.println("11. Удаляет из этого списка все его элементы, содержащиеся в указанной коллекции.");
-            System.out.println("Указанный список: " + specifiedList);
-            System.out.println("Наша таблица: " + hashTable);
-            System.out.println("Итого: " + hashTable.removeAll(specifiedList) + ", " + hashTable);
+            System.out.println("    Указанный список: " + specifiedList);
+            System.out.println("    Наша таблица: " + hashTable);
+            System.out.println("    Итого: " + hashTable.removeAll(specifiedList) + ", " + hashTable);
+            System.out.println("    Размер таблицы: " + hashTable.size());
             System.out.println();
 
             // 12. Сохраняет только те элементы в этом списке, которые содержатся в указанной коллекции.
@@ -92,16 +93,17 @@ public class CustomHashTable_main {
             specifiedList.add("Kate");
             specifiedList.add("Boris");
 
-            System.out.println("Указанный список: " + specifiedList);
-            System.out.println("Наша таблица: " + hashTable);
-            System.out.println("Итого: " + hashTable.retainAll(specifiedList) + ", " + hashTable);
+            System.out.println("    Указанный список: " + specifiedList);
+            System.out.println("    Наша таблица: " + hashTable);
+            System.out.println("    Итого: " + hashTable.retainAll(specifiedList) + ", " + hashTable);
+            System.out.println("    Размер таблицы: " + hashTable.size());
             System.out.println();
 
             // 13. Удаляем все элементы из таблицы.
             System.out.println("13. Удаляем все элементы из таблицы.");
-            System.out.println("Наш список: " + hashTable);
+            System.out.println("    Наш список: " + hashTable);
             hashTable.clear();
-            System.out.println("Итого: " + hashTable);
+            System.out.println("    Итого: " + hashTable);
             System.out.println();
 
             // Создадим и выведем таблицу по-умолчанию.
