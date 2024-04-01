@@ -13,6 +13,7 @@ public class CustomArrayListMain {
 
             // 1. Возвращает количество элементов списка.
             System.out.println("1. Размер списка: " + strings.size());
+            System.out.println(strings);
             System.out.println();
 
             // 2. Пуст ли список?
@@ -56,7 +57,7 @@ public class CustomArrayListMain {
             System.out.println();
 
             // 6. Возвращает из списка массив в указанный массив.
-            String[] destinationArray = {"4", "5", "6", "7", "8", "9", "10"};
+            String[] destinationArray = {"4", "5", "6", "7"};
             //String[] destinationArray = {"1", "2", "3"};
             System.out.println("6. Возвращает из списка массив в указанный массив.");
             System.out.println("Указанный массив: " + Arrays.toString(destinationArray));
