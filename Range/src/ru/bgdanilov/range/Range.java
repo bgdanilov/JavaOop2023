@@ -65,8 +65,8 @@ public class Range {
         }
 
         // Пересечение есть.
-        double resultFrom = Math.max(this.from, range.from);
-        double resultTo = Math.min(this.to, range.to);
+        double resultFrom = Math.max(from, range.from);
+        double resultTo = Math.min(to, range.to);
 
         return new Range(resultFrom, resultTo);
     }
@@ -80,8 +80,8 @@ public class Range {
         }
 
         // Интервалы пересекаются.
-        double resultFrom = Math.min(this.from, range.from);
-        double resultTo = Math.max(this.to, range.to);
+        double resultFrom = Math.min(from, range.from);
+        double resultTo = Math.max(to, range.to);
 
         return new Range[]{new Range(resultFrom, resultTo)};
     }
