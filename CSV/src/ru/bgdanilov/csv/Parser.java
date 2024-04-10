@@ -46,7 +46,7 @@ public class Parser {
 
             String line;
             ArrayList<String> tableRow = new ArrayList<>();
-            StringBuilder multiLineCellBuffer = new StringBuilder();
+            StringBuilder cellBuffer = new StringBuilder();
             boolean isTransferredTextCell = false;
 
             while ((line = bufferedReader.readLine()) != null) {
@@ -71,19 +71,19 @@ public class Parser {
 
                     if (isTransferredTextCell) { // первый раз встречаем текст с переносом.
                         cell = replaceSpecialSymbols(cell);
-                        multiLineCellBuffer.append(cell).append("<br />");
+                        cellBuffer.append(cell).append("<br />");
                     } else {
                         // Переносы в данном тексте закончились (буфер не пуст). Это последний перенесенный текст.
-                        if (!multiLineCellBuffer.isEmpty()) {
+                        if (!cellBuffer.isEmpty()) {
                             cell = replaceSpecialSymbols(cell);
-                            multiLineCellBuffer.append(cell);
+                            cellBuffer.append(cell);
 
-                            cell = multiLineCellBuffer.toString();
+                            cell = cellBuffer.toString();
                             cell = removeSideQuotes(cell);
                             cell = cell.replace("\"\"", "\""); // Меням двойные кавычки на одинарные.
 
                             tableRow.add(cell);
-                            multiLineCellBuffer = new StringBuilder();
+                            cellBuffer = new StringBuilder();
                             // А если буфер так и пуст - значит не было переносов вообще.
                         } else {
                             cell = replaceSpecialSymbols(cell);
