@@ -23,7 +23,7 @@ public class CustomHashTableMain {
             System.out.println();
 
             // 7. Добавить объект в таблицу.
-            System.out.println("7. Добавить объекты \"One\" и \"Two\" в таблицу.");
+            System.out.println("7. Добавить объекты \"One\", \"Two\", null, null в таблицу.");
             hashTable.add("One");
             hashTable.add("Two");
             hashTable.add(null);
@@ -74,7 +74,6 @@ public class CustomHashTableMain {
             // 11. Удаляет из таблицы все элементы, содержащиеся в указанной коллекции.
             System.out.println("11. Удаляет из этого списка все его элементы, содержащиеся в указанной коллекции.");
             System.out.println("    Указанный список: " + specifiedList);
-            hashTable.clear();
             System.out.println("    Наша таблица: " + hashTable);
             System.out.println("    Итого: " + hashTable.removeAll(specifiedList) + ", " + hashTable);
             System.out.println("    Размер таблицы: " + hashTable.size());
@@ -103,7 +102,6 @@ public class CustomHashTableMain {
             // 13. Удаляем все элементы из таблицы.
             System.out.println("13. Удаляем все элементы из таблицы.");
             System.out.println("    Наш список: " + hashTable);
-            hashTable.clear();
             System.out.println("    Итого: " + hashTable);
             System.out.println();
 
