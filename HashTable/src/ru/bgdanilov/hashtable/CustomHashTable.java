@@ -36,11 +36,7 @@ public class CustomHashTable<E> implements Collection<E> {
     public boolean contains(Object object) {
         int index = getIndex(object);
 
-        if (lists[index] == null) {
-            return false;
-        }
-
-        return lists[index].contains(object);
+        return lists[index] != null;
     }
 
     // 4. Итератор.
@@ -106,9 +102,10 @@ public class CustomHashTable<E> implements Collection<E> {
     // 8. Удаление элемента из таблицы.
     @Override
     public boolean remove(Object object) {
-        boolean isChanged = lists[getIndex(object)].remove(object);
+        boolean isChanged = false;
 
-        if (isChanged) {
+        if (contains(object)) {
+            isChanged = lists[getIndex(object)].remove(object);
             modCount++;
             size--;
         }
@@ -136,18 +133,25 @@ public class CustomHashTable<E> implements Collection<E> {
     public boolean addAll(Collection<? extends E> collection) {
         checkCollection(collection);
 
-        boolean isChanged = false;
-
-        for (E item : collection) {
-            isChanged = add(item);
+        if (collection.isEmpty()) {
+            return false;
         }
 
-        return isChanged;
+        for (E item : collection) {
+            add(item);
+        }
+
+        return true;
     }
 
     // 11. Удаляет из таблицы все вхождения элементов, содержащиеся в указанной коллекции.
     @Override
     public boolean removeAll(Collection<?> collection) {
+        // Если сама таблица пустая.
+        if (this.isEmpty()) {
+            return false;
+        }
+
         checkCollection(collection);
 
         if (collection.isEmpty()) {
@@ -156,20 +160,18 @@ public class CustomHashTable<E> implements Collection<E> {
 
         // Значит делаем removeAll() для каждого списка в таблице.
         boolean isChanged = false;
-        int initialListSize;
 
         for (ArrayList<E> list : lists) {
             if (list != null) {
-                initialListSize = list.size();
+                int initialListSize = list.size();
 
                 if (list.removeAll(collection)) {
                     isChanged = true;
-                    size = size - (initialListSize - list.size());
+                    size -= initialListSize - list.size();
+                    modCount++;
                 }
             }
         }
-
-        modCount++;
 
         return isChanged;
     }
@@ -178,6 +180,10 @@ public class CustomHashTable<E> implements Collection<E> {
     // Другими словами, удаляет из таблицы все элементы, которые не содержатся в переданной коллекции.
     @Override
     public boolean retainAll(Collection<?> collection) {
+        if (this.isEmpty()) {
+            return false;
+        }
+
         checkCollection(collection);
 
         if (collection.isEmpty()) {
@@ -188,20 +194,18 @@ public class CustomHashTable<E> implements Collection<E> {
 
         // Делаем retainAll() для каждого списка в таблице.
         boolean isChanged = false;
-        int initialListSize;
 
         for (ArrayList<E> list : lists) {
             if (list != null) {
-                initialListSize = list.size();
+                int initialListSize = list.size();
 
                 if (list.retainAll(collection)) {
                     isChanged = true;
-                    size = size - (initialListSize - list.size());
+                    size -= initialListSize - list.size();
+                    modCount++;
                 }
             }
         }
-
-        modCount++;
 
         return isChanged;
     }
@@ -219,15 +223,14 @@ public class CustomHashTable<E> implements Collection<E> {
 
     // Вложенный класс для итератора.
     private class CustomHashTableIterator implements Iterator<E> {
-        private int itemsCounter; // накопительный счетчик обработанных элементов.
+        private int passedItemsAmount; // количество пройденных элементов.
         private int arrayIndex; // текущий индекс списков в таблице.
         private int listIndex = -1; // текущий индекс элементов в списке.
         private final int initialModCount = modCount; // исходное количество изменений.
 
-
         @Override
         public boolean hasNext() {
-            return itemsCounter < size; // количество обработанных элементов не достигло их общего количества.
+            return passedItemsAmount < size; // количество обработанных элементов не достигло их общего количества.
         }
 
         @Override
@@ -253,7 +256,7 @@ public class CustomHashTable<E> implements Collection<E> {
                 listIndex = -1;
             }
 
-            itemsCounter++;
+            passedItemsAmount++;
             return lists[arrayIndex].get(listIndex);
         }
     }
@@ -285,7 +288,7 @@ public class CustomHashTable<E> implements Collection<E> {
         }
 
         sb.setLength(sb.length() - 2);
-        sb.append("]");
+        sb.append(']');
 
         return sb.toString();
     }
