@@ -23,13 +23,13 @@ public class CustomHashTableMain {
             System.out.println();
 
             // 7. Добавить объект в таблицу.
-            System.out.println("7. Добавить объекты \"One\" и \"Two\" в таблицу.");
+            System.out.println("7. Добавить объекты \"One\", \"Two\", null, null в таблицу.");
             hashTable.add("One");
             hashTable.add("Two");
             hashTable.add(null);
             hashTable.add(null);
             System.out.println("   Итого: " + hashTable);
-            System.out.println("   - есть ли элемент null в таблице? " + hashTable.contains("hfjsdhfgjs"));
+            System.out.println("   - есть ли элемент null в таблице? " + hashTable.contains(null));
             System.out.println();
 
             // 5. Создать массив из значений таблицы.
@@ -102,7 +102,6 @@ public class CustomHashTableMain {
             // 13. Удаляем все элементы из таблицы.
             System.out.println("13. Удаляем все элементы из таблицы.");
             System.out.println("    Наш список: " + hashTable);
-            hashTable.clear();
             System.out.println("    Итого: " + hashTable);
             System.out.println();
 
