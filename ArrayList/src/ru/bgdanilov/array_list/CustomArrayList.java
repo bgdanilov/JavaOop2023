@@ -245,13 +245,14 @@ public class CustomArrayList<E> implements List<E> {
         int maxIndex = size - 1;
 
         checkIndex(index, maxIndex);
+
         E removedItem = items[index];
 
         if (index < maxIndex) {
             System.arraycopy(items, index + 1, items, index, maxIndex - index);
         }
 
-        items[size - 1] = null;
+        items[maxIndex] = null;
         size--;
         modCount++;
 
