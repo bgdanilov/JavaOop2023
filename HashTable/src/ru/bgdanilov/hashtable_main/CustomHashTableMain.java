@@ -29,7 +29,7 @@ public class CustomHashTableMain {
             hashTable.add(null);
             hashTable.add(null);
             System.out.println("   Итого: " + hashTable);
-            System.out.println("   - есть ли элемент null в таблице? " + hashTable.contains("hfjsdhfgjs"));
+            System.out.println("   - есть ли элемент null в таблице? " + hashTable.contains(null));
             System.out.println();
 
             // 5. Создать массив из значений таблицы.
@@ -74,6 +74,7 @@ public class CustomHashTableMain {
             // 11. Удаляет из таблицы все элементы, содержащиеся в указанной коллекции.
             System.out.println("11. Удаляет из этого списка все его элементы, содержащиеся в указанной коллекции.");
             System.out.println("    Указанный список: " + specifiedList);
+            hashTable.clear();
             System.out.println("    Наша таблица: " + hashTable);
             System.out.println("    Итого: " + hashTable.removeAll(specifiedList) + ", " + hashTable);
             System.out.println("    Размер таблицы: " + hashTable.size());
