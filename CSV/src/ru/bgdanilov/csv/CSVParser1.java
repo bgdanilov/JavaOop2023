@@ -4,14 +4,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.io.File;
 
-public class Parser {
+public class CSVParser1 {
     private static final String UTF8_BOM = "\uFEFF";
 
     private final String csvFilename;
     private final char csvSeparator;
     private final String lineSeparator;
 
-    public Parser(String sourceFilename, Character cvsSeparator, String lineSeparator) {
+    public CSVParser1(String sourceFilename, Character cvsSeparator, String lineSeparator) {
         this.csvFilename = sourceFilename;
         this.csvSeparator = cvsSeparator;
         this.lineSeparator = lineSeparator;
