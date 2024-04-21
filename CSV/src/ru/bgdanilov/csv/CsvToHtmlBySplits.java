@@ -1,17 +1,21 @@
+// Версия 1. Оставлю данный довольно хитрый алгоритм для истории.
+// Можно не проверять.
+// К тому же тут ест ошибки, например, не учтен вариант нахождения разделителя в тексте
+// - будет сделано ненужное разбитие.
 package ru.bgdanilov.csv;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.io.File;
 
-public class CSVParser1 {
+public class CsvToHtmlBySplits {
     private static final String UTF8_BOM = "\uFEFF";
 
     private final String csvFilename;
     private final char csvSeparator;
     private final String lineSeparator;
 
-    public CSVParser1(String sourceFilename, Character cvsSeparator, String lineSeparator) {
+    public CsvToHtmlBySplits(String sourceFilename, Character cvsSeparator, String lineSeparator) {
         this.csvFilename = sourceFilename;
         this.csvSeparator = cvsSeparator;
         this.lineSeparator = lineSeparator;
