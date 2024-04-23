@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public enum DifficultyLevel {
-    EASY("Легкий", 10, 10, 1, new String[4]),
+    EASY("Легкий", 10, 10, 10, new String[4]),
     MEDIUM("Средний", 15, 20, 30, new String[4]),
     HARD("Тяжелый", 20, 30, 60, new String[4]);
 
