@@ -218,9 +218,15 @@ public class CustomHashTable<E> implements Collection<E> {
     public void clear() {
         if (!isEmpty()) {
             // Зря что-ли итератор делали.
+            for (Object item : this) {
+                remove(item);
+            }
+            /*
+            А может лучше так?
             for (ArrayList<E> list : lists) {
                 removeAll(list);
             }
+            */
 
             modCount++;
             size = 0;
@@ -229,14 +235,14 @@ public class CustomHashTable<E> implements Collection<E> {
 
     // Вложенный класс для итератора.
     private class CustomHashTableIterator implements Iterator<E> {
-        private int visitedItemsAmount; // количество пройденных элементов.
-        private int arrayIndex; // текущий индекс списков в хеш-таблице.
-        private int listIndex = -1; // текущий индекс элементов в списке.
-        private final int initialModCount = modCount; // исходное количество изменений.
+        private int visitedItemsAmount; // количество пройденных элементов;
+        private int arrayIndex; // текущий индекс списков в хеш-таблице;
+        private int listIndex = -1; // текущий индекс элементов в списке;
+        private final int initialModCount = modCount; // исходное количество изменений;
 
         @Override
         public boolean hasNext() {
-            return visitedItemsAmount < size; // количество обработанных элементов не достигло их общего количества.
+            return visitedItemsAmount < size; // количество обработанных элементов не достигло их общего количества;
         }
 
         @Override
