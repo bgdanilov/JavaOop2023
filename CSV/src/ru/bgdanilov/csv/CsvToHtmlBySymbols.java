@@ -4,22 +4,21 @@ package ru.bgdanilov.csv;
 import java.io.*;
 
 public class CsvToHtmlBySymbols {
-    private final char csvSeparator;
+    private final Settings settings;
 
-    public CsvToHtmlBySymbols(char csvSeparator) {
-        this.csvSeparator = csvSeparator;
+    public CsvToHtmlBySymbols(Settings settings) {
+        this.settings = settings;
     }
 
-    public void parseCsvToHtml(String csvFileName, String htmlFileName) throws IOException {
-        File csvFile = new File(csvFileName);
-        File htmlFile = new File(htmlFileName);
+    public void convertCsvToHtml() throws IOException {
+        char csvSeparator = settings.getUserSeparator();
 
-        deleteHtmlFileExists(htmlFile);
+        File csvFile = new File(settings.getUtilityHome() + settings.getCsvFileName());
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(csvFile));
 
-        try (
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(csvFile));
-                PrintWriter printWriter = new PrintWriter(htmlFile)
-        ) {
+        File htmlFile = getHtmlFile(settings.composeHtmlFilePath() + settings.composeHtmlFileName());
+
+        try (PrintWriter printWriter = new PrintWriter(htmlFile)) {
             printWriter.print("""
                     <!doctype html>
                     <html lang="ru">
@@ -119,14 +118,18 @@ public class CsvToHtmlBySymbols {
         }
     }
 
-    private static void deleteHtmlFileExists(File htmlFileName) {
-        if (htmlFileName.exists()) {
-            if (htmlFileName.delete()) {
-                System.out.println("Старый файл HTML-файл удален.");
+    private File getHtmlFile(String htmlFileName) {
+        File htmlFile = new File(htmlFileName);
+
+        if (htmlFile.exists()) {
+            if (htmlFile.delete()) {
+                System.out.println("Старый HTML-файл: " + htmlFileName + " удален.");
             }
-        } else {
-            System.out.println("Создан файл " + htmlFileName);
         }
+
+        System.out.println("Новый HTML-файл: " + htmlFileName + " создан.");
+
+        return htmlFile;
     }
 
     private static String replaceSpecialSymbols(char tdTextSymbol) {
