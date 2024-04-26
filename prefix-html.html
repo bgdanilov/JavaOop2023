@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <link rel="alternate" hreflang="en" href="http://en.example.com/" />
+    <meta charset="utf-8">
+    <title>CSV to HTML</title>
+    <style>
+        body {margin: 0px; padding: 30px}
+        table, td, tr {border: 1px solid black; border-collapse: collapse}
+    </style>
+</head>
+
+<body>
+    <table>
+       <tr>
+         <td>﻿следующая &lt;ячейка&qt; содержит перевод строки</td>
+         <td>до перевода строки<br />после "перевода" строки</td>
+         <td>а это третий столбец</td>
+       </tr>
+       <tr>
+         <td>следующая ячейка содержит кавычку и запятую</td>
+         <td>вот они: ",</td>
+         <td></td>
+       </tr>
+       <tr>
+         <td>в этой строке вторая и третья ячейка содержат по одной кавычке</td>
+         <td>"</td>
+         <td>"</td>
+       </tr>
+    </table>
+</body>
+</html>
