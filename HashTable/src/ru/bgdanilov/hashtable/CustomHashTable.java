@@ -122,7 +122,7 @@ public class CustomHashTable<E> implements Collection<E> {
     // Возвращает true, если все элементы переданной коллекции содержатся в рассматриваемой хеш-таблице.
     @Override
     public boolean containsAll(Collection<?> collection) {
-        checkCollectionNullPointerException(collection);
+        checkNullCollection(collection);
 
         for (Object item : collection) {
             if (!contains(item)) {
@@ -136,7 +136,7 @@ public class CustomHashTable<E> implements Collection<E> {
     // 10. Добавляет все элементы из переданной коллекции в хеш-таблицу.
     @Override
     public boolean addAll(Collection<? extends E> collection) {
-        checkCollectionNullPointerException(collection);
+        checkNullCollection(collection);
 
         if (collection.isEmpty()) {
             return false;
@@ -152,7 +152,7 @@ public class CustomHashTable<E> implements Collection<E> {
     // 11. Удаляет из хеш-таблицы все вхождения элементов, содержащиеся в указанной коллекции.
     @Override
     public boolean removeAll(Collection<?> collection) {
-        checkCollectionNullPointerException(collection);
+        checkNullCollection(collection);
 
         if (isEmpty() || collection.isEmpty()) {
             return false;
@@ -183,7 +183,7 @@ public class CustomHashTable<E> implements Collection<E> {
     // Другими словами, удаляет из хеш-таблицы все элементы, которые не содержатся в переданной коллекции.
     @Override
     public boolean retainAll(Collection<?> collection) {
-        checkCollectionNullPointerException(collection);
+        checkNullCollection(collection);
 
         if (collection.isEmpty()) {
             int initialModCountValue = modCount;
@@ -206,9 +206,12 @@ public class CustomHashTable<E> implements Collection<E> {
                 if (list.retainAll(collection)) {
                     isChanged = true;
                     size -= initialListSize - list.size();
-                    modCount++;
                 }
             }
+        }
+
+        if (isChanged) {
+            modCount++;
         }
 
         return isChanged;
@@ -300,7 +303,7 @@ public class CustomHashTable<E> implements Collection<E> {
         return sb.toString();
     }
 
-    private static void checkCollectionNullPointerException(Collection<?> collection) {
+    private static void checkNullCollection(Collection<?> collection) {
         if (collection == null) {
             throw new NullPointerException("Переданная коллекция равна null.");
         }
