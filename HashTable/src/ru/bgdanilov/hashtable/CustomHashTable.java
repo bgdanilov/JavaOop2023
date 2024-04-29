@@ -15,6 +15,10 @@ public class CustomHashTable<E> implements Collection<E> {
     }
 
     public CustomHashTable(int capacity) {
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Указанная вместимость: (" + capacity + "), нельзя создать хеш-таблицу с нулевой или отрицательной вместимостью.");
+        }
+
         //noinspection unchecked
         lists = new ArrayList[capacity];
     }
@@ -36,7 +40,7 @@ public class CustomHashTable<E> implements Collection<E> {
     public boolean contains(Object object) {
         int index = getIndex(object);
 
-        return !isEmpty() && lists[index] != null && lists[index].contains(object);
+        return lists[index] != null && lists[index].contains(object);
     }
 
     // 4. Итератор.
@@ -49,6 +53,7 @@ public class CustomHashTable<E> implements Collection<E> {
     @Override
     public Object[] toArray() {
         Object[] array = new Object[size]; // массив любых объектов.
+
         // Чтобы сработал наш Итератор, нужно применить foreach.
         int i = 0;
 
@@ -68,18 +73,16 @@ public class CustomHashTable<E> implements Collection<E> {
     @Override
     public <T> T[] toArray(T[] array) {
         // Получается, если переданный массив короче или равен по длине, то возвращаем просто хеш-таблицу как массив.
-        if (size >= array.length) {
-            //noinspection unchecked
-            return (T[]) toArray();
+
+        //noinspection unchecked
+        T[] outputArray = (T[]) toArray(); // можно, конечно, приведение в начале сделать.
+
+        if (array.length <= size) {
+            return outputArray;
         }
 
         //noinspection SuspiciousSystemArraycopy
         System.arraycopy(toArray(), 0, array, 0, size);
-
-        if (size < array.length) {
-            array[size] = null;
-        }
-
         return array;
     }
 
@@ -103,11 +106,13 @@ public class CustomHashTable<E> implements Collection<E> {
     // 8. Удаление элемента из хеш-таблицы.
     @Override
     public boolean remove(Object object) {
-        if (!isEmpty() && lists[getIndex(object)] != null) {
+        int index = getIndex(object);
+
+        if (lists[index] != null) {
             modCount++;
             size--;
 
-            return lists[getIndex(object)].remove(object);
+            return lists[index].remove(object);
         }
 
         return false;
@@ -149,12 +154,7 @@ public class CustomHashTable<E> implements Collection<E> {
     public boolean removeAll(Collection<?> collection) {
         checkCollectionNullPointerException(collection);
 
-        if (collection.isEmpty()) {
-            return false;
-        }
-
-        // Если сама хеш-таблица пустая.
-        if (isEmpty()) {
+        if (isEmpty() || collection.isEmpty()) {
             return false;
         }
 
@@ -186,9 +186,10 @@ public class CustomHashTable<E> implements Collection<E> {
         checkCollectionNullPointerException(collection);
 
         if (collection.isEmpty()) {
+            int initialModCountValue = modCount;
             clear();
 
-            return true;
+            return modCount != initialModCountValue;
         }
 
         if (isEmpty()) {
@@ -217,16 +218,10 @@ public class CustomHashTable<E> implements Collection<E> {
     @Override
     public void clear() {
         if (!isEmpty()) {
-            // Зря что-ли итератор делали.
-            for (Object item : this) {
-                remove(item);
+            // Тогда так, без итератора.
+            for (int i = 0; i < size; i++) {
+                lists[i].clear();
             }
-            /*
-            А может лучше так?
-            for (ArrayList<E> list : lists) {
-                removeAll(list);
-            }
-            */
 
             modCount++;
             size = 0;
@@ -252,7 +247,7 @@ public class CustomHashTable<E> implements Collection<E> {
             }
 
             if (initialModCount != modCount) {
-                throw new ConcurrentModificationException("Зафиксированы изменения Хеш-таблицы в процессе перебора элементов.");
+                throw new ConcurrentModificationException("Зафиксированы изменения хеш-таблицы в процессе перебора элементов.");
             }
 
             for (; arrayIndex < lists.length; arrayIndex++) {
@@ -291,12 +286,12 @@ public class CustomHashTable<E> implements Collection<E> {
         StringBuilder sb = new StringBuilder();
         sb.append('[');
 
-        int index = 0;
+        int i = 0;
 
         for (ArrayList<E> list : lists) {
-            sb.append(index).append('-').append(list).append(", ");
+            sb.append(i).append('-').append(list).append(", ");
 
-            index++;
+            i++;
         }
 
         sb.setLength(sb.length() - 2);
