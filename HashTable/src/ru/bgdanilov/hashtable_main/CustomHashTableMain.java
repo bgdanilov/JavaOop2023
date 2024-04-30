@@ -40,13 +40,11 @@ public class CustomHashTableMain {
             String[] destinationArray = {"4", "5", "6", "7"};
             System.out.println("   Указанный массив: " + Arrays.toString(destinationArray));
             System.out.println("   Итого: " + Arrays.toString(hashTable.toArray(destinationArray)));
-            System.out.println(hashTable.size());
             System.out.println();
 
             // 8. Удаление элемента из хеш-таблицы.
             System.out.println("8. Удаляем объект null из хеш-таблицы.");
             System.out.println("   Итого: " + hashTable.remove(null) + ", " + hashTable);
-            System.out.println(hashTable.size());
             System.out.println();
 
             // 9. Содержатся ли все элементы указанной коллекции в нашей хеш-таблице?
@@ -95,6 +93,7 @@ public class CustomHashTableMain {
             specifiedList.add("Boris");
 
             System.out.println("    Указанный список: " + specifiedList);
+            hashTable.clear();
             System.out.println("    Наша хеш-таблица: " + hashTable);
             System.out.println("    Итого: " + hashTable.retainAll(specifiedList) + ", " + hashTable);
             System.out.println("    Размер хеш-таблицы: " + hashTable.size());

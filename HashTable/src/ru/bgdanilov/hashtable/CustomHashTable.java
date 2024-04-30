@@ -16,7 +16,7 @@ public class CustomHashTable<E> implements Collection<E> {
 
     public CustomHashTable(int capacity) {
         if (capacity <= 0) {
-            throw new IllegalArgumentException("Указанная вместимость: (" + capacity + "), нельзя создать хеш-таблицу с нулевой или отрицательной вместимостью.");
+            throw new IllegalArgumentException("Указана вместимость: (" + capacity + "). Нельзя создать хеш-таблицу с нулевой или отрицательной вместимостью.");
         }
 
         //noinspection unchecked
@@ -185,11 +185,10 @@ public class CustomHashTable<E> implements Collection<E> {
     public boolean retainAll(Collection<?> collection) {
         checkNullCollection(collection);
 
-        if (collection.isEmpty()) {
-            int initialModCountValue = modCount;
+        if (collection.isEmpty() && !isEmpty()) {
             clear();
 
-            return modCount != initialModCountValue;
+            return true;
         }
 
         if (isEmpty()) {
