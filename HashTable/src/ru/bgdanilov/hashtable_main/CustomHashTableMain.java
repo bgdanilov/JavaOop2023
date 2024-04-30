@@ -2,9 +2,7 @@ package ru.bgdanilov.hashtable_main;
 
 import ru.bgdanilov.hashtable.CustomHashTable;
 
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 
 public class CustomHashTableMain {
     public static void main(String[] args) {
@@ -39,14 +37,14 @@ public class CustomHashTableMain {
 
             // 6. Возвращает из значений хеш-таблицы массив в переданный массив.
             System.out.println("6. Возвращает из значений хеш-таблицы массив в переданный массив.");
-            String[] destinationArray = {"4", "5", "6", "7", "8"};
+            String[] destinationArray = {"4", "5", "6", "7"};
             System.out.println("   Указанный массив: " + Arrays.toString(destinationArray));
             System.out.println("   Итого: " + Arrays.toString(hashTable.toArray(destinationArray)));
             System.out.println();
 
             // 8. Удаление элемента из хеш-таблицы.
             System.out.println("8. Удаляем объект null из хеш-таблицы.");
-            System.out.println("   Итого: " + hashTable.remove("eee") + ", " + hashTable);
+            System.out.println("   Итого: " + hashTable.remove(null) + ", " + hashTable);
             System.out.println();
 
             // 9. Содержатся ли все элементы указанной коллекции в нашей хеш-таблице?
@@ -95,6 +93,7 @@ public class CustomHashTableMain {
             specifiedList.add("Boris");
 
             System.out.println("    Указанный список: " + specifiedList);
+            hashTable.clear();
             System.out.println("    Наша хеш-таблица: " + hashTable);
             System.out.println("    Итого: " + hashTable.retainAll(specifiedList) + ", " + hashTable);
             System.out.println("    Размер хеш-таблицы: " + hashTable.size());
@@ -111,7 +110,7 @@ public class CustomHashTableMain {
             CustomHashTable<String> defaultHashTable = new CustomHashTable<>();
             defaultHashTable.addAll(specifiedList);
             System.out.println("Создадим и выведем хеш-таблицу по-умолчанию: " + defaultHashTable);
-        } catch (NullPointerException e) {
+        } catch (ConcurrentModificationException | NoSuchElementException | NullPointerException | IllegalArgumentException e) {
             System.out.println("Ошибка! " + e.getMessage());
         }
     }
