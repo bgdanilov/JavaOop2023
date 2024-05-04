@@ -49,6 +49,7 @@ public class CsvToHtmlBySymbols {
                 if (isNewTableRow) {
                     printWriter.println("       <tr>");
                     printWriter.print("         <td>");
+                    isNewTableRow = false; // обнуляем режим новой строки;
                 }
 
                 for (int i = 0; i < line.length(); i++) {
