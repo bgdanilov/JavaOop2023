@@ -16,7 +16,7 @@ public class CustomHashTable<E> implements Collection<E> {
 
     public CustomHashTable(int capacity) {
         if (capacity <= 0) {
-            throw new IllegalArgumentException("Указана вместимость: (" + capacity + "). Нельзя создать хеш-таблицу с нулевой или отрицательной вместимостью.");
+            throw new IllegalArgumentException("Передана вместимость: (" + capacity + "). Нельзя создать хеш-таблицу с нулевой или отрицательной вместимостью.");
         }
 
         //noinspection unchecked
@@ -72,17 +72,22 @@ public class CustomHashTable<E> implements Collection<E> {
     // Если переданный массив короче размера хеш-таблицы, создается массив с длиной, равной размеру хеш-таблицы.
     @Override
     public <T> T[] toArray(T[] array) {
-        // Получается, если переданный массив короче или равен по длине, то возвращаем просто хеш-таблицу как массив.
+        Object[] hashTableArray = toArray();
 
-        //noinspection unchecked
-        T[] outputArray = (T[]) toArray(); // можно, конечно, приведение в начале сделать.
-
-        if (array.length <= size) {
-            return outputArray;
+        if (size >= array.length) {
+            //noinspection unchecked
+            return Arrays.copyOf(hashTableArray, size, (Class<? extends T[]>) array.getClass());
         }
 
+        // (1) Копируем Objects[] toArray в T[] array - результат T[] array.
         //noinspection SuspiciousSystemArraycopy
         System.arraycopy(toArray(), 0, array, 0, size);
+
+        if (size < array.length) {
+            array[size] = null;
+        }
+
+        //System.out.println(array.getClass()); // проверим (1);
         return array;
     }
 
@@ -108,11 +113,11 @@ public class CustomHashTable<E> implements Collection<E> {
     public boolean remove(Object object) {
         int index = getIndex(object);
 
-        if (lists[index] != null) {
+        if (lists[index] != null && lists[index].remove(object)) {
             modCount++;
             size--;
 
-            return lists[index].remove(object);
+            return true;
         }
 
         return false;
@@ -122,7 +127,7 @@ public class CustomHashTable<E> implements Collection<E> {
     // Возвращает true, если все элементы переданной коллекции содержатся в рассматриваемой хеш-таблице.
     @Override
     public boolean containsAll(Collection<?> collection) {
-        checkNullCollection(collection);
+        checkCollectionIsNull(collection);
 
         for (Object item : collection) {
             if (!contains(item)) {
@@ -136,7 +141,7 @@ public class CustomHashTable<E> implements Collection<E> {
     // 10. Добавляет все элементы из переданной коллекции в хеш-таблицу.
     @Override
     public boolean addAll(Collection<? extends E> collection) {
-        checkNullCollection(collection);
+        checkCollectionIsNull(collection);
 
         if (collection.isEmpty()) {
             return false;
@@ -152,7 +157,7 @@ public class CustomHashTable<E> implements Collection<E> {
     // 11. Удаляет из хеш-таблицы все вхождения элементов, содержащиеся в указанной коллекции.
     @Override
     public boolean removeAll(Collection<?> collection) {
-        checkNullCollection(collection);
+        checkCollectionIsNull(collection);
 
         if (isEmpty() || collection.isEmpty()) {
             return false;
@@ -183,16 +188,13 @@ public class CustomHashTable<E> implements Collection<E> {
     // Другими словами, удаляет из хеш-таблицы все элементы, которые не содержатся в переданной коллекции.
     @Override
     public boolean retainAll(Collection<?> collection) {
-        checkNullCollection(collection);
-
-        if (collection.isEmpty() && !isEmpty()) {
-            clear();
-
-            return true;
-        }
-
         if (isEmpty()) {
             return false;
+        }
+
+        if (collection.isEmpty()) {
+            clear();
+            return true;
         }
 
         // Делаем retainAll() для каждого списка в хеш-таблице.
@@ -219,15 +221,19 @@ public class CustomHashTable<E> implements Collection<E> {
     // 13. Удаляем все элементы из хеш-таблицы.
     @Override
     public void clear() {
-        if (!isEmpty()) {
-            // Тогда так, без итератора.
-            for (int i = 0; i < size; i++) {
-                lists[i].clear();
+        if (isEmpty()) {
+            return;
+        }
+
+        for (ArrayList<E> list : lists) { // заменил на длину списка.
+            if (list != null) { // добавил еще пропуск null чтобы код не падал.
+                list.clear();
             }
 
-            modCount++;
-            size = 0;
         }
+
+        modCount++;
+        size = 0;
     }
 
     // Вложенный класс для итератора.
@@ -302,9 +308,17 @@ public class CustomHashTable<E> implements Collection<E> {
         return sb.toString();
     }
 
-    private static void checkNullCollection(Collection<?> collection) {
+    private static void checkCollectionIsNull(Collection<?> collection) {
         if (collection == null) {
             throw new NullPointerException("Переданная коллекция равна null.");
         }
     }
 }
+
+/* Описание класса.
+ 1. Справка по Arrays.copyOf(U[] original, int newLength, Class<? extends T[]> newType):
+    Копирует указанный массив (original),
+    усекая его или дополняя нулями (при необходимости),
+    чтобы копия имела указанную длину (newLength).
+    Результирующий массив будет принадлежать классу (newType).
+ */
