@@ -7,7 +7,7 @@ import java.util.*;
 public class CustomHashTableMain {
     public static void main(String[] args) {
         try {
-            CustomHashTable<String> hashTable = new CustomHashTable<>(4);
+            CustomHashTable<String> hashTable = new CustomHashTable<>(6);
 
             // 1. Получим размер хеш-таблицы.
             System.out.println("1. Получим размер хеш-таблицы: " + hashTable.size());
@@ -38,12 +38,14 @@ public class CustomHashTableMain {
             // 6. Возвращает из значений хеш-таблицы массив в переданный массив.
             System.out.println("6. Возвращает из значений хеш-таблицы массив в переданный массив.");
             String[] destinationArray = {"4", "5", "6", "7"};
-            System.out.println("   Указанный массив: " + Arrays.toString(destinationArray));
+            System.out.println("   Наша хеш-таблица: " + hashTable);
+            System.out.println("   Переданный массив: " + Arrays.toString(destinationArray));
             System.out.println("   Итого: " + Arrays.toString(hashTable.toArray(destinationArray)));
             System.out.println();
 
             // 8. Удаление элемента из хеш-таблицы.
             System.out.println("8. Удаляем объект null из хеш-таблицы.");
+            System.out.println("   Наша хеш-таблица: " + hashTable);
             System.out.println("   Итого: " + hashTable.remove(null) + ", " + hashTable);
             System.out.println();
 
@@ -93,7 +95,7 @@ public class CustomHashTableMain {
             specifiedList.add("Boris");
 
             System.out.println("    Указанный список: " + specifiedList);
-            hashTable.clear();
+            //System.out.println(hashTable.size());
             System.out.println("    Наша хеш-таблица: " + hashTable);
             System.out.println("    Итого: " + hashTable.retainAll(specifiedList) + ", " + hashTable);
             System.out.println("    Размер хеш-таблицы: " + hashTable.size());
@@ -101,6 +103,8 @@ public class CustomHashTableMain {
 
             // 13. Удаляем все элементы из хеш-таблицы.
             System.out.println("13. Удаляем все элементы из хеш-таблицы.");
+            hashTable.add("One");
+            hashTable.add("Two");
             System.out.println("    Наш список: " + hashTable);
             hashTable.clear();
             System.out.println("    Итого: " + hashTable);

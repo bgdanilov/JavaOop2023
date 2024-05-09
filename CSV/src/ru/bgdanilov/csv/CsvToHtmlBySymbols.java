@@ -6,19 +6,31 @@ import java.io.*;
 public class CsvToHtmlBySymbols {
     private final Settings settings;
 
+    private String csvFilePath;
+
+    private String htmlFilePath;
+
     public CsvToHtmlBySymbols(Settings settings) {
         this.settings = settings;
     }
 
+    public CsvToHtmlBySymbols(Settings settings, String csvFilePath, String htmlFilePath) {
+        this.settings = settings;
+        this.csvFilePath = csvFilePath;
+        this.htmlFilePath = htmlFilePath;
+    }
+
+    public void convertCsvToHtml(String csvFilePath, String htmlFilePath) {
+
+    }
+
     public void convertCsvToHtml() throws IOException {
+        File csvFile = new File(settings.getUtilityHome() + settings.getCsvFileName());
+        File htmlFile = getHtmlFile(settings.composeHtmlFilePath() + settings.composeHtmlFileName());
         char csvSeparator = settings.getUserSeparator();
 
-        File csvFile = new File(settings.getUtilityHome() + settings.getCsvFileName());
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(csvFile));
-
-        File htmlFile = getHtmlFile(settings.composeHtmlFilePath() + settings.composeHtmlFileName());
-
-        try (PrintWriter printWriter = new PrintWriter(htmlFile)) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(csvFile));
+             PrintWriter printWriter = new PrintWriter(htmlFile)) {
             printWriter.print("""
                     <!doctype html>
                     <html lang="ru">
@@ -37,11 +49,8 @@ public class CsvToHtmlBySymbols {
                         <table>
                     """);
 
-            printWriter.println("       <tr>");
-            printWriter.print("         <td>");
-
             boolean isComplicatedTextMode = false;
-            boolean isNewTableRow = false;
+            boolean isNewTableRow = true;
             int quotesAmount = 0;
             String line;
 

@@ -135,7 +135,7 @@ public class Settings {
     }
 
     public String composeHtmlFileName() {
-        String htmlFileName = "html.html";
+        String htmlFileName = csvFileName.replace(".csv", ".html");
 
         if (htmlFileNamePrefix != null) {
             return htmlFileNamePrefix + htmlFileName;
