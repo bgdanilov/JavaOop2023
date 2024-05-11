@@ -3,49 +3,50 @@ package ru.bgdanilov.csv;
 import java.util.*;
 
 public class Settings {
-    private final String utilityHome = System.getProperty("user.dir"); // путь, где лежит утилита; там лежит исходный файл csv;
-    private final String userHome = System.getProperty("user.home"); // домашний каталог пользователя;
-    private String csvFileName;
+    private final String[] args;
+    private final ArrayList<String> warningsList = new ArrayList<>();
+    private String csvFileName; // имя файла с путем или без него;
+    private String htmlFileName; // имя файла с путем или без него;
     private String htmlFileNamePrefix; // -p указание префикса имени выходного файла;
-    private String htmlFileUserPath; // -o указание пути для выходного файла, относительно userHome;
-    private char userSeparator = ','; // -s символ-разделитель;
-    private final Messages messages; // класс-аккумулятор сообщений процесса работы утилиты;
+    private char separator = ','; // -s символ-разделитель;
+    private static final String HELP_MESSAGE = """
+            Справка.
+            ----------
+            Исходный csv-файл должен находиться в папке с утилитой.
+            Необходимо указать имя csv-файла в строке вызова утилиты.
+            Например: CsvToHtml.jar my_csv_file.csv
+            ---
+            Результирующий html-файл по-умолчанию будет иметь имя html.html
+            и будет создан также в папке с утилитой.
+            Если файл с таким именем уже существует, он будет удален и создан новый.
+            ------
+            Дополнительные команды утилиты:
+            ---------
+            Пример вызова утилиты:
+            CsvToHtml.jar my_csv_file.csv -s ; p prefix- o /Documents/Files
+            Порядок следования команд значения не имеет.
+            ---
+            [-s <значение>] - указание разделителя. <,> или <;>
+                              по-умолчанию <,>
+            [-p <значение>] - указание префикса html-файла.
+            [-o <значение>] - указание пути для создания html-файла;
+                              путь указывается относительно домашней папки пользователя;
+                              указанный путь должен существовать.
+            [-help] - вызов справки об утилите.
+            ------""";
 
-    public Settings(Messages messages) {
-        this.messages = messages;
+    public Settings() {
+        this.args = null;
     }
 
-    public void loadSettings(String[] args) {
-        String helpMessage = """
-                Справка.
-                ----------
-                Исходный csv-файл должен находиться в папке с утилитой.
-                Необходимо указать имя csv-файла в строке вызова утилиты.
-                Например: CsvToHtml.jar my_csv_file.csv
-                ---
-                Результирующий html-файл по-умолчанию будет иметь имя html.html
-                и будет создан также в папке с утилитой.
-                Если файл с таким именем уже существует, он будет удален и создан новый.
-                ------
-                Дополнительные команды утилиты:
-                ---------
-                Пример вызова утилиты:
-                CsvToHtml.jar my_csv_file.csv -s ; p prefix- o /Documents/Files
-                Порядок следования команд значения не имеет.
-                ---
-                [-s <значение>] - указание разделителя. <,> или <;>
-                                  по-умолчанию <,>
-                [-p <значение>] - указание префикса html-файла.
-                [-o <значение>] - указание пути для создания html-файла;
-                                  путь указывается относительно домашней папки пользователя;
-                                  указанный путь должен существовать.
-                [-help] - вызов справки об утилите.
-                ------""";
+    public Settings(String[] args) {
+        this.args = args;
+        loadSettings();
+    }
 
-        List<String> settings = Arrays.asList(args); // список аргументов;
-
-        if (settings.size() == 0) {                  // аргументы не переданы;
-            messages.addMessage(helpMessage);
+    public void loadSettings() {
+        if (args.length == 0) { // аргументы не переданы;
+            warningsList.add(HELP_MESSAGE);
             return;
         }
 
@@ -53,67 +54,65 @@ public class Settings {
         ArrayList<String> settingsDuplicates = getKeysDuplicates(args);
 
         if (settingsDuplicates.size() != 0) {
-            messages.addMessage(settingsDuplicates + ": команды повторяются.");
+            warningsList.add(settingsDuplicates + ": команды повторяются.");
             return;
         }
 
-        // Имя csv-файла всегда передается с нулевым индексом аргумента.
-        int startIndex = 0;
+        // Считываем имена файлов (два подряд максимум) пока не начнутся ключи.
+        int fileNamesAmount = 0;
 
-        if (args[startIndex].charAt(0) == '-') {
-            if (args[startIndex].equals("-help")) {
-                messages.addMessage(helpMessage);
-                return;
-            }
-
-            messages.addMessage("Не указано имя CSV-файла.");
-        } else {
-            setCsvFileName(args[0]);
-            startIndex = 1; // имя csv-файла прыгаем дальше;
+        for (int i = 0; i < 2 || args[i].charAt(0) != '-'; i++) {
+            fileNamesAmount++;
         }
 
-        for (int i = startIndex; i < settings.size(); i++) {
+        int startIndex = 0;
+
+        if (fileNamesAmount >= 1) { // передан только csv-файл;
+            setCsvFileName(args[0]);
+            startIndex = 1;
+        }
+
+        if (fileNamesAmount == 2) { // передан еще и html-файл;
+            setHtmlFileName(args[1]);
+            startIndex = 2;
+        }
+
+        // Считываем ключи.
+        for (int i = startIndex; i < args.length; i++) {
             int keyValueIndex = i + 1;
 
             switch (args[i]) {
                 case "-s" -> {
-                    if (keyValueIndex == settings.size() || args[keyValueIndex].charAt(0) == '-') {
-                        messages.addMessage("[" + args[i] + "]: не указан символ-разделитель.");
+                    if (keyValueIndex == args.length || args[keyValueIndex].charAt(0) == '-') {
+                        warningsList.add("[" + args[i] + "]: не указан символ-разделитель.");
                     } else {
-                        String userSeparator = args[keyValueIndex];
+                        String separator = args[keyValueIndex];
 
-                        if (userSeparator.equals(";") || userSeparator.equals(",")) {
-                            setUserSeparator(userSeparator.charAt(0));
+                        if (separator.length() == 1) {
+                            this.separator = separator.charAt(0);
                         } else {
-                            messages.addMessage("[" + args[i] + " " + userSeparator + "] не верный разделитель.");
+                            warningsList.add("[" + args[i] + " " + separator + "] разделитель должен состоять из одного символа.");
                         }
 
                         i++;
                     }
                 }
-                case "-o" -> {
-                    if (keyValueIndex == settings.size() || args[keyValueIndex].charAt(0) == '-') {
-                        messages.addMessage("[" + args[i] + "]: не указан путь выходного файла.");
-                    } else {
-                        setHtmlFileUserPath(args[keyValueIndex] + "/");
-                        i++;
-                    }
-                }
                 case "-p" -> {
-                    if (keyValueIndex == settings.size() || args[keyValueIndex].charAt(0) == '-') {
-                        messages.addMessage("[" + args[i] + "]: не указан префикс выходного файла.");
+                    if (keyValueIndex == args.length || args[keyValueIndex].charAt(0) == '-') {
+                        warningsList.add("[" + args[i] + "]: не указан префикс выходного файла.");
                     } else {
                         setHtmlFileNamePrefix(args[keyValueIndex]);
+                        setHtmlFileName(composeHtmlFileNameWithPrefix());
                         i++;
                     }
                 }
                 case "-help" -> {
-                    messages.clearMessages(); //  не станем нагромождать другими сообщениями, справка важнее.
-                    messages.addMessage(helpMessage);
+                    warningsList.clear(); //  не станем нагромождать другими сообщениями, справка важнее.
+                    warningsList.add(HELP_MESSAGE);
                 }
                 default -> {
-                    messages.addMessage("[" + args[i] + "] не является командой.");
-                    messages.addMessage("Используйте команду -help для вызова справки.");
+                    warningsList.add("[" + args[i] + "] не является командой.");
+                    warningsList.add("Используйте команду -help для вызова справки.");
                 }
             }
         }
@@ -134,54 +133,45 @@ public class Settings {
         return settingsDuplicates;
     }
 
-    public String composeHtmlFileName() {
-        String htmlFileName = csvFileName.replace(".csv", ".html");
-
+    public String composeHtmlFileNameWithPrefix() {
         if (htmlFileNamePrefix != null) {
-            return htmlFileNamePrefix + htmlFileName;
-        } else {
-            return htmlFileName;
+            int htmlFileNameStartIndex = htmlFileName.lastIndexOf('/');
+
+            if (htmlFileNameStartIndex == -1) {
+                return htmlFileNamePrefix + htmlFileName;
+            } else {
+                return htmlFileName.substring(0, htmlFileNameStartIndex + 1)
+                        + htmlFileNamePrefix
+                        + htmlFileName.substring(htmlFileNameStartIndex + 1);
+            }
         }
+
+        return htmlFileName;
     }
 
-    // По-умолчанию - в каталог с программой.
-    // Или домашняя папка пользователя + указанный путь.
-    public String composeHtmlFilePath() {
-        if (htmlFileUserPath != null) {
-            return userHome + htmlFileUserPath;
-        } else {
-            return utilityHome + "/";
+    public String composeHtmlFileName(String csvFileName) {
+        return csvFileName.replace(".csv", ".html");
+    }
+
+    public boolean isWarnings() {
+        return !warningsList.isEmpty();
+    }
+
+    public void printWarnings() {
+        StringBuilder sb = new StringBuilder();
+        String lineSeparator = System.lineSeparator();
+
+        for (String item : warningsList) {
+            sb.append(item).append(lineSeparator);
         }
+
+        sb.setLength(sb.length() - 1);
+
+        System.out.println(sb);
     }
 
-/*
-    Не используется.
-    public String getUserHome() {
-        return userHome;
-    }
-*/
-
-    public String getUtilityHome() {
-        return utilityHome;
-    }
-
-/*
- Не используется.
-    public String getHtmlFileUserPath() {
-        return htmlFileUserPath;
-    }
-*/
-
-    public void setHtmlFileUserPath(String htmlFileUserPath) {
-        this.htmlFileUserPath = htmlFileUserPath;
-    }
-
-    public char getUserSeparator() {
-        return userSeparator;
-    }
-
-    public void setUserSeparator(char userSeparator) {
-        this.userSeparator = userSeparator;
+    public char getSeparator() {
+        return separator;
     }
 
     public String getCsvFileName() {
@@ -189,15 +179,16 @@ public class Settings {
     }
 
     public void setCsvFileName(String csvFileName) {
-        this.csvFileName = "/" + csvFileName;
+        this.csvFileName = csvFileName;
     }
 
-/*
- Не используется.
-    public String getHtmlFileNamePrefix() {
-        return htmlFileNamePrefix;
+    public String getHtmlFileName() {
+        return htmlFileName;
     }
-*/
+
+    public void setHtmlFileName(String htmlFileName) {
+        this.htmlFileName = htmlFileName;
+    }
 
     public void setHtmlFileNamePrefix(String htmlFileNamePrefix) {
         this.htmlFileNamePrefix = htmlFileNamePrefix;
