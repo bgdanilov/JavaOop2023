@@ -1,29 +1,39 @@
-// Версия 3. Правильные пути файлов. Передача путей через args[] и непосредственно в конвертер.
+// Версия 4.
+// Избавимся от влияния settings на конвертер при передаче файлов без args[].
+// Создан вспомогательный класс Commons (Общее) для методов, используемых рабочими классами.
 package ru.bgdanilov.csv;
 
 import java.io.*;
 import java.util.ArrayList;
 
-public class CsvToHtmlBySymbols {
-    private final Settings settings;
+public class CsvToHtmlConverter {
+    Commons commons;
+
+    public ArrayList<String> getLogsList() {
+        return logsList;
+    }
+
     private final ArrayList<String> logsList = new ArrayList<>();
 
-    public CsvToHtmlBySymbols(Settings settings) {
-        this.settings = settings;
+    public CsvToHtmlConverter() {
+    }
+
+    public CsvToHtmlConverter(Commons commons) {
+        this.commons = commons;
     }
 
     // Конвертирование по переданным args[].
-    // Использует данные из args[], хранящиеся в settings.
-    public void convert() throws IOException {
-        String csvFileName = settings.getCsvFileName();
+    // Использует данные из args[], хранящиеся в объекте arguments класса CommandLineArgs.
+    public void convert(CommandLineArgs arguments) throws IOException {
+        String csvFileName = arguments.getCsvFileName();
         File csvFile = new File(csvFileName);
 
-        String htmlFileName = settings.getHtmlFileName();
+        String htmlFileName = arguments.getHtmlFileName();
         File htmlFile = new File(htmlFileName);
 
-        char csvSeparator = settings.getSeparator();
+        char csvSeparator = arguments.getSeparator();
 
-        if (fileConverter(csvFile, htmlFile, csvSeparator)) {
+        if (converter(csvFile, htmlFile, csvSeparator)) {
             setLogs(csvFileName, htmlFileName);
         }
     }
@@ -33,10 +43,10 @@ public class CsvToHtmlBySymbols {
     public void convert(String csvFileName, char csvSeparator) throws IOException {
         File csvFile = new File(csvFileName);
 
-        String htmlFileName = settings.composeHtmlFileName(csvFileName);
-        File htmlFile = new File(settings.composeHtmlFileName(csvFileName));
+        String htmlFileName = commons.getHtmlExtensionFileName(csvFileName);
+        File htmlFile = new File(htmlFileName);
 
-        if (fileConverter(csvFile, htmlFile, csvSeparator)) {
+        if (converter(csvFile, htmlFile, csvSeparator)) {
             setLogs(csvFileName, htmlFileName);
         }
     }
@@ -47,7 +57,7 @@ public class CsvToHtmlBySymbols {
         File csvFile = new File(csvFileName);
         File htmlFile = new File(htmlFileName);
 
-        if (fileConverter(csvFile, htmlFile, csvSeparator)) {
+        if (converter(csvFile, htmlFile, csvSeparator)) {
             setLogs(csvFileName, htmlFileName);
         }
     }
@@ -55,7 +65,7 @@ public class CsvToHtmlBySymbols {
     // Конвертер csv в html.
     // Принимает на вход файлы и разделитель.
     // Создает html-файл и возвращает true в случае успеха.
-    private boolean fileConverter(File csvFile, File htmlFile, char csvSeparator) throws IOException {
+    private boolean converter(File csvFile, File htmlFile, char csvSeparator) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(csvFile));
              PrintWriter writer = new PrintWriter(htmlFile)) {
             writer.print("""
@@ -155,37 +165,20 @@ public class CsvToHtmlBySymbols {
         return true;
     }
 
-    private void setLogs(String csvFileName, String htmlFileName) {
-        logsList.add("Файл: " + csvFileName + " успешно обработан.");
-        logsList.add("Результат: " + htmlFileName + ".");
-    }
-
     private static String replaceSpecialSymbols(char symbol) {
         if (symbol == '&') {
             return "&amp;";
-        }
-
-        else if (symbol == '<') {
+        } else if (symbol == '<') {
             return "&lt;";
-        }
-
-       else if (symbol == '>') {
+        } else if (symbol == '>') {
             return "&gt;";
         }
 
         return String.valueOf(symbol);
     }
 
-    public void printLogs() {
-        StringBuilder sb = new StringBuilder();
-        String lineSeparator = System.lineSeparator();
-
-        for (String item : logsList) {
-            sb.append(item).append(lineSeparator);
-        }
-
-        sb.setLength(sb.length() - 1);
-
-        System.out.println(sb);
+    private void setLogs(String csvFileName, String htmlFileName) {
+        logsList.add("Файл: " + csvFileName + " успешно обработан.");
+        logsList.add("Результат: " + htmlFileName + ".");
     }
 }

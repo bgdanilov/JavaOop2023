@@ -2,8 +2,9 @@ package ru.bgdanilov.csv;
 
 import java.util.*;
 
-public class Settings {
+public class CommandLineArgs {
     private final String[] args;
+    private final Commons commons;
     private final ArrayList<String> warningsList = new ArrayList<>();
     private String csvFileName; // имя файла с путем или без него;
     private String htmlFileName; // имя файла с путем или без него;
@@ -11,69 +12,82 @@ public class Settings {
     private char separator = ','; // -s символ-разделитель;
     private static final String HELP_MESSAGE = """
             Справка.
-            ----------
-            Исходный csv-файл должен находиться в папке с утилитой.
-            Необходимо указать имя csv-файла в строке вызова утилиты.
-            Например: CsvToHtml.jar my_csv_file.csv
+            ------------------
+            Утилита принимает исходный csv-файл и создает результирующий html-файл.
             ---
-            Результирующий html-файл по-умолчанию будет иметь имя html.html
-            и будет создан также в папке с утилитой.
+            Для работы достаточно передать имя исходного файла, который должен находиться в папке с утилитой.
+            Результатом будет html-файл с тем же именем, расположенный также в папке с утилитой.
+            ---
+            Допускается указание расширенного имени (пути) исходного файла.
+            Например: /Users/user/Documents/csvFile.csv
+            Результирующий файл будет расположен по тому же пути с тем же именем,
+            если не указан его иной путь или имя.
+            ---
             Если файл с таким именем уже существует, он будет удален и создан новый.
-            ------
-            Дополнительные команды утилиты:
             ---------
             Пример вызова утилиты:
-            CsvToHtml.jar my_csv_file.csv -s ; p prefix- o /Documents/Files
+            ---------
+            CsvToHtml.jar csvFile.csv htmlFile.html -s ; p prefix-
+            ---
+            Результат:
+            - файл prefix-htmlFile.html в папке с утилитой.
+            - использована точка с запятой в качестве разделителя.
+            ---------
+            Дополнительные команды утилиты:
+            ---------
             Порядок следования команд значения не имеет.
             ---
             [-s <значение>] - указание разделителя. <,> или <;>
                               по-умолчанию <,>
             [-p <значение>] - указание префикса html-файла.
-            [-o <значение>] - указание пути для создания html-файла;
-                              путь указывается относительно домашней папки пользователя;
-                              указанный путь должен существовать.
-            [-help] - вызов справки об утилите.
-            ------""";
+            [-help]         - вызов справки об утилите.
+            ---------""";
 
-    public Settings() {
-        this.args = null;
-    }
-
-    public Settings(String[] args) {
+    public CommandLineArgs(String[] args, Commons commons) {
         this.args = args;
-        loadSettings();
+        this.commons = commons;
+        loadArguments();
     }
 
-    public void loadSettings() {
+    private void loadArguments() {
         if (args.length == 0) { // аргументы не переданы;
             warningsList.add(HELP_MESSAGE);
             return;
         }
 
-        // Ищем дубликаты команд.
-        ArrayList<String> settingsDuplicates = getKeysDuplicates(args);
+        // Ищем дубликаты команд-ключей.
+        ArrayList<String> keysDuplicates = getKeysDuplicates(args);
 
-        if (settingsDuplicates.size() != 0) {
-            warningsList.add(settingsDuplicates + ": команды повторяются.");
+        if (keysDuplicates.size() != 0) {
+            warningsList.add(keysDuplicates + ": команды повторяются.");
             return;
         }
 
-        // Считываем имена файлов (два подряд максимум) пока не начнутся ключи.
+        // Считаем количество переданных имен файлов (пока не начнутся ключи).
         int fileNamesAmount = 0;
 
-        for (int i = 0; i < 2 || args[i].charAt(0) != '-'; i++) {
+        for (int i = 0; args[i].charAt(0) != '-'; i++) {
             fileNamesAmount++;
         }
 
         int startIndex = 0;
 
-        if (fileNamesAmount >= 1) { // передан только csv-файл;
+        if (fileNamesAmount == 0) {
+            warningsList.add("Не переданы имена файлов.");
+            return;
+        }
+
+        if (fileNamesAmount == 1) { // передан только csv-файл;
             setCsvFileName(args[0]);
+            setHtmlFileName(commons.getHtmlExtensionFileName(csvFileName));
+
             startIndex = 1;
         }
 
         if (fileNamesAmount == 2) { // передан еще и html-файл;
+            setCsvFileName(args[0]);
             setHtmlFileName(args[1]);
+
             startIndex = 2;
         }
 
@@ -133,7 +147,7 @@ public class Settings {
         return settingsDuplicates;
     }
 
-    public String composeHtmlFileNameWithPrefix() {
+    private String composeHtmlFileNameWithPrefix() {
         if (htmlFileNamePrefix != null) {
             int htmlFileNameStartIndex = htmlFileName.lastIndexOf('/');
 
@@ -149,29 +163,12 @@ public class Settings {
         return htmlFileName;
     }
 
-    public String composeHtmlFileName(String csvFileName) {
-        return csvFileName.replace(".csv", ".html");
-    }
-
     public boolean isWarnings() {
         return !warningsList.isEmpty();
     }
 
-    public void printWarnings() {
-        StringBuilder sb = new StringBuilder();
-        String lineSeparator = System.lineSeparator();
-
-        for (String item : warningsList) {
-            sb.append(item).append(lineSeparator);
-        }
-
-        sb.setLength(sb.length() - 1);
-
-        System.out.println(sb);
-    }
-
-    public char getSeparator() {
-        return separator;
+    public ArrayList<String> getWarningsList() {
+        return warningsList;
     }
 
     public String getCsvFileName() {
@@ -192,5 +189,9 @@ public class Settings {
 
     public void setHtmlFileNamePrefix(String htmlFileNamePrefix) {
         this.htmlFileNamePrefix = htmlFileNamePrefix;
+    }
+
+    public char getSeparator() {
+        return separator;
     }
 }

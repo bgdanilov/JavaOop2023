@@ -8,14 +8,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.io.File;
 
-public class CsvToHtmlBySplits {
+public class CsvToHtmlConverterBySplits {
     private static final String UTF8_BOM = "\uFEFF";
 
     private final String csvFilename;
     private final char csvSeparator;
     private final String lineSeparator;
 
-    public CsvToHtmlBySplits(String sourceFilename, Character cvsSeparator, String lineSeparator) {
+    public CsvToHtmlConverterBySplits(String sourceFilename, Character cvsSeparator, String lineSeparator) {
         this.csvFilename = sourceFilename;
         this.csvSeparator = cvsSeparator;
         this.lineSeparator = lineSeparator;
