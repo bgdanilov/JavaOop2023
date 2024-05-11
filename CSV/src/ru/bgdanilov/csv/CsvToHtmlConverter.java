@@ -8,11 +8,6 @@ import java.util.ArrayList;
 
 public class CsvToHtmlConverter {
     Commons commons;
-
-    public ArrayList<String> getLogsList() {
-        return logsList;
-    }
-
     private final ArrayList<String> logsList = new ArrayList<>();
 
     public CsvToHtmlConverter() {
@@ -175,6 +170,10 @@ public class CsvToHtmlConverter {
         }
 
         return String.valueOf(symbol);
+    }
+
+    public ArrayList<String> getLogsList() {
+        return logsList;
     }
 
     private void setLogs(String csvFileName, String htmlFileName) {
