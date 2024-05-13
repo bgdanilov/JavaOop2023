@@ -172,7 +172,7 @@ public class Vector {
 
     // Проверка передаваемого индекса.
     private void checkIndex(int index) {
-        if (index < 0 || components.length - 1 < index) {
+        if (index < 0 || index >= components.length) {
             throw new IndexOutOfBoundsException("Индекс: (" + index + "), за пределами индексов (0, " + (components.length - 1) + ") вектора.");
         }
     }
