@@ -1,12 +1,11 @@
 package ru.bgdanilov.list;
 
+import java.util.NoSuchElementException;
+
 // Это класс односвязного списка.
 public class List<E> {
     private ListItem<E> head; // первый элемент - голова списка.
     private int length; //  тут храним длину списка.
-
-    public List() {
-    }
 
     // 1.1. Получение размера списка.
     public int getLength() {
@@ -15,49 +14,42 @@ public class List<E> {
 
     // 1.2. Получение значения первого элемента.
     public E getFirst() {
-        checkIndex(0, length);
+        checkListIsEmpty();
         return head.getData();
     }
 
     // 1.3. Получение/изменение значения по указанному индексу.
     // Получение.
-    public E getByIndex(int index) {
-        checkIndex(index, length);
+    public E get(int index) {
+        checkIndex(index, length - 1);
         return getItemByIndex(index).getData();
     }
 
     // Изменение с выдачей старого значения.
-    public E setByIndex(int index, E data) {
-        checkIndex(index, length);
+    public E set(int index, E data) {
+        checkIndex(index, length - 1);
 
-        ListItem<E> currentItem = getItemByIndex(index);
+        ListItem<E> item = getItemByIndex(index);
 
-        E oldData = currentItem.getData();
-        currentItem.setData(data);
+        E oldData = item.getData();
+        item.setData(data);
 
         return oldData;
     }
 
     // 1.4. Удаление элемента по индексу, пусть выдает значение элемента.
     public E deleteByIndex(int index) {
-        checkIndex(index, length);
-
-        ListItem<E> currentItem = head;
+        checkIndex(index, length - 1);
 
         if (index == 0) {
-            deleteFirst();
-        } else {
-            ListItem<E> previousItem = currentItem;
-
-            for (int i = 0; i < index; i++) {
-                previousItem = currentItem;
-                currentItem = currentItem.getNext();
-            }
-
-            previousItem.setNext(currentItem.getNext());
-
-            length--;
+            return deleteFirst();
         }
+
+        ListItem<E> currentItem = getItemByIndex(index);
+        ListItem<E> previousItem = getItemByIndex(index - 1);
+
+        previousItem.setNext(currentItem.getNext());
+        length--;
 
         return currentItem.getData();
     }
@@ -65,28 +57,21 @@ public class List<E> {
     // 1.5. Вставка элемента в начало.
     public void addFirst(E data) {
         head = new ListItem<>(data, head);
-
         length++;
     }
 
     // 1.6. Вставка элемента по индексу.
     public void addByIndex(int index, E data) {
-        checkIndex(index, length + 1);
+        checkIndex(index, length);
 
         // Индекс равен нулю. Значит в начало вставить.
         if (index == 0) {
             addFirst(data);
-
             return;
         }
 
-        ListItem<E> currentItem = head;
-        ListItem<E> previousItem = currentItem; // это тоже одинаковое присваивание?
-
-        for (int i = 0; i < index; i++) {
-            previousItem = currentItem;
-            currentItem = currentItem.getNext();
-        }
+        ListItem<E> currentItem = getItemByIndex(index);
+        ListItem<E> previousItem = getItemByIndex(index - 1);
 
         previousItem.setNext(new ListItem<>(data, currentItem));
 
@@ -99,7 +84,7 @@ public class List<E> {
              currentItem != null;
              previousItem = currentItem, currentItem = currentItem.getNext()) {
 
-            if (currentItem.getData() == data) {
+            if (currentItem.getData().equals(data)) {
                 if (previousItem == null) {
                     head = currentItem.getNext();
                 } else {
@@ -111,19 +96,18 @@ public class List<E> {
                 return true;
             }
         }
-
         return false;
     }
 
     // 1.8. Удаление первого элемента, пусть выдает значение элемента.
     public E deleteFirst() {
-        checkIndex(0, length);
+        checkListIsEmpty();
 
-        ListItem<E> currentItem = head;
-        head = currentItem.getNext();
+        E headData = head.getData();
+        head = head.getNext();
         length--;
 
-        return currentItem.getData();
+        return headData;
     }
 
     // 1.9. Разворот списка за линейное время.
@@ -135,9 +119,9 @@ public class List<E> {
         ListItem<E> currentItem = head; // адрес элемента в памяти.
         ListItem<E> previousItem = null;
 
-        for (ListItem<E> nextCurrent = currentItem.getNext();
-             nextCurrent != null;
-             previousItem = currentItem, currentItem = nextCurrent, nextCurrent = nextCurrent.getNext()) {
+        for (ListItem<E> nextItem = currentItem.getNext();
+             nextItem != null;
+             previousItem = currentItem, currentItem = nextItem, nextItem = nextItem.getNext()) {
             currentItem.setNext(previousItem);
         }
 
@@ -147,7 +131,8 @@ public class List<E> {
 
     // 1.10. Копирование списка.
     public List<E> copy() {
-        // создали новый пустой список.
+        checkListIsEmpty();
+
         List<E> copiedList = new List<>();
         copiedList.length = length;
 
@@ -186,16 +171,6 @@ public class List<E> {
         addByIndex(length, data);
     }
 
-    // Проверка индекса на принадлежность допустимому диапазону.
-    // Private - доступ только внутри класса.
-    // Static - не нужно, т.к. метод из вне не нужно и нельзя вызывать.
-    private void checkIndex(int index, int maxIndex) {
-        if (index < 0 || index >= maxIndex) {
-            throw new IllegalArgumentException("Index: " + index + ", Длина списка: " + length + ". Индекс выходит за пределы списка.");
-            //throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за границы [0 - "+ (maxIndex - 1) + "] списка.");
-        }
-    }
-
     // Итерация до заданного по индексу элемента.
     private ListItem<E> getItemByIndex(int index) {
         ListItem<E> currentItem = head;
@@ -205,6 +180,24 @@ public class List<E> {
         }
 
         return currentItem;
+    }
+
+    // Проверка индекса на принадлежность допустимому диапазону.
+    private void checkIndex(int index, int maxIndex) {
+        if (maxIndex == length && (index < 0 || index > maxIndex)) {
+            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за пределы индексов [0 - " + (length - 1) + "] списка.");
+        }
+
+        if (maxIndex == length - 1 && (index < 0 || index > maxIndex)) {
+            throw new NoSuchElementException("Элемент с индексом [" + index + "] не существует в списке длиной [" + length + "].");
+        }
+
+    }
+
+    private void checkListIsEmpty() {
+        if (length == 0) {
+            throw new NullPointerException("Список пуст!");
+        }
     }
 }
 
