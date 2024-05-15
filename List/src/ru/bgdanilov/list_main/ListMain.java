@@ -2,6 +2,8 @@ package ru.bgdanilov.list_main;
 
 import ru.bgdanilov.list.List;
 
+import java.util.NoSuchElementException;
+
 public class ListMain {
     public static void main(String[] args) {
         try {
@@ -9,6 +11,7 @@ public class ListMain {
             // объект специального класса ListItem, который мы считаем головой.
             // По-умолчанию, при инициализации - эта ссылка = null. Список пустой.
             List<String> strings = new List<>();
+            // strings.getFirst(); // проверка исключения;
             // Далее, мы добавляем элемент в список, а на самом деле:
             // 1. Создаем объект списка.
             // 2. Присваиваем адрес объекта полю head списка.
@@ -32,11 +35,11 @@ public class ListMain {
             // 1.3. Получение/изменение значения по указанному индексу.
             // Получение.
             System.out.println("Получение:");
-            System.out.println("1.3. Элемент списка с индексом 0: " + strings.getByIndex(0) + ".");
-            System.out.println("1.3. Элемент списка с индексом 3: " + strings.getByIndex(3) + ".");
+            System.out.println("1.3. Элемент списка с индексом 0: " + strings.get(0) + ".");
+            System.out.println("1.3. Элемент списка с индексом 3: " + strings.get(3) + ".");
             System.out.println("----------------");
             System.out.println("Изменение:");
-            System.out.println("1.3. Поменяли элемент: " + strings.setByIndex(1, "Два") + ".");
+            System.out.println("1.3. Поменяли элемент: " + strings.set(1, "Два") + ".");
 
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
@@ -86,6 +89,7 @@ public class ListMain {
             strings.addByIndex(3, "Три");
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
+            //strings.addByIndex(6, "Шесть"); // проверка исключения;
             System.out.println();
 
             // 1.7. Удаление узла по значению, пусть выдает true, если элемент был удален.
@@ -121,6 +125,11 @@ public class ListMain {
 
             // 1.8. Удаление первого элемента, пусть выдает значение элемента.
             System.out.println("1.8. Удаляем первый элемент: " + strings.deleteFirst());
+            strings.deleteFirst();
+            strings.deleteFirst();
+            strings.deleteFirst();
+            strings.deleteFirst();
+            strings.deleteFirst();
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
             System.out.println();
@@ -146,8 +155,8 @@ public class ListMain {
 
             // 1.11. Проверим работу исключения.
             System.out.println("1.11. Проверим работу исключения. Запросим элемент списка с индексом 4.");
-            System.out.println(strings.getByIndex(4));
-        } catch (IllegalArgumentException e) {
+            System.out.println(strings.get(4));
+        } catch (IndexOutOfBoundsException | NoSuchElementException | NullPointerException e) {
             System.out.println("Ошибка! " + e.getMessage());
         }
     }
