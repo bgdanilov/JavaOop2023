@@ -72,14 +72,11 @@ public class CustomHashTable<E> implements Collection<E> {
     // Если переданный массив короче размера хеш-таблицы, создается массив с длиной, равной размеру хеш-таблицы.
     @Override
     public <T> T[] toArray(T[] array) {
-        Object[] hashTableArray = toArray();
-
         if (size >= array.length) {
             //noinspection unchecked
-            return Arrays.copyOf(hashTableArray, size, (Class<? extends T[]>) array.getClass());
+            return Arrays.copyOf(toArray(), size, (Class<? extends T[]>) array.getClass());
         }
 
-        // (1) Копируем Objects[] toArray в T[] array - результат T[] array.
         //noinspection SuspiciousSystemArraycopy
         System.arraycopy(toArray(), 0, array, 0, size);
 
@@ -87,7 +84,6 @@ public class CustomHashTable<E> implements Collection<E> {
             array[size] = null;
         }
 
-        //System.out.println(array.getClass()); // проверим (1);
         return array;
     }
 
