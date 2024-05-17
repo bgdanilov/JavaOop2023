@@ -74,15 +74,13 @@ public class CustomHashTable<E> implements Collection<E> {
     public <T> T[] toArray(T[] array) {
         if (size >= array.length) {
             //noinspection unchecked
-            return Arrays.copyOf(toArray(), size, (Class<? extends T[]>) array.getClass());
+            array = Arrays.copyOf(toArray(), size, (Class<? extends T[]>) array.getClass());
+            return array;
         }
 
         //noinspection SuspiciousSystemArraycopy
         System.arraycopy(toArray(), 0, array, 0, size);
-
-        if (size < array.length) {
-            array[size] = null;
-        }
+        array[size] = null;
 
         return array;
     }
