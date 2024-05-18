@@ -37,7 +37,7 @@ public class CustomHashTableMain {
 
             // 6. Возвращает из значений хеш-таблицы массив в переданный массив.
             System.out.println("6. Возвращает из значений хеш-таблицы массив в переданный массив.");
-            String[] destinationArray = {"4", "5", "6"};
+            String[] destinationArray = {"4", "5", "6", "7", "8", "9", "10"};
             System.out.println("   Наша хеш-таблица: " + hashTable);
             System.out.println("   Переданный массив: " + Arrays.toString(destinationArray));
             System.out.println("   Итого: " + Arrays.toString(hashTable.toArray(destinationArray)));
