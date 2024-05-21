@@ -3,12 +3,8 @@ package ru.bgdanilov.csv;
 import java.util.ArrayList;
 
 // Класс с общими для других классов методами.
-public class Commons {
-    public String getHtmlExtensionFileName(String csvFileName) {
-        return csvFileName.replace(".csv", ".html");
-    }
-
-    public void printMessages(ArrayList<String> list) {
+public class Utilities {
+    public static void printMessages(ArrayList<String> list) {
         StringBuilder sb = new StringBuilder();
         String lineSeparator = System.lineSeparator();
 

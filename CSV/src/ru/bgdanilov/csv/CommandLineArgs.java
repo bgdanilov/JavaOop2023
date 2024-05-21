@@ -4,12 +4,13 @@ import java.util.*;
 
 public class CommandLineArgs {
     private final String[] args;
-    private final Commons commons;
+    //private final Utilities utilities;
     private final ArrayList<String> warningsList = new ArrayList<>();
     private String csvFileName; // имя файла с путем или без него;
     private String htmlFileName; // имя файла с путем или без него;
     private String htmlFileNamePrefix; // -p указание префикса имени выходного файла;
     private char separator = ','; // -s символ-разделитель;
+
     private static final String HELP_MESSAGE = """
             Справка.
             ------------------
@@ -43,9 +44,8 @@ public class CommandLineArgs {
             [-help]         - вызов справки об утилите.
             ---------""";
 
-    public CommandLineArgs(String[] args, Commons commons) {
+    public CommandLineArgs(String[] args, Utilities utilities) {
         this.args = args;
-        this.commons = commons;
         loadArguments();
     }
 
@@ -79,7 +79,7 @@ public class CommandLineArgs {
 
         if (fileNamesAmount == 1) { // передан только csv-файл;
             setCsvFileName(args[0]);
-            setHtmlFileName(commons.getHtmlExtensionFileName(csvFileName));
+            setHtmlFileName(FileNameUtilities.getHtmlExtensionFileName(csvFileName));
 
             startIndex = 1;
         }
@@ -116,7 +116,7 @@ public class CommandLineArgs {
                         warningsList.add("[" + args[i] + "]: не указан префикс выходного файла.");
                     } else {
                         setHtmlFileNamePrefix(args[keyValueIndex]);
-                        setHtmlFileName(composeHtmlFileNameWithPrefix());
+                        setHtmlFileName(FileNameUtilities.composeHtmlFileNameWithPrefix(htmlFileNamePrefix, htmlFileName));
                         i++;
                     }
                 }

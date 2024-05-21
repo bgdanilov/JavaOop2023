@@ -1,20 +1,20 @@
 // Версия 4.
 // Избавимся от влияния settings на конвертер при передаче файлов без args[].
-// Создан вспомогательный класс Commons (Общее) для методов, используемых рабочими классами.
+// Создан вспомогательный класс Utilities (Общее) для методов, используемых рабочими классами.
 package ru.bgdanilov.csv;
 
 import java.io.*;
 import java.util.ArrayList;
 
 public class CsvToHtmlConverter {
-    Commons commons;
+    Utilities utilities;
     private final ArrayList<String> logsList = new ArrayList<>();
 
     public CsvToHtmlConverter() {
     }
 
-    public CsvToHtmlConverter(Commons commons) {
-        this.commons = commons;
+    public CsvToHtmlConverter(Utilities utilities) {
+        this.utilities = utilities;
     }
 
     // Конвертирование по переданным args[].
@@ -38,7 +38,7 @@ public class CsvToHtmlConverter {
     public void convert(String csvFileName, char csvSeparator) throws IOException {
         File csvFile = new File(csvFileName);
 
-        String htmlFileName = commons.getHtmlExtensionFileName(csvFileName);
+        String htmlFileName = FileNameUtilities.getHtmlExtensionFileName(csvFileName);
         File htmlFile = new File(htmlFileName);
 
         if (converter(csvFile, htmlFile, csvSeparator)) {
