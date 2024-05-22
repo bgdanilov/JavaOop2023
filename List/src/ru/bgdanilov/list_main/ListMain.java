@@ -89,10 +89,17 @@ public class ListMain {
             strings.addByIndex(3, "Три");
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
+            System.out.println("1.6. Вставляем новый элемент \"null\" индексом 1.");
+            strings.addByIndex(1, null);
+            System.out.println("Наш список теперь есть: " + strings);
+            System.out.println("=============================");
             //strings.addByIndex(6, "Шесть"); // проверка исключения;
             System.out.println();
 
             // 1.7. Удаление узла по значению, пусть выдает true, если элемент был удален.
+            System.out.println("1.7. Удаляем элемент \"null\". Удалили? - " + strings.deleteByData(null));
+            System.out.println("Наш список теперь есть: " + strings);
+            System.out.println("=============================");
             System.out.println("1.7. Удаляем элемент \"Ноль\". Удалили? - " + strings.deleteByData("Ноль"));
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
@@ -125,11 +132,6 @@ public class ListMain {
 
             // 1.8. Удаление первого элемента, пусть выдает значение элемента.
             System.out.println("1.8. Удаляем первый элемент: " + strings.deleteFirst());
-            strings.deleteFirst();
-            strings.deleteFirst();
-            strings.deleteFirst();
-            strings.deleteFirst();
-            strings.deleteFirst();
             System.out.println("Наш список теперь есть: " + strings);
             System.out.println("=============================");
             System.out.println();
@@ -154,8 +156,25 @@ public class ListMain {
             System.out.println();
 
             // 1.11. Проверим работу исключения.
-            System.out.println("1.11. Проверим работу исключения. Запросим элемент списка с индексом 4.");
-            System.out.println(strings.get(4));
+            System.out.println("1.11. Проверим работу исключения. Запросим элемент списка с индексом 3.");
+            System.out.println("Наш исходный список: " + strings);
+            System.out.println(strings.get(3));
+            System.out.println();
+
+            // 1.12. Проверим работу исключения.
+//            System.out.println("1.12. Проверим работу исключения. Добавим элемент с индексом 4.");
+//            System.out.println("Наш исходный список: " + strings);
+//            strings.addByIndex(4, null);
+//            System.out.println();
+
+            // 1.13. Проверим работу исключения.
+            System.out.println("1.13. Проверим работу исключения. Запросим элемент списка с индексом 3 из пустого списка.");
+//            strings.deleteFirst();
+//            strings.deleteFirst();
+//            strings.deleteFirst();
+//            System.out.println("Наш исходный список: " + strings);
+//            System.out.println(strings.get(3));
+//            System.out.println();
         } catch (IndexOutOfBoundsException | NoSuchElementException | NullPointerException e) {
             System.out.println("Ошибка! " + e.getMessage());
         }
