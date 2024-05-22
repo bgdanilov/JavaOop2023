@@ -1,6 +1,7 @@
 package ru.bgdanilov.list;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 // Это класс односвязного списка.
 public class List<E> {
@@ -45,8 +46,8 @@ public class List<E> {
             return deleteFirst();
         }
 
-        ListItem<E> currentItem = getItemByIndex(index);
         ListItem<E> previousItem = getItemByIndex(index - 1);
+        ListItem<E> currentItem = previousItem.getNext();
 
         previousItem.setNext(currentItem.getNext());
         length--;
@@ -70,8 +71,8 @@ public class List<E> {
             return;
         }
 
-        ListItem<E> currentItem = getItemByIndex(index);
         ListItem<E> previousItem = getItemByIndex(index - 1);
+        ListItem<E> currentItem = previousItem.getNext();
 
         previousItem.setNext(new ListItem<>(data, currentItem));
 
@@ -79,12 +80,12 @@ public class List<E> {
     }
 
     // 1.7. Удаление узла по значению, пусть выдает true, если элемент был удален.
+
     public boolean deleteByData(E data) {
         for (ListItem<E> currentItem = head, previousItem = null;
              currentItem != null;
              previousItem = currentItem, currentItem = currentItem.getNext()) {
-
-            if (currentItem.getData().equals(data)) {
+            if (Objects.equals(currentItem.getData(), data)) {
                 if (previousItem == null) {
                     head = currentItem.getNext();
                 } else {
@@ -92,10 +93,10 @@ public class List<E> {
                 }
 
                 length--;
-
                 return true;
             }
         }
+
         return false;
     }
 
@@ -131,7 +132,9 @@ public class List<E> {
 
     // 1.10. Копирование списка.
     public List<E> copy() {
-        checkListIsEmpty();
+        if (head == null) {
+            return new List<>();
+        }
 
         List<E> copiedList = new List<>();
         copiedList.length = length;
@@ -139,8 +142,8 @@ public class List<E> {
         ListItem<E> copiedCurrentItem = new ListItem<>(head.getData());
         copiedList.head = copiedCurrentItem;
 
-        for (ListItem<E> nextItem = head.getNext(); nextItem != null; nextItem = nextItem.getNext()) {
-            ListItem<E> copiedNextItem = new ListItem<>(nextItem.getData());
+        for (ListItem<E> currentItem = head.getNext(); currentItem != null; currentItem = currentItem.getNext()) {
+            ListItem<E> copiedNextItem = new ListItem<>(currentItem.getData());
             copiedCurrentItem.setNext(copiedNextItem);
             copiedCurrentItem = copiedNextItem;
         }
@@ -154,14 +157,14 @@ public class List<E> {
             return "[]";
         }
 
-        ListItem<E> currentItem;
+        ListItem<E> item;
         StringBuilder sb = new StringBuilder().append('[');
 
-        for (currentItem = head; currentItem.getNext() != null; currentItem = currentItem.getNext()) {
-            sb.append(currentItem.getData()).append(", ");
+        for (item = head; item.getNext() != null; item = item.getNext()) {
+            sb.append(item.getData()).append(", ");
         }
 
-        sb.append(currentItem.getData()).append(']');
+        sb.append(item.getData()).append(']');
 
         return sb.toString();
     }
@@ -184,19 +187,15 @@ public class List<E> {
 
     // Проверка индекса на принадлежность допустимому диапазону.
     private void checkIndex(int index, int maxIndex) {
-        if (maxIndex == length && (index < 0 || index > maxIndex)) {
-            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за пределы индексов [0 - " + (length - 1) + "] списка.");
+        if (index < 0 || index > maxIndex) {
+            checkListIsEmpty();
+            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за пределы индексов [0 - " + maxIndex + "] списка.");
         }
-
-        if (maxIndex == length - 1 && (index < 0 || index > maxIndex)) {
-            throw new NoSuchElementException("Элемент с индексом [" + index + "] не существует в списке длиной [" + length + "].");
-        }
-
     }
 
     private void checkListIsEmpty() {
-        if (length == 0) {
-            throw new NullPointerException("Список пуст!");
+        if (head == null) {
+            throw new NoSuchElementException("Список пуст!");
         }
     }
 }
