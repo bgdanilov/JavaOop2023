@@ -28,15 +28,15 @@ public class FileNameUtilities {
         String fileExtension = null;
         String fileNameOnly = null;
 
-         if (pointIndex != -1) {
-             fileExtension = fileName.substring(pointIndex).toLowerCase();
-             fileNameOnly = fileName.substring(0, pointIndex);
-         }
+        if (pointIndex != -1) {
+            fileExtension = fileName.substring(pointIndex).toLowerCase();
+            fileNameOnly = fileName.substring(0, pointIndex);
+        }
 
-         if (Objects.equals(fileExtension, extension)) {
-             return fileNameOnly + fileExtension;
-         }
+        if (Objects.equals(fileExtension, extension)) {
+            return fileNameOnly + fileExtension;
+        }
 
-         return null;
+        return null;
     }
 }

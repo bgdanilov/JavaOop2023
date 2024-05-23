@@ -7,14 +7,9 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class CsvToHtmlConverter {
-    Utilities utilities;
     private final ArrayList<String> logs = new ArrayList<>();
 
     public CsvToHtmlConverter() {
-    }
-
-    public CsvToHtmlConverter(Utilities utilities) {
-        this.utilities = utilities;
     }
 
     // Конвертирование по переданным args[].
