@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class CsvToHtmlConverter {
     Utilities utilities;
-    private final ArrayList<String> logsList = new ArrayList<>();
+    private final ArrayList<String> logs = new ArrayList<>();
 
     public CsvToHtmlConverter() {
     }
@@ -172,12 +172,12 @@ public class CsvToHtmlConverter {
         return String.valueOf(symbol);
     }
 
-    public ArrayList<String> getLogsList() {
-        return logsList;
+    public ArrayList<String> getLogs() {
+        return logs;
     }
 
     private void setLogs(String csvFileName, String htmlFileName) {
-        logsList.add("Файл: " + csvFileName + " успешно обработан.");
-        logsList.add("Результат: " + htmlFileName + ".");
+        logs.add("Файл: " + csvFileName + " успешно обработан.");
+        logs.add("Результат: " + htmlFileName + ".");
     }
 }
