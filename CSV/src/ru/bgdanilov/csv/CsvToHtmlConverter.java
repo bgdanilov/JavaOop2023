@@ -1,20 +1,15 @@
 // Версия 4.
 // Избавимся от влияния settings на конвертер при передаче файлов без args[].
-// Создан вспомогательный класс Commons (Общее) для методов, используемых рабочими классами.
+// Создан вспомогательный класс Utilities (Общее) для методов, используемых рабочими классами.
 package ru.bgdanilov.csv;
 
 import java.io.*;
 import java.util.ArrayList;
 
 public class CsvToHtmlConverter {
-    Commons commons;
-    private final ArrayList<String> logsList = new ArrayList<>();
+    private final ArrayList<String> logs = new ArrayList<>();
 
     public CsvToHtmlConverter() {
-    }
-
-    public CsvToHtmlConverter(Commons commons) {
-        this.commons = commons;
     }
 
     // Конвертирование по переданным args[].
@@ -38,7 +33,7 @@ public class CsvToHtmlConverter {
     public void convert(String csvFileName, char csvSeparator) throws IOException {
         File csvFile = new File(csvFileName);
 
-        String htmlFileName = commons.getHtmlExtensionFileName(csvFileName);
+        String htmlFileName = FileNameUtilities.getHtmlExtensionFileName(csvFileName);
         File htmlFile = new File(htmlFileName);
 
         if (converter(csvFile, htmlFile, csvSeparator)) {
@@ -172,12 +167,12 @@ public class CsvToHtmlConverter {
         return String.valueOf(symbol);
     }
 
-    public ArrayList<String> getLogsList() {
-        return logsList;
+    public ArrayList<String> getLogs() {
+        return logs;
     }
 
     private void setLogs(String csvFileName, String htmlFileName) {
-        logsList.add("Файл: " + csvFileName + " успешно обработан.");
-        logsList.add("Результат: " + htmlFileName + ".");
+        logs.add("Файл: " + csvFileName + " успешно обработан.");
+        logs.add("Результат: " + htmlFileName + ".");
     }
 }

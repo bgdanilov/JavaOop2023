@@ -4,12 +4,12 @@ import java.util.*;
 
 public class CommandLineArgs {
     private final String[] args;
-    private final Commons commons;
-    private final ArrayList<String> warningsList = new ArrayList<>();
+    private final ArrayList<String> warnings = new ArrayList<>();
     private String csvFileName; // имя файла с путем или без него;
     private String htmlFileName; // имя файла с путем или без него;
     private String htmlFileNamePrefix; // -p указание префикса имени выходного файла;
     private char separator = ','; // -s символ-разделитель;
+
     private static final String HELP_MESSAGE = """
             Справка.
             ------------------
@@ -43,132 +43,13 @@ public class CommandLineArgs {
             [-help]         - вызов справки об утилите.
             ---------""";
 
-    public CommandLineArgs(String[] args, Commons commons) {
+    public CommandLineArgs(String[] args) {
         this.args = args;
-        this.commons = commons;
         loadArguments();
     }
 
-    private void loadArguments() {
-        if (args.length == 0) { // аргументы не переданы;
-            warningsList.add(HELP_MESSAGE);
-            return;
-        }
-
-        // Ищем дубликаты команд-ключей.
-        ArrayList<String> keysDuplicates = getKeysDuplicates(args);
-
-        if (keysDuplicates.size() != 0) {
-            warningsList.add(keysDuplicates + ": команды повторяются.");
-            return;
-        }
-
-        // Считаем количество переданных имен файлов (пока не начнутся ключи).
-        int fileNamesAmount = 0;
-
-        for (int i = 0; args[i].charAt(0) != '-'; i++) {
-            fileNamesAmount++;
-        }
-
-        int startIndex = 0;
-
-        if (fileNamesAmount == 0) {
-            warningsList.add("Не переданы имена файлов.");
-            return;
-        }
-
-        if (fileNamesAmount == 1) { // передан только csv-файл;
-            setCsvFileName(args[0]);
-            setHtmlFileName(commons.getHtmlExtensionFileName(csvFileName));
-
-            startIndex = 1;
-        }
-
-        if (fileNamesAmount == 2) { // передан еще и html-файл;
-            setCsvFileName(args[0]);
-            setHtmlFileName(args[1]);
-
-            startIndex = 2;
-        }
-
-        // Считываем ключи.
-        for (int i = startIndex; i < args.length; i++) {
-            int keyValueIndex = i + 1;
-
-            switch (args[i]) {
-                case "-s" -> {
-                    if (keyValueIndex == args.length || args[keyValueIndex].charAt(0) == '-') {
-                        warningsList.add("[" + args[i] + "]: не указан символ-разделитель.");
-                    } else {
-                        String separator = args[keyValueIndex];
-
-                        if (separator.length() == 1) {
-                            this.separator = separator.charAt(0);
-                        } else {
-                            warningsList.add("[" + args[i] + " " + separator + "] разделитель должен состоять из одного символа.");
-                        }
-
-                        i++;
-                    }
-                }
-                case "-p" -> {
-                    if (keyValueIndex == args.length || args[keyValueIndex].charAt(0) == '-') {
-                        warningsList.add("[" + args[i] + "]: не указан префикс выходного файла.");
-                    } else {
-                        setHtmlFileNamePrefix(args[keyValueIndex]);
-                        setHtmlFileName(composeHtmlFileNameWithPrefix());
-                        i++;
-                    }
-                }
-                case "-help" -> {
-                    warningsList.clear(); //  не станем нагромождать другими сообщениями, справка важнее.
-                    warningsList.add(HELP_MESSAGE);
-                }
-                default -> {
-                    warningsList.add("[" + args[i] + "] не является командой.");
-                    warningsList.add("Используйте команду -help для вызова справки.");
-                }
-            }
-        }
-    }
-
-    private static ArrayList<String> getKeysDuplicates(String[] settings) {
-        // HashSet дубликаты не примет,
-        // поэтому дубликаты осядут в settingsDuplicates.
-        ArrayList<String> settingsDuplicates = new ArrayList<>();
-        HashSet<String> verificationSet = new HashSet<>();
-
-        for (String item : settings) {
-            if (item.charAt(0) == '-' && !verificationSet.add(item)) {
-                settingsDuplicates.add(item);
-            }
-        }
-
-        return settingsDuplicates;
-    }
-
-    private String composeHtmlFileNameWithPrefix() {
-        if (htmlFileNamePrefix != null) {
-            int htmlFileNameStartIndex = htmlFileName.lastIndexOf('/');
-
-            if (htmlFileNameStartIndex == -1) {
-                return htmlFileNamePrefix + htmlFileName;
-            } else {
-                return htmlFileName.substring(0, htmlFileNameStartIndex + 1)
-                        + htmlFileNamePrefix
-                        + htmlFileName.substring(htmlFileNameStartIndex + 1);
-            }
-        }
-
-        return htmlFileName;
-    }
-
-    public boolean isWarnings() {
-        return !warningsList.isEmpty();
-    }
-
-    public ArrayList<String> getWarningsList() {
-        return warningsList;
+    public ArrayList<String> getWarnings() {
+        return warnings;
     }
 
     public String getCsvFileName() {
@@ -193,5 +74,162 @@ public class CommandLineArgs {
 
     public char getSeparator() {
         return separator;
+    }
+
+    public void setSeparator(char separator) {
+        this.separator = separator;
+    }
+
+    private void loadArguments() {
+        if (args.length == 0) { // аргументы не переданы;
+            warnings.add(HELP_MESSAGE);
+            return;
+        }
+
+        // Ищем дубликаты команд-ключей.
+        ArrayList<String> keysDuplicates = getKeysDuplicates(args);
+
+        if (keysDuplicates.size() != 0) {
+            warnings.add(keysDuplicates + ": команды повторяются.");
+            return;
+        }
+
+        // Считаем количество переданных имен файлов (пока не начнутся ключи).
+        int fileNamesAmount = 0;
+
+        for (String arg : args) {
+            if (arg.charAt(0) != '-') {
+                fileNamesAmount++;
+            } else {
+                break;
+            }
+        }
+
+        int startIndex = 0;
+
+        if (fileNamesAmount == 0) {
+            warnings.add("Не переданы имена файлов.");
+            return;
+        }
+
+        if (fileNamesAmount > 2) { // написали перед командами больше двух имен файлов;
+            warnings.add("Передано более двух имен файлов.");
+            return;
+        }
+
+        String warning;
+
+        if (fileNamesAmount == 1) { // передан только csv-файл;
+            warning = loadCheckedFileName(args[0], ".csv");
+
+            if (warning != null) {
+                warnings.add(warning);
+                return;
+            }
+
+            setHtmlFileName(FileNameUtilities.getHtmlExtensionFileName(this.csvFileName));
+
+            startIndex = 1;
+        }
+
+        if (fileNamesAmount == 2) { // передан еще и html-файл;
+            warning = loadCheckedFileName(args[0], ".csv");
+
+            if (warning != null) {
+                warnings.add(warning);
+            }
+
+            warning = loadCheckedFileName(args[0], ".html");
+
+            if (warning != null) {
+                warnings.add(warning);
+            }
+
+            startIndex = 2;
+        }
+
+        // Поскольку нельзя сделать return после Warning'а исходного файла
+        // (пропустим Warning результирующего), будем копить Warning'и.
+        // Прервем дальнейшее выполнение, если накопились Warnings.
+        if (hasWarnings()) {
+            return;
+        }
+
+        // Считываем ключи.
+        for (int i = startIndex; i < args.length; i++) {
+            int keyValueIndex = i + 1;
+
+            switch (args[i]) {
+                case "-s" -> {
+                    if (keyValueIndex == args.length || args[keyValueIndex].charAt(0) == '-') {
+                        warnings.add("[" + args[i] + "]: не указан символ-разделитель.");
+                    } else {
+                        String separator = args[keyValueIndex];
+
+                        if (separator.length() == 1) {
+                            this.separator = separator.charAt(0);
+                        } else {
+                            warnings.add("[" + args[i] + " " + separator + "] разделитель должен состоять из одного символа.");
+                        }
+
+                        i++;
+                    }
+                }
+                case "-p" -> {
+                    if (keyValueIndex == args.length || args[keyValueIndex].charAt(0) == '-') {
+                        warnings.add("[" + args[i] + "]: не указан префикс выходного файла.");
+                    } else {
+                        setHtmlFileNamePrefix(args[keyValueIndex]);
+                        setHtmlFileName(FileNameUtilities.composeHtmlFileNameWithPrefix(htmlFileNamePrefix, htmlFileName));
+                        i++;
+                    }
+                }
+                case "-help" -> {
+                    warnings.clear(); //  не станем нагромождать другими сообщениями, справка важнее.
+                    warnings.add(HELP_MESSAGE);
+                }
+                default -> {
+                    warnings.add("[" + args[i] + "] не является командой.");
+                    warnings.add("Используйте команду -help для вызова справки.");
+                }
+            }
+        }
+    }
+
+    // Принимает имя файла (из args) и образец расширения.
+    // Проверяет и формирует имя файла с правильным расширением.
+    // Записывает полученное имя файла в поле.
+    // Возвращает сообщение об ошибке или null, если все успешно.
+    private String loadCheckedFileName(String fileName, String verificationExtension) {
+        String message = null;
+
+        String csvFileName = FileNameUtilities.getCheckedExtensionFileName(fileName, verificationExtension);
+
+        if (csvFileName != null) {
+            setCsvFileName(csvFileName);
+        } else {
+            message = "Не указано или неверно указано расширение " + verificationExtension + "-файла";
+        }
+
+        return message;
+    }
+
+    private static ArrayList<String> getKeysDuplicates(String[] settings) {
+        // HashSet дубликаты не примет,
+        // поэтому дубликаты осядут в settingsDuplicates.
+        ArrayList<String> settingsDuplicates = new ArrayList<>();
+        HashSet<String> verificationSet = new HashSet<>();
+
+        for (String item : settings) {
+            if (item.charAt(0) == '-' && !verificationSet.add(item)) {
+                settingsDuplicates.add(item);
+            }
+        }
+
+        return settingsDuplicates;
+    }
+
+    public boolean hasWarnings() {
+        return !warnings.isEmpty();
     }
 }
