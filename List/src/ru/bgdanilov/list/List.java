@@ -72,22 +72,19 @@ public class List<E> {
         }
 
         ListItem<E> previousItem = getItemByIndex(index - 1);
-        ListItem<E> currentItem = previousItem.getNext();
-
-        previousItem.setNext(new ListItem<>(data, currentItem));
+        previousItem.setNext(new ListItem<>(data, previousItem.getNext()));
 
         length++;
     }
 
     // 1.7. Удаление узла по значению, пусть выдает true, если элемент был удален.
-
     public boolean deleteByData(E data) {
         for (ListItem<E> currentItem = head, previousItem = null;
              currentItem != null;
              previousItem = currentItem, currentItem = currentItem.getNext()) {
             if (Objects.equals(currentItem.getData(), data)) {
                 if (previousItem == null) {
-                    head = currentItem.getNext();
+                    head = head.getNext();
                 } else {
                     previousItem.setNext(currentItem.getNext());
                 }
@@ -136,16 +133,17 @@ public class List<E> {
             return new List<>();
         }
 
-        List<E> copiedList = new List<>();
-        copiedList.length = length;
+        List<E> copiedList = new List<>(); // создаем пустой скопированный лист - заготовка;
+        copiedList.length = length; // задаем ему длину, равную исходнику;
 
-        ListItem<E> copiedCurrentItem = new ListItem<>(head.getData());
-        copiedList.head = copiedCurrentItem;
+        ListItem<E> copiedCurrentItem = new ListItem<>(head.getData()); // текущий скопированный элемент - голова исходника;
+        copiedList.head = copiedCurrentItem; // записываем в голову скопированного списка;
 
+        // Перебираем элементы исходного списка.
         for (ListItem<E> currentItem = head.getNext(); currentItem != null; currentItem = currentItem.getNext()) {
-            ListItem<E> copiedNextItem = new ListItem<>(currentItem.getData());
-            copiedCurrentItem.setNext(copiedNextItem);
-            copiedCurrentItem = copiedNextItem;
+            ListItem<E> copiedListNextItem = new ListItem<>(currentItem.getData());
+            copiedCurrentItem.setNext(copiedListNextItem);
+            copiedCurrentItem = copiedListNextItem;
         }
 
         return copiedList;
@@ -157,14 +155,19 @@ public class List<E> {
             return "[]";
         }
 
-        ListItem<E> item;
-        StringBuilder sb = new StringBuilder().append('[');
+        ListItem<E> item = head;
+        StringBuilder sb = new StringBuilder("["); // строка-аргумент менее затратна, чем .append() ?
 
-        for (item = head; item.getNext() != null; item = item.getNext()) {
-            sb.append(item.getData()).append(", ");
+        // Пусть тогда так:
+        for (int i = length; i > 0; i--, item = item.getNext()) {
+            if (i > 1) {
+                sb.append(item.getData()).append(", ");
+            } else {
+                sb.append(item.getData());
+            }
         }
 
-        sb.append(item.getData()).append(']');
+        sb.append(']');
 
         return sb.toString();
     }
@@ -187,9 +190,14 @@ public class List<E> {
 
     // Проверка индекса на принадлежность допустимому диапазону.
     private void checkIndex(int index, int maxIndex) {
+        String indexRange = "0 - " + maxIndex;
+
+        if (maxIndex == -1) {
+            indexRange = "список пуст";
+        }
+
         if (index < 0 || index > maxIndex) {
-            checkListIsEmpty();
-            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за пределы индексов [0 - " + maxIndex + "] списка.");
+            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за пределы индексов [" + indexRange + "] списка.");
         }
     }
 
