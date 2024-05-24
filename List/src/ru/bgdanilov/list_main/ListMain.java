@@ -156,25 +156,26 @@ public class ListMain {
             System.out.println();
 
             // 1.11. Проверим работу исключения.
-            System.out.println("1.11. Проверим работу исключения. Запросим элемент списка с индексом 3.");
-            System.out.println("Наш исходный список: " + strings);
-            System.out.println(strings.get(3));
-            System.out.println();
+//            System.out.println("1.11. Проверим работу исключения. Запросим элемент списка с индексом 4.");
+//            System.out.println("Наш исходный список: " + strings);
+//            System.out.println(strings.get(4));
+//            System.out.println();
 
             // 1.12. Проверим работу исключения.
-//            System.out.println("1.12. Проверим работу исключения. Добавим элемент с индексом 4.");
+//            System.out.println("1.12. Проверим работу исключения. Добавим элемент с индексом 5.");
 //            System.out.println("Наш исходный список: " + strings);
-//            strings.addByIndex(4, null);
+//            strings.addByIndex(5, null);
 //            System.out.println();
 
             // 1.13. Проверим работу исключения.
             System.out.println("1.13. Проверим работу исключения. Запросим элемент списка с индексом 3 из пустого списка.");
-//            strings.deleteFirst();
-//            strings.deleteFirst();
-//            strings.deleteFirst();
-//            System.out.println("Наш исходный список: " + strings);
-//            System.out.println(strings.get(3));
-//            System.out.println();
+            strings.deleteFirst();
+            strings.deleteFirst();
+            strings.deleteFirst();
+            strings.deleteFirst();
+            System.out.println("Наш исходный список: " + strings);
+            System.out.println(strings.get(3));
+            System.out.println();
         } catch (IndexOutOfBoundsException | NoSuchElementException | NullPointerException e) {
             System.out.println("Ошибка! " + e.getMessage());
         }
