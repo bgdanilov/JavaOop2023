@@ -1,11 +1,9 @@
 package ru.bgdanilov.trees;
 
-import static java.util.Objects.compare;
-
-public class TreeNode<T> {
+public class TreeNode<T extends Comparable<T>> {
     private TreeNode<T> left;
     private TreeNode<T> right;
-    private T data;
+    private T data; // это любой объект, например Здание.
 
     public TreeNode() {}
 

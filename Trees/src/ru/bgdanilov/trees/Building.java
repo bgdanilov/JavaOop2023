@@ -16,7 +16,6 @@ public class Building implements Comparable<Building> {
     @Override
     // Почему compareTo красный?
     public int compareTo(Building otherBuilding) {
-        // return this.roomsAmount.compareTo(otherBuilding.getRoomsAmount()); // снимите комментарий.
-        return 0;
+        return  roomsAmount - otherBuilding.roomsAmount;
     }
 }
