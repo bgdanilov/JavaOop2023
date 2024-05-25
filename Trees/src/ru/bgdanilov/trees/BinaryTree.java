@@ -1,8 +1,13 @@
 package ru.bgdanilov.trees;
 
-public class BinaryTree<T> {
+import java.util.ArrayList;
+
+public class BinaryTree<T extends Comparable<T>> {
     TreeNode<T> root;
-    public BinaryTree() {}
+
+    public BinaryTree() {
+    }
+
     public BinaryTree(TreeNode<T> root) {
         this.root = root;
     }
@@ -15,17 +20,53 @@ public class BinaryTree<T> {
         this.root = root;
     }
 
-    public int getComparisonValue(T data) {
-        int value = 0;
+    public void add(TreeNode<T> node) {// Почему нельзя добавить <T extends Comparable<T>> ?
+        TreeNode<T> currentNode = root;
 
-        if (root == null) {
-            root = new TreeNode<>(data);
-        } else {
-            // Cannot resolve method 'compareTo' in 'T'
-            // Что ему мешает?
-            // value = root.getData().compareTo(data); // снимите комментарий.
+        while (true) {
+            if (node.getData().compareTo(currentNode.getData()) < 0) {
+                if (currentNode.getLeft() != null) {
+                    currentNode = currentNode.getLeft();
+                } else {
+                    currentNode.setLeft(node);
+                    return;
+                }
+                // Узел больше текущего.
+            } else {
+                if (currentNode.getRight() != null) {
+                    currentNode = currentNode.getRight();
+                } else {
+                    currentNode.setRight(node);
+                    return;
+                }
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        ArrayList<TreeNode<T>> queue = new ArrayList<>();
+        queue.add(root);
+
+        StringBuilder sb = new StringBuilder();
+        String lineSeparator = System.lineSeparator();
+
+        while (queue.size() != 0) {
+            TreeNode<T> currentNode = queue.get(0);
+
+            // Напечатали - удалили.
+            sb.append(currentNode.getData()).append(lineSeparator);
+            queue.remove(0);
+
+            if (currentNode.getRight() != null) {
+                queue.add(0, currentNode.getRight());
+            }
+
+            if (currentNode.getLeft() != null) {
+                queue.add(0, currentNode.getLeft());
+            }
         }
 
-        return value;
+        return sb.toString();
     }
 }
