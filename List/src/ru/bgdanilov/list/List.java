@@ -156,18 +156,14 @@ public class List<E> {
         }
 
         ListItem<E> item = head;
-        StringBuilder sb = new StringBuilder("["); // строка-аргумент менее затратна, чем .append() ?
+        StringBuilder sb = new StringBuilder("["); // строка-аргумент менее затратна, чем .append();
 
-        // Пусть тогда так:
-        for (int i = length; i > 0; i--, item = item.getNext()) {
-            if (i > 1) {
-                sb.append(item.getData()).append(", ");
-            } else {
-                sb.append(item.getData());
-            }
+        for (int i = 0; i < length; i++, item = item.getNext()) {
+            sb.append(item.getData()).append(", ");
         }
 
-        sb.append(']');
+        int sbLength = sb.length();
+        sb.replace(sbLength - 2, sbLength - 1, "]");
 
         return sb.toString();
     }
@@ -190,14 +186,9 @@ public class List<E> {
 
     // Проверка индекса на принадлежность допустимому диапазону.
     private void checkIndex(int index, int maxIndex) {
-        String indexRange = "0 - " + maxIndex;
-
-        if (maxIndex == -1) {
-            indexRange = "список пуст";
-        }
-
         if (index < 0 || index > maxIndex) {
-            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за пределы индексов [" + indexRange + "] списка.");
+            String indexesRange = (maxIndex == -1) ? "список пуст" : "0 - " + maxIndex;
+            throw new IndexOutOfBoundsException("Индекс [" + index + "] выходит за пределы индексов [" + indexesRange + "] списка.");
         }
     }
 
