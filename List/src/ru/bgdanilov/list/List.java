@@ -155,15 +155,14 @@ public class List<E> {
             return "[]";
         }
 
-        ListItem<E> item = head;
         StringBuilder sb = new StringBuilder("["); // строка-аргумент менее затратна, чем .append();
 
-        for (int i = 0; i < length; i++, item = item.getNext()) {
+        for (ListItem<E> item = head; item != null; item = item.getNext()) {
             sb.append(item.getData()).append(", ");
         }
 
         int sbLength = sb.length();
-        sb.replace(sbLength - 2, sbLength - 1, "]");
+        sb.replace(sbLength - 2, sbLength, "]");
 
         return sb.toString();
     }
