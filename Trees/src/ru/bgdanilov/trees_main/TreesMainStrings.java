@@ -16,6 +16,7 @@ public class TreesMainStrings {
         TreeNode<String> name5 = new TreeNode<>("Roma");
         TreeNode<String> name6 = new TreeNode<>("Dima");
         TreeNode<String> name7 = new TreeNode<>("Alla");
+        TreeNode<String> name8 = new TreeNode<>("Dima");
 
         stringsTree.setRoot(name1);
         stringsTree.add(name2);
@@ -26,5 +27,7 @@ public class TreesMainStrings {
         stringsTree.add(name7);
 
         System.out.println(stringsTree);
+
+        System.out.println(stringsTree.find(name8));
     }
 }

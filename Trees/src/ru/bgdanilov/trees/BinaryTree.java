@@ -32,12 +32,36 @@ public class BinaryTree<T extends Comparable<T>> {
                     return;
                 }
                 // Узел больше текущего.
-            } else {
+            } else { // а если равны?
                 if (currentNode.getRight() != null) {
                     currentNode = currentNode.getRight();
                 } else {
                     currentNode.setRight(node);
                     return;
+                }
+            }
+        }
+    }
+
+    public boolean find(TreeNode<T> node) {
+        TreeNode<T> currentNode = root;
+
+        while (true) {
+            if (node.getData().compareTo(currentNode.getData()) == 0) {
+                return true;
+            }
+
+            if (node.getData().compareTo(currentNode.getData()) < 0) {
+                if (currentNode.getLeft() != null) {
+                    currentNode = currentNode.getLeft();
+                } else {
+                    return false;
+                }
+            } else {
+                if (currentNode.getRight() != null) {
+                    currentNode = currentNode.getRight();
+                } else {
+                    return false;
                 }
             }
         }
@@ -55,7 +79,7 @@ public class BinaryTree<T extends Comparable<T>> {
             TreeNode<T> currentNode = queue.get(0);
 
             // Напечатали - удалили.
-            sb.append(currentNode.getData()).append(lineSeparator);
+            sb.append(currentNode.getData().toString()).append(lineSeparator);
             queue.remove(0);
 
             if (currentNode.getRight() != null) {
