@@ -1,63 +1,76 @@
 package ru.bgdanilov.temperature.view;
 
-import ru.bgdanilov.temperature.controller.ControllerInterface;
-import ru.bgdanilov.temperature.model.ScaleInterface;
+import ru.bgdanilov.temperature.controller.Controller;
+import ru.bgdanilov.temperature.model.Scale;
 
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class Console {
-    private final ControllerInterface controller;
+public class ConsoleView {
+    private final Controller controller;
 
-    public Console(ControllerInterface controller) {
+    public ConsoleView(Controller controller) {
         this.controller = controller;
     }
 
     public void execute() {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите исходную температуру:");
 
-        // Ввод исходной температуры.
-        System.out.println("Введите исходную температуру: ");
-
-        if (!scanner.hasNextDouble()) {
-            throw new NumberFormatException("Вы должны ввести число.");
+        while (!scanner.hasNextDouble()) {
+            scanner.next();
+            System.out.println("Ошибка. Вы должны ввести число.");
         }
 
         double inputTemperature = scanner.nextDouble();
 
-        List<ScaleInterface> temperatureScales = controller.getTemperatureScales();
+        List<Scale> temperatureScales = controller.getTemperatureScales();
 
         // Строка обозначений допустимых шкал температуры. Для вывода сообщений.
         String temperatureScalesKeysLine = temperatureScales.stream()
-                .map(ScaleInterface::key)
+                .map(Scale::key)
                 .map(Object::toString)
                 .collect(Collectors.joining(", ", "(", ")"));
 
         // Ввод исходной шкалы измерения.
+        // TODO: Хорошо бы позволить вводить только одну букву.
+        System.out.println("Введите исходную шкалу " + temperatureScalesKeysLine + ":");
+        char inputTemperatureScaleKey = scanner.next().charAt(0);
+
+        while (getTemperatureScale(temperatureScales, inputTemperatureScaleKey) == null) {
+            System.out.println("Вы должны ввести " + temperatureScalesKeysLine + ".");
+            inputTemperatureScaleKey = scanner.next().charAt(0);
+        }
+
+        Scale inputScale = getTemperatureScale(temperatureScales, inputTemperatureScaleKey);
+
+        /* * Старое оставим пока.
         String inputMessage = "Введите исходную шкалу " + temperatureScalesKeysLine + ":";
 
         System.out.println(inputMessage);
         char inputTemperatureScaleKey = scanner.next().charAt(0);
 
-        ScaleInterface inputScale = getTemperatureScale(temperatureScales, inputTemperatureScaleKey);
+        Scale inputScale = getTemperatureScale(temperatureScales, inputTemperatureScaleKey);
 
         String errorMessage = "Вы должны ввести " + temperatureScalesKeysLine + ".";
 
         if (inputScale == null) {
             throw new NumberFormatException(errorMessage);
         }
+        * */
 
         // Ввод результирующей шкалы измерения.
         System.out.println("Введите результирующую шкалу " + temperatureScalesKeysLine + ":");
         char outputTemperatureScaleKey = scanner.next().charAt(0);
 
-        ScaleInterface outputScale = getTemperatureScale(temperatureScales, outputTemperatureScaleKey);
-
-        if (outputScale == null) {
-            throw new NumberFormatException(errorMessage);
+        while (getTemperatureScale(temperatureScales, outputTemperatureScaleKey) == null) {
+            System.out.println("Вы должны ввести " + temperatureScalesKeysLine + ".");
+            outputTemperatureScaleKey = scanner.next().charAt(0);
         }
+
+        Scale outputScale = getTemperatureScale(temperatureScales, outputTemperatureScaleKey);
 
         // Расчет и округление выходной температуры.
         double outputTemperature = controller.convertTemperature(inputTemperature, inputScale, outputScale);
@@ -71,7 +84,7 @@ public class Console {
         System.out.println(outputTemperatureMessage);
     }
 
-    private static ScaleInterface getTemperatureScale(List<ScaleInterface> temperatureScales, char temperatureKey) {
+    private static Scale getTemperatureScale(List<Scale> temperatureScales, char temperatureKey) {
         return temperatureScales.stream()
                 .filter(scale -> scale.key() == temperatureKey)
                 .findFirst()

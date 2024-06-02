@@ -1,7 +1,7 @@
 package ru.bgdanilov.temperature.view;
 
-import ru.bgdanilov.temperature.controller.ControllerInterface;
-import ru.bgdanilov.temperature.model.ScaleInterface;
+import ru.bgdanilov.temperature.controller.Controller;
+import ru.bgdanilov.temperature.model.Scale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,10 +12,10 @@ import java.util.List;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
-public class Desktop {
-    private final ControllerInterface controller;
+public class DesktopView {
+    private final Controller controller;
 
-    public Desktop(ControllerInterface controller) {
+    public DesktopView(Controller controller) {
         this.controller = controller;
     }
 
@@ -31,22 +31,25 @@ public class Desktop {
             frame.setIconImage(icon);
 
             // Получаем коллекцию объектов шкал температур.
-            List<ScaleInterface> temperatureScales = controller.getTemperatureScales();
+            List<Scale> temperatureScales = controller.getTemperatureScales();
 
             // Исходные данные.
             JLabel inputTemperatureLabel = new JLabel("Исходная температура:");
             JTextField inputTemperatureField = new JTextField("0", 13);
 
-            JComboBox<ScaleInterface> inputScaleComboBox = new JComboBox<>();
-            fillComboBoxByTemperatureScales(inputScaleComboBox, temperatureScales);
+            // Тут мы заполняем шкалами температур наш JComboBox.
+            // JComboBox'у нужно передать массив шкал.
+            // Передаем массив, создаваемый из списка наших шкал методом toArray,
+            // который принимает массив Scale[0] нулевой длины и преобразуется в длину,
+            // равную списку шкал - так что все шкалы влезают.
+            JComboBox<Scale> inputScaleComboBox = new JComboBox<>(temperatureScales.toArray(new Scale[0]));
 
             // Результирующие данные.
             JLabel outputTemperatureLabel = new JLabel(" Результирующая температура:");
             JTextField outputTemperatureField = new JTextField("0", 13);
             outputTemperatureField.setEditable(false);
 
-            JComboBox<ScaleInterface> outputScaleComboBox = new JComboBox<>();
-            fillComboBoxByTemperatureScales(outputScaleComboBox, temperatureScales);
+            JComboBox<Scale> outputScaleComboBox = new JComboBox<>(temperatureScales.toArray(new Scale[0]));
 
             // Кнопки.
             JButton convertButton = new JButton("Конвертировать");
@@ -141,6 +144,7 @@ public class Desktop {
                 @Override
                 public void keyTyped(KeyEvent event) {
                     super.keyTyped(event);
+
                     if (inputTemperatureField.getText().length() >= 18) {
                         event.consume();
                     }
@@ -150,11 +154,10 @@ public class Desktop {
             convertButton.addActionListener(event -> {
                 try {
                     double inputTemperature = Double.parseDouble(inputTemperatureField.getText());
-                    ScaleInterface inputScale = (ScaleInterface) inputScaleComboBox.getSelectedItem();
-                    ScaleInterface outputScale = (ScaleInterface) outputScaleComboBox.getSelectedItem();
+                    Scale inputScale = (Scale) inputScaleComboBox.getSelectedItem();
+                    Scale outputScale = (Scale) outputScaleComboBox.getSelectedItem();
 
-                    double outputTemperature = controller
-                            .convertTemperature(inputTemperature, inputScale, outputScale);
+                    double outputTemperature = controller.convertTemperature(inputTemperature, inputScale, outputScale);
 
                     // Формируем сообщение с данными исходной температуры.
                     String outputTemperatureMessage = getRoundedTemperatureLine(outputTemperature);
@@ -174,14 +177,6 @@ public class Desktop {
                 outputScaleComboBox.setSelectedIndex(0);
             });
         });
-    }
-
-    // Наполнение JComboBox.
-    private static void fillComboBoxByTemperatureScales(JComboBox<ScaleInterface> comboBox,
-                                                        List<ScaleInterface> temperatureScales) {
-        for (ScaleInterface comboBoxItem : temperatureScales) {
-            comboBox.addItem(comboBoxItem);
-        }
     }
 
     // Округление температуры.

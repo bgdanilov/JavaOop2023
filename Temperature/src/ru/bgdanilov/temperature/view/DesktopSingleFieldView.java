@@ -1,7 +1,7 @@
 package ru.bgdanilov.temperature.view;
 
-import ru.bgdanilov.temperature.controller.ControllerInterface;
-import ru.bgdanilov.temperature.model.ScaleInterface;
+import ru.bgdanilov.temperature.controller.Controller;
+import ru.bgdanilov.temperature.model.Scale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,13 +12,13 @@ import java.util.List;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
-public class DesktopInputFieldOutputs {
-    private final ControllerInterface controller;
+public class DesktopSingleFieldView {
+    private final Controller controller;
 
     private boolean isPressed;
     private double inputTemperature;
 
-    public DesktopInputFieldOutputs(ControllerInterface controller) {
+    public DesktopSingleFieldView(Controller controller) {
         this.controller = controller;
     }
 
@@ -37,16 +37,14 @@ public class DesktopInputFieldOutputs {
             JLabel header = new JLabel("Введите температуру:");
             JTextField textField = new JTextField("0", 13);
 
-            List<ScaleInterface> temperatureScales = controller.getTemperatureScales();
+            List<Scale> temperatureScales = controller.getTemperatureScales();
 
             // inputScaleComboBox, toText, outputScaleComboBox, buttons.
-            JComboBox<ScaleInterface> inputScaleComboBox = new JComboBox<>();
-            fillComboBoxByTemperatureScales(inputScaleComboBox, temperatureScales);
+            JComboBox<Scale> inputScaleComboBox = new JComboBox<>(temperatureScales.toArray(new Scale[0]));
 
             JLabel toText = new JLabel("конвертировать в:");
 
-            JComboBox<ScaleInterface> outputScaleComboBox = new JComboBox<>();
-            fillComboBoxByTemperatureScales(outputScaleComboBox, temperatureScales);
+            JComboBox<Scale> outputScaleComboBox = new JComboBox<>(temperatureScales.toArray(new Scale[0]));
 
             JButton convertButton = new JButton("Конвертировать");
             JButton resetButton = new JButton("Назад / Сброс");
@@ -119,11 +117,10 @@ public class DesktopInputFieldOutputs {
             convertButton.addActionListener(event -> {
                 try {
                     inputTemperature = Double.parseDouble(textField.getText());
-                    ScaleInterface inputScale = (ScaleInterface) inputScaleComboBox.getSelectedItem();
-                    ScaleInterface outputScale = (ScaleInterface) outputScaleComboBox.getSelectedItem();
+                    Scale inputScale = (Scale) inputScaleComboBox.getSelectedItem();
+                    Scale outputScale = (Scale) outputScaleComboBox.getSelectedItem();
 
-                    double outputTemperature = controller
-                            .convertTemperature(inputTemperature, inputScale, outputScale);
+                    double outputTemperature = controller.convertTemperature(inputTemperature, inputScale, outputScale);
 
                     // Формируем сообщение с данными исходной температуры.
                     assert inputScale != null;
@@ -156,14 +153,6 @@ public class DesktopInputFieldOutputs {
                 }
             });
         });
-    }
-
-    // Наполнение JComboBox.
-    private static void fillComboBoxByTemperatureScales(JComboBox<ScaleInterface> comboBox,
-                                                        List<ScaleInterface> temperatureScales) {
-        for (ScaleInterface comboBoxItem : temperatureScales) {
-            comboBox.addItem(comboBoxItem);
-        }
     }
 
     // Округление температуры.
