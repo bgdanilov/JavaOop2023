@@ -7,18 +7,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.text.DecimalFormat;
 import java.util.List;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
-public class DesktopView {
+public class DesktopView implements View {
     private final Controller controller;
-
     public DesktopView(Controller controller) {
         this.controller = controller;
     }
 
+    @Override
     public void execute() {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Конвертер температур");
@@ -160,7 +159,7 @@ public class DesktopView {
                     double outputTemperature = controller.convertTemperature(inputTemperature, inputScale, outputScale);
 
                     // Формируем сообщение с данными исходной температуры.
-                    String outputTemperatureMessage = getRoundedTemperatureLine(outputTemperature);
+                    String outputTemperatureMessage = ViewUtilities.getRoundedTemperatureLine(outputTemperature);
 
                     outputTemperatureField.setText(outputTemperatureMessage);
                 } catch (NumberFormatException exception) {
@@ -177,14 +176,5 @@ public class DesktopView {
                 outputScaleComboBox.setSelectedIndex(0);
             });
         });
-    }
-
-    // Округление температуры.
-    private static String getRoundedTemperatureLine(double temperature) {
-        DecimalFormat temperatureFormat = new DecimalFormat("0.00E00");
-
-        return temperature < 10000
-                ? String.valueOf((double) Math.round(temperature * 100) / 100)
-                : temperatureFormat.format(temperature);
     }
 }

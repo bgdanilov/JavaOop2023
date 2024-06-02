@@ -15,14 +15,10 @@ public class DesktopSingleFieldMain {
                 new FahrenheitScale('F', "Фаренгейт")
         );
 
-        try {
-            ModelImpl model = new ModelImpl(temperatureScales);
-            ControllerImpl controller = new ControllerImpl(model);
-            DesktopSingleFieldView userView = new DesktopSingleFieldView(controller);
+        ModelImpl model = new ModelImpl(temperatureScales);
+        ControllerImpl controller = new ControllerImpl(model);
+        DesktopSingleFieldView userView = new DesktopSingleFieldView(controller);
 
-            userView.execute();
-        } catch (NumberFormatException e) {
-            System.out.println("Ошибка! " + e.getMessage());
-        }
+        userView.execute();
     }
 }

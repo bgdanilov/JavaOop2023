@@ -15,14 +15,10 @@ public class ConsoleMain {
                 new FahrenheitScale('F', "Фаренгейт")
         );
 
-        try {
-            ModelImpl model = new ModelImpl(temperatureScales);
-            ControllerImpl controller = new ControllerImpl(model);
-            ConsoleView userView = new ConsoleView(controller);
+        ModelImpl model = new ModelImpl(temperatureScales);
+        ControllerImpl controller = new ControllerImpl(model);
+        ConsoleView userView = new ConsoleView(controller);
 
-            userView.execute();
-        } catch (NumberFormatException e) {
-            System.out.println("Ошибка! " + e.getMessage());
-        }
+        userView.execute();
     }
 }
