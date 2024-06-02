@@ -1,28 +1,24 @@
 package ru.bgdanilov.temperature_main;
 
-import ru.bgdanilov.temperature.controller.Controller;
+import ru.bgdanilov.temperature.controller.ControllerImpl;
 import ru.bgdanilov.temperature.model.*;
-import ru.bgdanilov.temperature.view.Console;
+import ru.bgdanilov.temperature.view.ConsoleView;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class ConsoleMain {
     public static void main(String[] args) {
-        List<ScaleInterface> temperatureScales = Arrays.asList(
-                new ScaleCelsius('C', "Цельсий"),
-                new ScaleKelvin('K', "Кельвин"),
-                new ScaleFahrenheit('F', "Фаренгейт")
+        List<Scale> temperatureScales = Arrays.asList(
+                new CelsiusScale('C', "Цельсий"),
+                new KelvinScale('K', "Кельвин"),
+                new FahrenheitScale('F', "Фаренгейт")
         );
 
-        try {
-            Model model = new Model(temperatureScales);
-            Controller controller = new Controller(model);
-            Console userView = new Console(controller);
+        ModelImpl model = new ModelImpl(temperatureScales);
+        ControllerImpl controller = new ControllerImpl(model);
+        ConsoleView userView = new ConsoleView(controller);
 
-            userView.execute();
-        } catch (NumberFormatException e) {
-            System.out.println("Ошибка! " + e.getMessage());
-        }
+        userView.execute();
     }
 }

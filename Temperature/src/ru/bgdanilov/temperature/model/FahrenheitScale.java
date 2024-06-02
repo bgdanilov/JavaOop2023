@@ -1,15 +1,14 @@
 package ru.bgdanilov.temperature.model;
 
-public record ScaleKelvin(char key, String name) implements ScaleInterface {
-
+public record FahrenheitScale(char key, String name) implements Scale {
     @Override
     public double convertToCelsius(double temperature) {
-        return temperature - 273.15;
+        return 5.0 * (temperature - 32.0) / 9.0;
     }
 
     @Override
     public double covertFromCelsius(double temperature) {
-        return temperature + 273.15;
+        return temperature * 1.8 + 32.0;
     }
 
     @Override
