@@ -35,16 +35,16 @@ public class ConsoleView {
                 .collect(Collectors.joining(", ", "(", ")"));
 
         // Ввод исходной шкалы измерения.
-        // TODO: Хорошо бы позволить вводить только одну букву.
         System.out.println("Введите исходную шкалу " + temperatureScalesKeysLine + ":");
-        char inputTemperatureScaleKey = scanner.next().charAt(0);
+        String inputTemperatureScaleKey = scanner.next();
 
-        while (getTemperatureScale(temperatureScales, inputTemperatureScaleKey) == null) {
-            System.out.println("Вы должны ввести " + temperatureScalesKeysLine + ".");
-            inputTemperatureScaleKey = scanner.next().charAt(0);
+        while (inputTemperatureScaleKey.length() > 1
+                || getTemperatureScale(temperatureScales, inputTemperatureScaleKey.charAt(0)) == null) {
+            System.out.println("Вы должны ввести один символ " + temperatureScalesKeysLine + ".");
+            inputTemperatureScaleKey = scanner.next();
         }
 
-        Scale inputScale = getTemperatureScale(temperatureScales, inputTemperatureScaleKey);
+        Scale inputScale = getTemperatureScale(temperatureScales, inputTemperatureScaleKey.charAt(0));
 
         /* * Старое оставим пока.
         String inputMessage = "Введите исходную шкалу " + temperatureScalesKeysLine + ":";
@@ -63,14 +63,15 @@ public class ConsoleView {
 
         // Ввод результирующей шкалы измерения.
         System.out.println("Введите результирующую шкалу " + temperatureScalesKeysLine + ":");
-        char outputTemperatureScaleKey = scanner.next().charAt(0);
+        String outputTemperatureScaleKey = scanner.next();
 
-        while (getTemperatureScale(temperatureScales, outputTemperatureScaleKey) == null) {
-            System.out.println("Вы должны ввести " + temperatureScalesKeysLine + ".");
-            outputTemperatureScaleKey = scanner.next().charAt(0);
+        while (outputTemperatureScaleKey.length() > 1
+                || getTemperatureScale(temperatureScales, outputTemperatureScaleKey.charAt(0)) == null) {
+            System.out.println("Вы должны ввести один символ " + temperatureScalesKeysLine + ".");
+            outputTemperatureScaleKey = scanner.next();
         }
 
-        Scale outputScale = getTemperatureScale(temperatureScales, outputTemperatureScaleKey);
+        Scale outputScale = getTemperatureScale(temperatureScales, outputTemperatureScaleKey.charAt(0));
 
         // Расчет и округление выходной температуры.
         double outputTemperature = controller.convertTemperature(inputTemperature, inputScale, outputScale);
