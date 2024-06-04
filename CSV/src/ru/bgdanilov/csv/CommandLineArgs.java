@@ -52,6 +52,10 @@ public class CommandLineArgs {
         return warnings;
     }
 
+    public boolean hasWarnings() {
+        return !warnings.isEmpty();
+    }
+
     public String getCsvFileName() {
         return csvFileName;
     }
@@ -86,7 +90,7 @@ public class CommandLineArgs {
             return;
         }
 
-        // Ищем дубликаты команд-ключей.
+        // Ищем дубликаты команд-ключей.§
         ArrayList<String> keysDuplicates = getKeysDuplicates(args);
 
         if (keysDuplicates.size() != 0) {
@@ -105,8 +109,6 @@ public class CommandLineArgs {
             }
         }
 
-        int startIndex = 0;
-
         if (fileNamesAmount == 0) {
             warnings.add("Не переданы имена файлов.");
             return;
@@ -117,6 +119,7 @@ public class CommandLineArgs {
             return;
         }
 
+        int startIndex = 0;
         String warning;
 
         if (fileNamesAmount == 1) { // передан только csv-файл;
@@ -127,7 +130,7 @@ public class CommandLineArgs {
                 return;
             }
 
-            setHtmlFileName(FileNameUtilities.getHtmlExtensionFileName(this.csvFileName));
+            setHtmlFileName(FileNameUtilities.getHtmlExtensionFileName(csvFileName));
 
             startIndex = 1;
         }
@@ -201,17 +204,14 @@ public class CommandLineArgs {
     // Записывает полученное имя файла в поле.
     // Возвращает сообщение об ошибке или null, если все успешно.
     private String loadCheckedFileName(String fileName, String verificationExtension) {
-        String message = null;
-
         String csvFileName = FileNameUtilities.getCheckedExtensionFileName(fileName, verificationExtension);
 
         if (csvFileName != null) {
             setCsvFileName(csvFileName);
-        } else {
-            message = "Не указано или неверно указано расширение " + verificationExtension + "-файла";
+            return null;
         }
 
-        return message;
+        return "Не указано или неверно указано расширение " + verificationExtension + "-файла";
     }
 
     private static ArrayList<String> getKeysDuplicates(String[] settings) {
@@ -227,9 +227,5 @@ public class CommandLineArgs {
         }
 
         return settingsDuplicates;
-    }
-
-    public boolean hasWarnings() {
-        return !warnings.isEmpty();
     }
 }
