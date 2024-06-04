@@ -12,8 +12,8 @@ public class CsvToHtmlConverter {
     // public CsvToHtmlConverter() {} // пустой конструктор, пусть будет;
 
     // Конвертирование по переданным args[].
-    // Использует данные из args[], хранящиеся в объекте arguments класса CommandLineArgs.
-    public void convert(CommandLineArgs arguments) throws IOException {
+    // Использует данные из args[], хранящиеся в объекте arguments класса CsvToHtmlConverterArgs.
+    public void convert(CsvToHtmlConverterArgs arguments) throws IOException {
         String csvFileName = arguments.getCsvFileName();
         File csvFile = new File(csvFileName);
 
