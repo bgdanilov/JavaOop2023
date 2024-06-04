@@ -10,7 +10,7 @@ public class CsvMainByFileNames {
         CsvToHtmlConverter converter = new CsvToHtmlConverter();
 
         try {
-            converter.convert("csv1.csv", ',');
+            //converter.convert("csv.csv1.", ',');
             converter.convert("csv2.csv", "mineNamedFile.html", ',');
             Utilities.printMessages(converter.getLogs());
         } catch (IOException e) {
