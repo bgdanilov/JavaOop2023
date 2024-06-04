@@ -123,14 +123,16 @@ public class CommandLineArgs {
         String warning;
 
         if (fileNamesAmount == 1) { // передан только csv-файл;
-            warning = loadCheckedFileName(args[0], ".csv");
+            setCsvFileName(args[0]);
 
-            if (warning != null) {
-                warnings.add(warning);
-                return;
-            }
+//            warning = loadCheckedFileName(args[0], ".csv");
+//
+//            if (warning != null) {
+//                warnings.add(warning);
+//                return;
+//            }
 
-            setHtmlFileName(FileNameUtilities.getHtmlExtensionFileName(csvFileName));
+            setHtmlFileName(FileNameUtilities.getNewExtensionFileName(csvFileName, "html"));
 
             startIndex = 1;
         }
@@ -142,7 +144,7 @@ public class CommandLineArgs {
                 warnings.add(warning);
             }
 
-            warning = loadCheckedFileName(args[0], ".html");
+            warning = loadCheckedFileName(args[1], ".html");
 
             if (warning != null) {
                 warnings.add(warning);

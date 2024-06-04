@@ -31,7 +31,7 @@ public class CsvToHtmlConverter {
     public void convert(String csvFileName, char csvSeparator) throws IOException {
         File csvFile = new File(csvFileName);
 
-        String htmlFileName = FileNameUtilities.getHtmlExtensionFileName(csvFileName);
+        String htmlFileName = FileNameUtilities.getNewExtensionFileName(csvFileName, ".html");
         File htmlFile = new File(htmlFileName);
 
         convertFile(csvFile, htmlFile, csvSeparator);
