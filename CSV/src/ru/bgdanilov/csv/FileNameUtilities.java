@@ -40,10 +40,15 @@ public class FileNameUtilities {
 
     }
 
-
 //    public static String getCheckedExtensionFileName(String fileName, String extension) {
-//        String fileExtension = getFileNameExtension(fileName);
-//        String fileNameOnly = getFileNameOnly(fileName);
+//        int dotIndex = fileName.lastIndexOf('.');
+//        String fileExtension = null;
+//        String fileNameOnly = null;
+//
+//        if (dotIndex != -1) {
+//            fileExtension = fileName.substring(dotIndex).toLowerCase();
+//            fileNameOnly = fileName.substring(0, dotIndex);
+//        }
 //
 //        if (Objects.equals(fileExtension, extension)) {
 //            return fileNameOnly + fileExtension;
@@ -51,20 +56,4 @@ public class FileNameUtilities {
 //
 //        return null;
 //    }
-    public static String getCheckedExtensionFileName(String fileName, String extension) {
-        int dotIndex = fileName.lastIndexOf('.');
-        String fileExtension = null;
-        String fileNameOnly = null;
-
-        if (dotIndex != -1) {
-            fileExtension = fileName.substring(dotIndex).toLowerCase();
-            fileNameOnly = fileName.substring(0, dotIndex);
-        }
-
-        if (Objects.equals(fileExtension, extension)) {
-            return fileNameOnly + fileExtension;
-        }
-
-        return null;
-    }
 }

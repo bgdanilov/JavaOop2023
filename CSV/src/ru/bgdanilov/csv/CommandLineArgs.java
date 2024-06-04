@@ -90,7 +90,7 @@ public class CommandLineArgs {
             return;
         }
 
-        // Ищем дубликаты команд-ключей.§
+        // Ищем дубликаты команд-ключей.
         ArrayList<String> keysDuplicates = getKeysDuplicates(args);
 
         if (keysDuplicates.size() != 0) {
@@ -120,44 +120,19 @@ public class CommandLineArgs {
         }
 
         int startIndex = 0;
-        String warning;
 
         if (fileNamesAmount == 1) { // передан только csv-файл;
             setCsvFileName(args[0]);
-
-//            warning = loadCheckedFileName(args[0], ".csv");
-//
-//            if (warning != null) {
-//                warnings.add(warning);
-//                return;
-//            }
-
             setHtmlFileName(FileNameUtilities.getNewExtensionFileName(csvFileName, "html"));
 
             startIndex = 1;
         }
 
         if (fileNamesAmount == 2) { // передан еще и html-файл;
-            warning = loadCheckedFileName(args[0], ".csv");
-
-            if (warning != null) {
-                warnings.add(warning);
-            }
-
-            warning = loadCheckedFileName(args[1], ".html");
-
-            if (warning != null) {
-                warnings.add(warning);
-            }
+            setCsvFileName(args[0]);
+            setHtmlFileName(args[1]);
 
             startIndex = 2;
-        }
-
-        // Поскольку нельзя сделать return после Warning'а исходного файла
-        // (пропустим Warning результирующего), будем копить Warning'и.
-        // Прервем дальнейшее выполнение, если накопились Warnings.
-        if (hasWarnings()) {
-            return;
         }
 
         // Считываем ключи.
@@ -199,21 +174,6 @@ public class CommandLineArgs {
                 }
             }
         }
-    }
-
-    // Принимает имя файла (из args) и образец расширения.
-    // Проверяет и формирует имя файла с правильным расширением.
-    // Записывает полученное имя файла в поле.
-    // Возвращает сообщение об ошибке или null, если все успешно.
-    private String loadCheckedFileName(String fileName, String verificationExtension) {
-        String csvFileName = FileNameUtilities.getCheckedExtensionFileName(fileName, verificationExtension);
-
-        if (csvFileName != null) {
-            setCsvFileName(csvFileName);
-            return null;
-        }
-
-        return "Не указано или неверно указано расширение " + verificationExtension + "-файла";
     }
 
     private static ArrayList<String> getKeysDuplicates(String[] settings) {
