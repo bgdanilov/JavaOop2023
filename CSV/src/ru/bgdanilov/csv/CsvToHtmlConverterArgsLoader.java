@@ -11,22 +11,18 @@ public class CsvToHtmlConverterArgsLoader {
     public CsvToHtmlConverterArgsLoader(String[] args, CsvToHtmlConverterArgs arguments) {
         this.args = args;
         this.converterArgs = arguments;
-        loadArguments();
     }
 
     public void loadArguments() throws IOException {
         if (args.length == 0) { // аргументы не переданы;
-            throw new IOException("Аргументы не переданы.");
-            System.out.println(HE);
-            //warnings.add(HELP_MESSAGE);
+            throw new IOException(converterArgs.getHelpMessage());
         }
 
         // Ищем дубликаты команд-ключей.
         ArrayList<String> keysDuplicates = getKeysDuplicates(args);
 
         if (keysDuplicates.size() != 0) {
-            //warnings.add(keysDuplicates + ": команды повторяются.");
-            return;
+            throw new IOException(keysDuplicates + ": команды повторяются.");
         }
 
         // Считаем количество переданных имен файлов (пока не начнутся ключи).
@@ -41,20 +37,18 @@ public class CsvToHtmlConverterArgsLoader {
         }
 
         if (fileNamesAmount == 0) {
-            //warnings.add("Не переданы имена файлов.");
-            return;
+            throw new IOException("Не переданы имена файлов.");
         }
 
         if (fileNamesAmount > 2) { // написали перед командами больше двух имен файлов;
-           // warnings.add("Передано более двух имен файлов.");
-            return;
+            throw new IOException("Передано более двух имен файлов.");
         }
 
         int startIndex = 0;
 
         if (fileNamesAmount == 1) { // передан только csv-файл;
             converterArgs.setCsvFileName(args[0]);
-            converterArgs.setHtmlFileName(FileNameUtilities.getNewExtensionFileName(converterArgs.getCsvFileName(), "html"));
+            converterArgs.setHtmlFileName(FileNameUtilities.composeNewExtensionFileName(converterArgs.getCsvFileName(), "html"));
 
             startIndex = 1;
         }
@@ -73,14 +67,14 @@ public class CsvToHtmlConverterArgsLoader {
             switch (args[i]) {
                 case "-s" -> {
                     if (keyValueIndex == args.length || args[keyValueIndex].charAt(0) == '-') {
-                        //warnings.add("[" + args[i] + "]: не указан символ-разделитель.");
+                        throw new IOException("[" + args[i] + "]: не указан символ-разделитель.");
                     } else {
                         String separator = args[keyValueIndex];
 
                         if (separator.length() == 1) {
                             converterArgs.setSeparator(separator.charAt(0));
                         } else {
-                           // warnings.add("[" + args[i] + " " + separator + "] разделитель должен состоять из одного символа.");
+                            throw new IOException("[" + args[i] + " " + separator + "] разделитель должен состоять из одного символа.");
                         }
 
                         i++;
@@ -88,21 +82,16 @@ public class CsvToHtmlConverterArgsLoader {
                 }
                 case "-p" -> {
                     if (keyValueIndex == args.length || args[keyValueIndex].charAt(0) == '-') {
-                        //warnings.add("[" + args[i] + "]: не указан префикс выходного файла.");
+                        throw new IOException("[" + args[i] + "]: не указан префикс выходного файла.");
                     } else {
                         converterArgs.setHtmlFileNamePrefix(args[keyValueIndex]);
-                        converterArgs.setHtmlFileName(FileNameUtilities.composeHtmlFileNameWithPrefix(converterArgs.getHtmlFileNamePrefix(), converterArgs.getHtmlFileName()));
+                        converterArgs.setHtmlFileName(FileNameUtilities.composeFileNameWithPrefix(converterArgs.getHtmlFileNamePrefix(), converterArgs.getHtmlFileName()));
                         i++;
                     }
                 }
-                case "-help" -> {
-                   // warnings.clear(); //  не станем нагромождать другими сообщениями, справка важнее.
-                    //warnings.add(HELP_MESSAGE);
-                }
-                default -> {
-                    //warnings.add("[" + args[i] + "] не является командой.");
-                    //warnings.add("Используйте команду -help для вызова справки.");
-                }
+                case "-help" -> throw new IOException(converterArgs.getHelpMessage());
+                default ->
+                        throw new IOException("[" + args[i] + "] не является командой. Используйте команду -help для вызова справки.");
             }
         }
     }

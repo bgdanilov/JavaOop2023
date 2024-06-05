@@ -9,12 +9,9 @@ public class CsvMainByFileNames {
     public static void main(String[] args) {
         CsvToHtmlConverter converter = new CsvToHtmlConverter();
 
-        try {
-            //converter.convert("csv.csv1.", ',');
-            converter.convert("csv2.csv", "mineNamedFile.html", ',');
-            Utilities.printMessages(converter.getLogs());
-        } catch (IOException e) {
-            System.out.println("Ошибка: " + e.getMessage());
-        }
+        converter.convert("csv.csv1q", ',');
+        converter.convert("csv2.csv", "mineNamedFile.html", ',');
+
+        Utilities.printMessages(converter.getLogs());
     }
 }
