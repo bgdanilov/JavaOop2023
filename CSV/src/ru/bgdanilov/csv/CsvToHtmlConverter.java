@@ -8,10 +8,19 @@ import java.util.ArrayList;
 
 public class CsvToHtmlConverter {
     private final ArrayList<String> logs = new ArrayList<>();
+    private boolean isSuccess = false;
+
+    public ArrayList<String> getLogs() {
+        return logs;
+    }
+
+    public boolean getSuccess() {
+        return this.isSuccess;
+    }
 
     // Конвертирование по переданным args[].
     // Использует данные из args[], хранящиеся в объекте arguments класса CsvToHtmlConverterArgs.
-    public void convert(CsvToHtmlConverterArgs arguments) throws IOException {
+    public void convert(CsvToHtmlConverterArgs arguments) {
         String csvFileName = arguments.getCsvFileName();
         String htmlFileName = arguments.getHtmlFileName();
 
@@ -22,12 +31,13 @@ public class CsvToHtmlConverter {
             char csvSeparator = arguments.getSeparator();
 
             convertFile(csvFile, htmlFile, csvSeparator);
+
+            isSuccess = true;
             logs.add("Файл: " + csvFileName + " успешно обработан.");
             logs.add("Результат: " + htmlFileName + ".");
-        } catch (FileNotFoundException e) {
-            logs.add("Ошибка: файл " + csvFileName + " не существует.");
         } catch (IOException e) {
-            logs.add("Ошибка чтения или обработки файла: " + csvFileName + ".");
+            isSuccess = false;
+            logs.add("Файл: " + csvFileName + " не существует или ошибка его обработки.");
         }
     }
 
@@ -42,12 +52,12 @@ public class CsvToHtmlConverter {
 
             convertFile(csvFile, htmlFile, csvSeparator);
 
+            isSuccess = true;
             logs.add("Файл: " + csvFileName + " успешно обработан.");
             logs.add("Результат: " + htmlFileName + ".");
-        } catch (FileNotFoundException e) {
-            logs.add("Ошибка: файл " + csvFileName + " не существует.");
         } catch (IOException e) {
-            logs.add("Ошибка чтения или обработки файла: " + csvFileName + ".");
+            isSuccess = false;
+            logs.add("Файл: " + csvFileName + " не существует или ошибка его обработки.");
         }
     }
 
@@ -60,14 +70,13 @@ public class CsvToHtmlConverter {
 
             convertFile(csvFile, htmlFile, csvSeparator);
 
+            isSuccess = true;
             logs.add("Файл: " + csvFileName + " успешно обработан.");
             logs.add("Результат: " + htmlFileName + ".");
-        } catch (FileNotFoundException e) {
-            logs.add("Ошибка: файл " + csvFileName + " не существует.");
         } catch (IOException e) {
-            logs.add("Ошибка чтения или обработки файла: " + csvFileName + ".");
+            isSuccess = false;
+            logs.add("Файл: " + csvFileName + " не существует или ошибка его обработки.");
         }
-
     }
 
     // Конвертер csv в html.
@@ -189,9 +198,5 @@ public class CsvToHtmlConverter {
         }
 
         return String.valueOf(symbol);
-    }
-
-    public ArrayList<String> getLogs() {
-        return logs;
     }
 }
