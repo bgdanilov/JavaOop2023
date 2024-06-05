@@ -8,54 +8,81 @@ import java.util.ArrayList;
 
 public class CsvToHtmlConverter {
     private final ArrayList<String> logs = new ArrayList<>();
+    private boolean isSuccess = false;
 
-    public CsvToHtmlConverter() {
+    public ArrayList<String> getLogs() {
+        return logs;
+    }
+
+    public boolean getSuccess() {
+        return this.isSuccess;
     }
 
     // Конвертирование по переданным args[].
-    // Использует данные из args[], хранящиеся в объекте arguments класса CommandLineArgs.
-    public void convert(CommandLineArgs arguments) throws IOException {
+    // Использует данные из args[], хранящиеся в объекте arguments класса CsvToHtmlConverterArgs.
+    public void convert(CsvToHtmlConverterArgs arguments) {
         String csvFileName = arguments.getCsvFileName();
-        File csvFile = new File(csvFileName);
-
         String htmlFileName = arguments.getHtmlFileName();
-        File htmlFile = new File(htmlFileName);
 
-        char csvSeparator = arguments.getSeparator();
+        try {
+            File csvFile = new File(csvFileName);
+            File htmlFile = new File(htmlFileName);
 
-        if (converter(csvFile, htmlFile, csvSeparator)) {
-            setLogs(csvFileName, htmlFileName);
+            char csvSeparator = arguments.getSeparator();
+
+            convertFile(csvFile, htmlFile, csvSeparator);
+
+            isSuccess = true;
+            logs.add("Файл: " + csvFileName + " успешно обработан.");
+            logs.add("Результат: " + htmlFileName + ".");
+        } catch (IOException e) {
+            isSuccess = false;
+            logs.add("Файл: " + csvFileName + " не существует или ошибка его обработки.");
         }
     }
 
     // Конвертирование непосредственно путем передачи только имени csv-файла и разделителя.
     // Принимает непосредственно имена файлов.
-    public void convert(String csvFileName, char csvSeparator) throws IOException {
-        File csvFile = new File(csvFileName);
+    public void convert(String csvFileName, char csvSeparator) {
+        try {
+            File csvFile = new File(csvFileName);
 
-        String htmlFileName = FileNameUtilities.getHtmlExtensionFileName(csvFileName);
-        File htmlFile = new File(htmlFileName);
+            String htmlFileName = FileNameUtilities.composeNewExtensionFileName(csvFileName, ".html");
+            File htmlFile = new File(htmlFileName);
 
-        if (converter(csvFile, htmlFile, csvSeparator)) {
-            setLogs(csvFileName, htmlFileName);
+            convertFile(csvFile, htmlFile, csvSeparator);
+
+            isSuccess = true;
+            logs.add("Файл: " + csvFileName + " успешно обработан.");
+            logs.add("Результат: " + htmlFileName + ".");
+        } catch (IOException e) {
+            isSuccess = false;
+            logs.add("Файл: " + csvFileName + " не существует или ошибка его обработки.");
         }
     }
 
     // Конвертирование непосредственно путем передачи имени csv-файла, html-файла и разделителя.
     // Принимает непосредственно имена файлов.
-    public void convert(String csvFileName, String htmlFileName, char csvSeparator) throws IOException {
-        File csvFile = new File(csvFileName);
-        File htmlFile = new File(htmlFileName);
+    public void convert(String csvFileName, String htmlFileName, char csvSeparator) {
+        try {
+            File csvFile = new File(csvFileName);
+            File htmlFile = new File(htmlFileName);
 
-        if (converter(csvFile, htmlFile, csvSeparator)) {
-            setLogs(csvFileName, htmlFileName);
+            convertFile(csvFile, htmlFile, csvSeparator);
+
+            isSuccess = true;
+            logs.add("Файл: " + csvFileName + " успешно обработан.");
+            logs.add("Результат: " + htmlFileName + ".");
+        } catch (IOException e) {
+            isSuccess = false;
+            logs.add("Файл: " + csvFileName + " не существует или ошибка его обработки.");
         }
     }
 
     // Конвертер csv в html.
     // Принимает на вход файлы и разделитель.
     // Создает html-файл и возвращает true в случае успеха.
-    private boolean converter(File csvFile, File htmlFile, char csvSeparator) throws IOException {
+    private void convertFile(File csvFile, File htmlFile, char csvSeparator) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(csvFile));
              PrintWriter writer = new PrintWriter(htmlFile)) {
             writer.print("""
@@ -79,7 +106,7 @@ public class CsvToHtmlConverter {
             int quotesAmount = 0;
             String line;
 
-            while (((line = reader.readLine()) != null)) {
+            while ((line = reader.readLine()) != null) {
                 if (isNewTableRow) {
                     writer.println("       <tr>");
                     writer.print("         <td>");
@@ -112,11 +139,15 @@ public class CsvToHtmlConverter {
                         isComplicatedTextMode = true;
                         continue;
                         // Закрывающая кавычка - выход из режима "непростого текста", сигнал к концу ячейки.
-                    } else if (symbol == '"' && isComplicatedTextMode) {
+                    }
+
+                    if (symbol == '"' && isComplicatedTextMode) {
                         isComplicatedTextMode = false;
                         continue;
                         // Это просто кавычки в тексте, продолжаем в режиме "непростого текста".
-                    } else if (symbol == '"' && line.charAt(i - 1) == '"') {
+                    }
+
+                    if (symbol == '"' && line.charAt(i - 1) == '"') {
                         isComplicatedTextMode = true;
                     }
 
@@ -151,28 +182,21 @@ public class CsvToHtmlConverter {
                     </html>
                     """);
         }
-
-        return true;
     }
 
     private static String replaceSpecialSymbols(char symbol) {
         if (symbol == '&') {
             return "&amp;";
-        } else if (symbol == '<') {
+        }
+
+        if (symbol == '<') {
             return "&lt;";
-        } else if (symbol == '>') {
+        }
+
+        if (symbol == '>') {
             return "&gt;";
         }
 
         return String.valueOf(symbol);
-    }
-
-    public ArrayList<String> getLogs() {
-        return logs;
-    }
-
-    private void setLogs(String csvFileName, String htmlFileName) {
-        logs.add("Файл: " + csvFileName + " успешно обработан.");
-        logs.add("Результат: " + htmlFileName + ".");
     }
 }
