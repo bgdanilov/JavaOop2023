@@ -45,21 +45,6 @@ public class ConsoleView implements View {
 
         Scale inputScale = ViewUtilities.getTemperatureScale(temperatureScales, inputTemperatureScaleKey.charAt(0));
 
-        /* * Старое оставим пока.
-        String inputMessage = "Введите исходную шкалу " + temperatureScalesKeysLine + ":";
-
-        System.out.println(inputMessage);
-        char inputTemperatureScaleKey = scanner.next().charAt(0);
-
-        Scale inputScale = getTemperatureScale(temperatureScales, inputTemperatureScaleKey);
-
-        String errorMessage = "Вы должны ввести " + temperatureScalesKeysLine + ".";
-
-        if (inputScale == null) {
-            throw new NumberFormatException(errorMessage);
-        }
-        * */
-
         // Ввод результирующей шкалы измерения.
         System.out.println("Введите результирующую шкалу " + temperatureScalesKeysLine + ":");
         String outputTemperatureScaleKey = scanner.next();
