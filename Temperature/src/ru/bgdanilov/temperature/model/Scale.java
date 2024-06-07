@@ -1,6 +1,6 @@
 package ru.bgdanilov.temperature.model;
 
-public interface ScaleInterface {
+public interface Scale {
     double convertToCelsius(double temperature);
 
     double covertFromCelsius(double temperature);
