@@ -24,7 +24,8 @@ public class Building implements Comparable<Building> {
     @Override
     // Почему compareTo красный?
     public int compareTo(Building otherBuilding) {
-        return roomsAmount - otherBuilding.roomsAmount;
+        return Integer.compare(roomsAmount, otherBuilding.roomsAmount);
+        //return roomsAmount - otherBuilding.roomsAmount;
     }
 
     @Override

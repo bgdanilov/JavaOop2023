@@ -1,10 +1,10 @@
 package ru.bgdanilov.trees;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class BinaryTree<T extends Comparable<T>> {
     TreeNode<T> root;
-
     public BinaryTree() {
     }
 
@@ -44,7 +44,6 @@ public class BinaryTree<T extends Comparable<T>> {
         }
     }
 
-
     // 2. Поиск узла.
     public boolean contains(TreeNode<T> node) {
         TreeNode<T> parentNode = root;
@@ -74,6 +73,7 @@ public class BinaryTree<T extends Comparable<T>> {
         }
     }
 
+/* Еще не доделано.
     public void delete(TreeNode<T> node) {
         TreeNode<T> parentNode = root;
         TreeNode<T> currentNode = root;
@@ -83,20 +83,25 @@ public class BinaryTree<T extends Comparable<T>> {
         TreeNode<T> minLeftNode;
         TreeNode<T> minLeftNodeParent;
 
+        boolean currentNodeIsLeft = true;
+
         while (true) {
             if (node.getData().compareTo(currentNode.getData()) == 0) {
                 // 1. Лист. Нет детей.
                 if (currentNode.getLeft() == null && currentNode.getRight() == null) {
-                    if (parentNode.getLeft() != null) {
+                    // Найденный узел правый или левый ребенок?
+                    if (currentNodeIsLeft) {
                         parentNode.setLeft(null);
-                    } else if (parentNode.getRight() != null) {
+                    } else {
                         parentNode.setRight(null);
                     }
+
+                    return;
                 }
 
                 // 2. Только один ребенок.
                 if ((currentNode.getLeft() != null && currentNode.getRight() == null)
-                || currentNode.getLeft() == null && currentNode.getRight() != null) {
+                        || currentNode.getLeft() == null && currentNode.getRight() != null) {
                     if (parentNode.getLeft() == currentNode) { // найденный узел - левый ребенок родителя;
                         parentNode.setLeft(currentNode.getLeft() != null ? currentNode.getLeft() : currentNode.getRight());
                     }
@@ -109,16 +114,17 @@ public class BinaryTree<T extends Comparable<T>> {
                 // 3. Два ребенка.
                 // Найти в правом поддереве минимальный элемент и переместить его на место удаляемого узла.
                 if (currentNode.getLeft() != null && currentNode.getRight() != null) {
-                   minLeftNode = getMin(currentNode);
+
                 }
             }
 
-
             // Поиск узла.
+            // Идем влево (узел меньше текущего) или вправо.
             if (node.getData().compareTo(currentNode.getData()) < 0) {
                 if (currentNode.getLeft() != null) {
                     parentNode = currentNode;
                     currentNode = currentNode.getLeft();
+                    currentNodeIsLeft = true;
                 } else {
                     return;
                 }
@@ -126,22 +132,55 @@ public class BinaryTree<T extends Comparable<T>> {
                 if (currentNode.getRight() != null) {
                     parentNode = currentNode;
                     currentNode = currentNode.getRight();
+                    currentNodeIsLeft = false;
                 } else {
                     return;
                 }
             }
         }
     }
+*/
 
-    private TreeNode<T> getMin(TreeNode<T> startNode) {
-        return null;
+    // В глубину - это Стек, в Ширину - это Очередь.
+    public void PrintDeep(TreeNode<T> node, Consumer<TreeNode<T>> consumer) {
+        Stack<TreeNode<T>> treeNodeStack = new Stack<>();
+        treeNodeStack.push(node);
+
+        while (!treeNodeStack.isEmpty()) {
+            TreeNode<T> currentNode = treeNodeStack.pop();
+            //System.out.println(currentNode.getData());
+            consumer.accept(currentNode);
+
+            if (currentNode.getRight() != null) {
+                treeNodeStack.push(currentNode.getRight());
+            }
+
+            if (currentNode.getLeft() != null) {
+                treeNodeStack.push(currentNode.getLeft());
+            }
+        }
     }
 
-    private boolean hasChildren(TreeNode<T> node) {
-        return node.getLeft() != null || node.getRight() != null;
+    public void PrintWide(TreeNode<T> node) {
+        Deque<TreeNode<T>> treeNodeQueue = new ArrayDeque<>();
+        treeNodeQueue.add(node);
+
+        while (!treeNodeQueue.isEmpty()) {
+            TreeNode<T> currentNode = treeNodeQueue.remove();
+            System.out.println(currentNode.getData());
+
+            if (currentNode.getLeft() != null) {
+                treeNodeQueue.add(currentNode.getLeft());
+            }
+
+            if (currentNode.getRight() != null) {
+                treeNodeQueue.add(currentNode.getRight());
+            }
+        }
     }
 
-    // TODO вставить └ символ. Не корректно работает если удалить Аллу.
+    /* Это эксперимент.
+ TODO вставить └ символ. Не корректно работает если удалить Аллу.
     @Override
     public String toString() {
         Stack<TreeNode<T>> treeNodeStack = new Stack<>();
@@ -181,4 +220,5 @@ public class BinaryTree<T extends Comparable<T>> {
 
         return printTreeBuilder.toString();
     }
+*/
 }
