@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 
 public class BinaryTree<T extends Comparable<T>> {
     TreeNode<T> root;
+
     public BinaryTree() {
     }
 
@@ -20,8 +21,8 @@ public class BinaryTree<T extends Comparable<T>> {
         this.root = root;
     }
 
-    // 1. Вставка.
-    public void add(TreeNode<T> node) {// Почему нельзя добавить <T extends Comparable<T>> ?
+    // 1. Вставка узла.
+    public void add(TreeNode<T> node) {
         TreeNode<T> currentNode = root;
 
         while (true) {
@@ -46,34 +47,85 @@ public class BinaryTree<T extends Comparable<T>> {
 
     // 2. Поиск узла.
     public boolean contains(TreeNode<T> node) {
-        TreeNode<T> parentNode = root;
-        TreeNode<T> currentNode = root;
+        final boolean[] result = {false};
 
-        while (true) {
-            if (node.getData().compareTo(currentNode.getData()) == 0) {
-                System.out.println(parentNode.getData().toString());
-                return true;
+        traversalInDepth(root, treeNode -> {
+            if (treeNode.getData().equals(node.getData())) {
+                result[0] = true;
+            }
+        });
+
+        return result[0];
+    }
+
+    // 3. Удаление первого вхождения узла по значению.
+
+
+    // 4. Получение числа элементов.
+    public int getNodesAmount(TreeNode<T> initialNode) {
+        final int[] nodesAmount = {0};
+        // Реализуем нагрузку в виде подсчета узлов.
+        traversalInDepth(initialNode, treeNode -> nodesAmount[0]++);
+
+        return nodesAmount[0];
+    }
+
+    // 5. Обходы.
+    // 5.1. В глубину - это Стек, в Ширину - это Очередь.
+    public void printInDepth() {
+        traversalInDepth(root, treeNode -> System.out.println(treeNode.getData()));
+    }
+
+    private void traversalInDepth(TreeNode<T> node, Consumer<TreeNode<T>> consumer) {
+        Stack<TreeNode<T>> treeNodeStack = new Stack<>();
+        treeNodeStack.push(node);
+
+        while (!treeNodeStack.isEmpty()) {
+            TreeNode<T> currentNode = treeNodeStack.pop();
+            consumer.accept(currentNode);
+
+            if (currentNode.getRight() != null) {
+                treeNodeStack.push(currentNode.getRight());
             }
 
-            if (node.getData().compareTo(currentNode.getData()) < 0) {
-                if (currentNode.getLeft() != null) {
-                    parentNode = currentNode;
-                    currentNode = currentNode.getLeft();
-                } else {
-                    return false;
-                }
-            } else {
-                if (currentNode.getRight() != null) {
-                    parentNode = currentNode;
-                    currentNode = currentNode.getRight();
-                } else {
-                    return false;
-                }
+            if (currentNode.getLeft() != null) {
+                treeNodeStack.push(currentNode.getLeft());
             }
         }
     }
 
-/* Еще не доделано.
+    // 5.2. В Ширину - это Очередь.
+    public void printInWide() {
+        traversalInWide(root, treeNode -> System.out.println(treeNode.getData()));
+    }
+
+    private void traversalInWide(TreeNode<T> node, Consumer<TreeNode<T>> consumer) {
+        Deque<TreeNode<T>> treeNodeQueue = new ArrayDeque<>();
+        treeNodeQueue.add(node);
+
+        while (!treeNodeQueue.isEmpty()) {
+            TreeNode<T> currentNode = treeNodeQueue.remove();
+            consumer.accept(currentNode);
+
+            if (currentNode.getLeft() != null) {
+                treeNodeQueue.add(currentNode.getLeft());
+            }
+
+            if (currentNode.getRight() != null) {
+                treeNodeQueue.add(currentNode.getRight());
+            }
+        }
+    }
+
+    // 6. Печать дерева в консоль.
+
+
+    // Раз мы не можем передать в функцию другую функцию как аргумент
+    // - только объекты можем передать.
+    // Тогда передадим экземпляр printLoad функционального интерфейса Consumer,
+    // переопределив его единственный метод.
+
+    /* Еще не доделано.
     public void delete(TreeNode<T> node) {
         TreeNode<T> parentNode = root;
         TreeNode<T> currentNode = root;
@@ -140,44 +192,6 @@ public class BinaryTree<T extends Comparable<T>> {
         }
     }
 */
-
-    // В глубину - это Стек, в Ширину - это Очередь.
-    public void PrintDeep(TreeNode<T> node, Consumer<TreeNode<T>> consumer) {
-        Stack<TreeNode<T>> treeNodeStack = new Stack<>();
-        treeNodeStack.push(node);
-
-        while (!treeNodeStack.isEmpty()) {
-            TreeNode<T> currentNode = treeNodeStack.pop();
-            //System.out.println(currentNode.getData());
-            consumer.accept(currentNode);
-
-            if (currentNode.getRight() != null) {
-                treeNodeStack.push(currentNode.getRight());
-            }
-
-            if (currentNode.getLeft() != null) {
-                treeNodeStack.push(currentNode.getLeft());
-            }
-        }
-    }
-
-    public void PrintWide(TreeNode<T> node) {
-        Deque<TreeNode<T>> treeNodeQueue = new ArrayDeque<>();
-        treeNodeQueue.add(node);
-
-        while (!treeNodeQueue.isEmpty()) {
-            TreeNode<T> currentNode = treeNodeQueue.remove();
-            System.out.println(currentNode.getData());
-
-            if (currentNode.getLeft() != null) {
-                treeNodeQueue.add(currentNode.getLeft());
-            }
-
-            if (currentNode.getRight() != null) {
-                treeNodeQueue.add(currentNode.getRight());
-            }
-        }
-    }
 
     /* Это эксперимент.
  TODO вставить └ символ. Не корректно работает если удалить Аллу.
