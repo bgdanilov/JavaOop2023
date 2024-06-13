@@ -22,9 +22,9 @@ public class TemperatureMain {
         Model model = new ModelImpl(temperatureScales);
         Controller controller = new ControllerImpl(model);
 
-        View view = new DesktopView(controller);
-        // View view = new ConsoleView(controller);
         // View view = new DesktopSingleFieldView(controller);
+        // View view = new ConsoleView(controller);
+        View view = new DesktopView(controller);
 
         view.start();
 
