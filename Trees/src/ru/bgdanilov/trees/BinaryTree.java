@@ -22,15 +22,15 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     // 1. Вставка узла.
-    public void add(TreeNode<T> node) {
+    public void add(T data) {
         TreeNode<T> currentNode = root;
 
         while (true) {
-            if (node.getData().compareTo(currentNode.getData()) < 0) {
+            if (data.compareTo(currentNode.getData()) < 0) {
                 if (currentNode.getLeft() != null) {
                     currentNode = currentNode.getLeft();
                 } else {
-                    currentNode.setLeft(node);
+                    currentNode.setLeft(new TreeNode<>(data));
                     return;
                 }
                 // Узел больше текущего.
@@ -38,7 +38,7 @@ public class BinaryTree<T extends Comparable<T>> {
                 if (currentNode.getRight() != null) {
                     currentNode = currentNode.getRight();
                 } else {
-                    currentNode.setRight(node);
+                    currentNode.setRight(new TreeNode<>(data));
                     return;
                 }
             }
@@ -46,11 +46,11 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     // 2. Поиск узла.
-    public boolean contains(TreeNode<T> node) {
+    public boolean contains(T data) {
         final boolean[] result = {false};
 
-        traversalInDepth(root, treeNode -> {
-            if (treeNode.getData().equals(node.getData())) {
+        traversalInDepth(treeNode -> {
+            if (treeNode.getData().equals(data)) {
                 result[0] = true;
             }
         });
@@ -62,10 +62,10 @@ public class BinaryTree<T extends Comparable<T>> {
 
 
     // 4. Получение числа элементов.
-    public int getNodesAmount(TreeNode<T> initialNode) {
+    public int getNodesAmount() {
         final int[] nodesAmount = {0};
         // Реализуем нагрузку в виде подсчета узлов.
-        traversalInDepth(initialNode, treeNode -> nodesAmount[0]++);
+        traversalInDepth(treeNode -> nodesAmount[0]++);
 
         return nodesAmount[0];
     }
@@ -73,12 +73,12 @@ public class BinaryTree<T extends Comparable<T>> {
     // 5. Обходы.
     // 5.1. В глубину - это Стек, в Ширину - это Очередь.
     public void printInDepth() {
-        traversalInDepth(root, treeNode -> System.out.println(treeNode.getData()));
+        traversalInDepth(treeNode -> System.out.println(treeNode.getData()));
     }
 
-    private void traversalInDepth(TreeNode<T> node, Consumer<TreeNode<T>> consumer) {
+    private void traversalInDepth(Consumer<TreeNode<T>> consumer) {
         Stack<TreeNode<T>> treeNodeStack = new Stack<>();
-        treeNodeStack.push(node);
+        treeNodeStack.push(root);
 
         while (!treeNodeStack.isEmpty()) {
             TreeNode<T> currentNode = treeNodeStack.pop();
@@ -96,12 +96,12 @@ public class BinaryTree<T extends Comparable<T>> {
 
     // 5.2. В Ширину - это Очередь.
     public void printInWide() {
-        traversalInWide(root, treeNode -> System.out.println(treeNode.getData()));
+        traversalInWide(treeNode -> System.out.println(treeNode.getData()));
     }
 
-    private void traversalInWide(TreeNode<T> node, Consumer<TreeNode<T>> consumer) {
+    private void traversalInWide(Consumer<TreeNode<T>> consumer) {
         Deque<TreeNode<T>> treeNodeQueue = new ArrayDeque<>();
-        treeNodeQueue.add(node);
+        treeNodeQueue.add(root);
 
         while (!treeNodeQueue.isEmpty()) {
             TreeNode<T> currentNode = treeNodeQueue.remove();
