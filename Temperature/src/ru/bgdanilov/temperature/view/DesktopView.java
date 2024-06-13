@@ -13,17 +13,18 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class DesktopView implements View {
     private final Controller controller;
+
     public DesktopView(Controller controller) {
         this.controller = controller;
     }
 
     @Override
-    public void execute() {
+    public void start() {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Конвертер температур");
             frame.setResizable(false);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+            frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
             // В Mac иконка не появляется, а в Win появляется.
             Image icon = Toolkit.getDefaultToolkit().getImage("Temperature/iConvertIcon.png");
@@ -55,84 +56,82 @@ public class DesktopView implements View {
             JButton resetButton = new JButton("Сброс");
 
             // Создаем менеджер расположения компонентов.
-            GridBagLayout bagLayout = new GridBagLayout();
-            frame.setLayout(bagLayout);
+
+            UIManager.getDefaults().put("frame", new Insets(0, 0, 0, 0));
+            UIManager.getDefaults().put("frame.tabsOverlapBorder", true);
+            GridBagLayout gridBagLayout = new GridBagLayout();
+            frame.setLayout(gridBagLayout);
             GridBagConstraints c = new GridBagConstraints();
 
             // Исходные значения сетки.
             c.gridx = 0; // Координата по x.
             c.gridy = 0; // Координата по y.
-            // c.gridwidth = 1; // Количество занимаемых столбцов.
+            c.gridwidth = 1; // Количество занимаемых столбцов.
             c.gridheight = 1; // Количество занимаемых строк.
-            // c.anchor = GridBagConstraints.NORTHWEST; // Выравнивание по краю.
+            c.anchor = GridBagConstraints.NORTHWEST; // Выравнивание.
             c.fill = GridBagConstraints.NONE; // Заполнение по доступному пространству.
-            c.insets = new Insets(0, 0, 5, 0); // Margin CSS.
-            c.ipadx = 0; // Дополнительный отступ.
-            c.ipady = 0; // Дополнительный отступ.
-            c.weightx = 0.0; // Распределение доступной ширины на количество элементов
-            c.weighty = 0.0; // Распределение доступной высоты на количество элементов.
+            c.insets = new Insets(0, 0, 5, 0); // Margin.
+            c.ipadx = 0; // Padding.
+            c.ipady = 0; //  Padding.
+            c.weightx = 0; // Распределение доступной ширины на количество элементов
+            c.weighty = 0; // Распределение доступной высоты на количество элементов.
 
             // inputTemperatureLabel.
             c.gridwidth = 2;
             c.anchor = GridBagConstraints.CENTER;
-            bagLayout.setConstraints(inputTemperatureLabel, c);
-            frame.add(inputTemperatureLabel);
+            frame.add(inputTemperatureLabel, c);
 
-            // Приведение к измененных стилей к исходным.
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.NORTHWEST;
 
             // inputTemperatureField.
             c.gridx = 0;
             c.gridy = 1;
-            bagLayout.setConstraints(inputTemperatureField, c);
-            frame.add(inputTemperatureField);
+            c.insets = new Insets(0, 0, 5, 5);
+            frame.add(inputTemperatureField, c);
 
             // inputScaleComboBox.
             c.gridx = 1;
             c.gridy = 1;
-            bagLayout.setConstraints(inputScaleComboBox, c);
-            frame.add(inputScaleComboBox);
+            c.insets = new Insets(0, 0, 5, 0);
+            frame.add(inputScaleComboBox, c);
 
             // outputTemperatureLabel.
             c.gridx = 0;
             c.gridy = 2;
             c.gridwidth = 2;
             c.anchor = GridBagConstraints.CENTER;
-            bagLayout.setConstraints(outputTemperatureLabel, c);
-            frame.add(outputTemperatureLabel);
+            c.insets = new Insets(10, 0, 5, 0);
+            frame.add(outputTemperatureLabel, c);
 
-            // Приведение к измененных стилей к исходным.
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.NORTHWEST;
 
             // outputTemperatureField
             c.gridx = 0;
             c.gridy = 3;
-            bagLayout.setConstraints(outputTemperatureField, c);
-            frame.add(outputTemperatureField);
+            c.insets = new Insets(0, 0, 5, 5);
+            frame.add(outputTemperatureField, c);
 
             // outputScaleComboBox.
             c.gridx = 1;
             c.gridy = 3;
-            bagLayout.setConstraints(outputScaleComboBox, c);
-            frame.add(outputScaleComboBox);
+            c.insets = new Insets(0, 0, 5, 0);
+            frame.add(outputScaleComboBox, c);
 
-            // resetButton.
+            // convertButton.
             c.gridx = 0;
             c.gridy = 4;
             c.gridwidth = 2;
             c.anchor = GridBagConstraints.CENTER;
-            c.insets = new Insets(0, 0, 30, 0);
-            bagLayout.setConstraints(resetButton, c);
-            frame.add(resetButton);
+            c.insets = new Insets(10, 0, 30, 0);
+            frame.add(convertButton, c);
 
-            // convertButton.
+            // resetButton.
             c.gridx = 0;
             c.gridy = 5;
             c.insets = new Insets(0, 0, 0, 0);
-            bagLayout.setConstraints(convertButton, c);
-            frame.add(convertButton);
+            frame.add(resetButton, c);
 
             frame.pack();
             frame.setLocationRelativeTo(null);
@@ -142,9 +141,7 @@ public class DesktopView implements View {
             inputTemperatureField.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyTyped(KeyEvent event) {
-                    super.keyTyped(event);
-
-                    if (inputTemperatureField.getText().length() >= 18) {
+                    if (inputTemperatureField.getText().length() >= INPUT_SYMBOLS_AMOUNT_MAX) {
                         event.consume();
                     }
                 }
@@ -163,9 +160,8 @@ public class DesktopView implements View {
 
                     outputTemperatureField.setText(outputTemperatureMessage);
                 } catch (NumberFormatException exception) {
-                    showMessageDialog(frame, "Вы должны ввести число.", "Сообщение!", JOptionPane.INFORMATION_MESSAGE);
+                    showMessageDialog(frame, "Вы должны ввести число.", "Сообщение!", JOptionPane.WARNING_MESSAGE, null);
                     inputTemperatureLabel.setText("Введите температуру:");
-                    inputTemperatureField.setText("0");
                 }
             });
 

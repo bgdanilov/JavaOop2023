@@ -13,8 +13,9 @@ public class ConsoleView implements View {
     public ConsoleView(Controller controller) {
         this.controller = controller;
     }
+
     @Override
-    public void execute() {
+    public void start() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите исходную температуру:");
 
