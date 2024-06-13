@@ -18,7 +18,7 @@ public class DesktopView implements View {
     }
 
     @Override
-    public void execute() {
+    public void start() {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Конвертер температур");
             frame.setResizable(false);
@@ -55,28 +55,27 @@ public class DesktopView implements View {
             JButton resetButton = new JButton("Сброс");
 
             // Создаем менеджер расположения компонентов.
-            GridBagLayout bagLayout = new GridBagLayout();
-            frame.setLayout(bagLayout);
+            GridBagLayout gridBagLayout = new GridBagLayout();
+            frame.setLayout(gridBagLayout);
             GridBagConstraints c = new GridBagConstraints();
 
             // Исходные значения сетки.
             c.gridx = 0; // Координата по x.
             c.gridy = 0; // Координата по y.
-            // c.gridwidth = 1; // Количество занимаемых столбцов.
+            c.gridwidth = 1; // Количество занимаемых столбцов.
             c.gridheight = 1; // Количество занимаемых строк.
-            // c.anchor = GridBagConstraints.NORTHWEST; // Выравнивание по краю.
-            c.fill = GridBagConstraints.NONE; // Заполнение по доступному пространству.
-            c.insets = new Insets(0, 0, 5, 0); // Margin CSS.
-            c.ipadx = 0; // Дополнительный отступ.
-            c.ipady = 0; // Дополнительный отступ.
-            c.weightx = 0.0; // Распределение доступной ширины на количество элементов
-            c.weighty = 0.0; // Распределение доступной высоты на количество элементов.
+            c.anchor = GridBagConstraints.NORTHWEST; // Выравнивание по краю.
+            c.fill = GridBagConstraints.VERTICAL; // Заполнение по доступному пространству.
+            c.insets = new Insets(0, 0, 10, 5); // Margin.
+            c.ipadx = 3; // Padding.
+            c.ipady = 3; // padding.
+            c.weightx = 1.0; // Распределение доступной ширины на количество элементов
+            c.weighty = 1.0; // Распределение доступной высоты на количество элементов.
 
             // inputTemperatureLabel.
             c.gridwidth = 2;
             c.anchor = GridBagConstraints.CENTER;
-            bagLayout.setConstraints(inputTemperatureLabel, c);
-            frame.add(inputTemperatureLabel);
+            frame.add(inputTemperatureLabel, c);
 
             // Приведение к измененных стилей к исходным.
             c.gridwidth = 1;
@@ -85,22 +84,19 @@ public class DesktopView implements View {
             // inputTemperatureField.
             c.gridx = 0;
             c.gridy = 1;
-            bagLayout.setConstraints(inputTemperatureField, c);
-            frame.add(inputTemperatureField);
+            frame.add(inputTemperatureField, c);
 
             // inputScaleComboBox.
             c.gridx = 1;
             c.gridy = 1;
-            bagLayout.setConstraints(inputScaleComboBox, c);
-            frame.add(inputScaleComboBox);
+            frame.add(inputScaleComboBox, c);
 
             // outputTemperatureLabel.
             c.gridx = 0;
             c.gridy = 2;
             c.gridwidth = 2;
             c.anchor = GridBagConstraints.CENTER;
-            bagLayout.setConstraints(outputTemperatureLabel, c);
-            frame.add(outputTemperatureLabel);
+            frame.add(outputTemperatureLabel, c);
 
             // Приведение к измененных стилей к исходным.
             c.gridwidth = 1;
@@ -109,30 +105,28 @@ public class DesktopView implements View {
             // outputTemperatureField
             c.gridx = 0;
             c.gridy = 3;
-            bagLayout.setConstraints(outputTemperatureField, c);
-            frame.add(outputTemperatureField);
+            frame.add(outputTemperatureField, c);
 
             // outputScaleComboBox.
             c.gridx = 1;
             c.gridy = 3;
-            bagLayout.setConstraints(outputScaleComboBox, c);
-            frame.add(outputScaleComboBox);
+            frame.add(outputScaleComboBox, c);
 
-            // resetButton.
+            // convertButton.
             c.gridx = 0;
             c.gridy = 4;
             c.gridwidth = 2;
             c.anchor = GridBagConstraints.CENTER;
             c.insets = new Insets(0, 0, 30, 0);
-            bagLayout.setConstraints(resetButton, c);
-            frame.add(resetButton);
+            c.ipady = 0;
+            frame.add(convertButton, c);
 
-            // convertButton.
+            // resetButton.
             c.gridx = 0;
             c.gridy = 5;
             c.insets = new Insets(0, 0, 0, 0);
-            bagLayout.setConstraints(convertButton, c);
-            frame.add(convertButton);
+            c.ipady = 0;
+            frame.add(resetButton, c);
 
             frame.pack();
             frame.setLocationRelativeTo(null);
@@ -142,9 +136,7 @@ public class DesktopView implements View {
             inputTemperatureField.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyTyped(KeyEvent event) {
-                    super.keyTyped(event);
-
-                    if (inputTemperatureField.getText().length() >= 18) {
+                    if (inputTemperatureField.getText().length() >= INPUT_SYMBOLS_AMOUNT_MAX) {
                         event.consume();
                     }
                 }
@@ -163,9 +155,8 @@ public class DesktopView implements View {
 
                     outputTemperatureField.setText(outputTemperatureMessage);
                 } catch (NumberFormatException exception) {
-                    showMessageDialog(frame, "Вы должны ввести число.", "Сообщение!", JOptionPane.INFORMATION_MESSAGE);
+                    showMessageDialog(frame, "Вы должны ввести число.", "Сообщение!", JOptionPane.WARNING_MESSAGE, null);
                     inputTemperatureLabel.setText("Введите температуру:");
-                    inputTemperatureField.setText("0");
                 }
             });
 

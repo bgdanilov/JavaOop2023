@@ -20,7 +20,7 @@ public class DesktopSingleFieldView implements View {
         this.controller = controller;
     }
     @Override
-    public void execute() {
+    public void start() {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Конвертер температур");
             frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
@@ -48,9 +48,9 @@ public class DesktopSingleFieldView implements View {
             JButton resetButton = new JButton("Назад / Сброс");
 
             // Создаем менеджер расположения компонентов.
-            GridBagLayout bagLayout = new GridBagLayout();
+            GridBagLayout gridBagLayout = new GridBagLayout();
             GridBagConstraints c = new GridBagConstraints();
-            frame.setLayout(bagLayout);
+            frame.setLayout(gridBagLayout);
 
             // header.
             c.gridx = 1; // Номер столбца.
@@ -65,34 +65,34 @@ public class DesktopSingleFieldView implements View {
             c.weightx = 0.0; // Распределение доступной ширины на количество элементов
             c.weighty = 0.0; // Распределение доступной высоты на количество элементов.
 
-            bagLayout.setConstraints(header, c);
+            gridBagLayout.setConstraints(header, c);
             frame.add(header);
 
             // textField.
-            bagLayout.setConstraints(textField, c);
+            gridBagLayout.setConstraints(textField, c);
             frame.add(textField);
 
             // inputScaleComboBox.
-            bagLayout.setConstraints(inputScaleComboBox, c);
+            gridBagLayout.setConstraints(inputScaleComboBox, c);
             frame.add(inputScaleComboBox);
 
             // toText.
-            bagLayout.setConstraints(toText, c);
+            gridBagLayout.setConstraints(toText, c);
             frame.add(toText);
 
             // outputScaleComboBox.
-            bagLayout.setConstraints(outputScaleComboBox, c);
+            gridBagLayout.setConstraints(outputScaleComboBox, c);
             frame.add(outputScaleComboBox);
 
-            // resetButton.
-            c.insets = new Insets(0, 0, 30, 0); //  отступы
-            bagLayout.setConstraints(resetButton, c);
-            frame.add(resetButton);
-
             // convertButton.
-            c.insets = new Insets(0, 0, 0, 0); //  отступы
-            bagLayout.setConstraints(convertButton, c);
+            c.insets = new Insets(0, 0, 30, 0); //  отступы
+            gridBagLayout.setConstraints(convertButton, c);
             frame.add(convertButton);
+
+            // resetButton.
+            c.insets = new Insets(0, 0, 0, 0); //  отступы
+            gridBagLayout.setConstraints(resetButton, c);
+            frame.add(resetButton);
 
             frame.pack();
             frame.setLocationRelativeTo(null);
@@ -102,8 +102,7 @@ public class DesktopSingleFieldView implements View {
             textField.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyTyped(KeyEvent event) {
-                    super.keyTyped(event);
-                    if (textField.getText().length() >= 18) {
+                    if (textField.getText().length() >= INPUT_SYMBOLS_AMOUNT_MAX) {
                         event.consume();
                     }
                 }
@@ -130,9 +129,8 @@ public class DesktopSingleFieldView implements View {
                     textField.setEditable(false);
                     isPressed = false;
                 } catch (NumberFormatException exception) {
-                    showMessageDialog(frame, "Вы должны ввести число.", "Сообщение!", JOptionPane.INFORMATION_MESSAGE);
+                    showMessageDialog(frame, "Вы должны ввести число.", "Сообщение!", JOptionPane.ERROR_MESSAGE);
                     header.setText("Введите температуру:");
-                    textField.setText("0");
                     textField.setEditable(true);
                 }
             });

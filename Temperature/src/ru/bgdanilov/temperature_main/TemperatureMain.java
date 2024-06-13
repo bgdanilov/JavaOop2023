@@ -3,7 +3,6 @@ package ru.bgdanilov.temperature_main;
 import ru.bgdanilov.temperature.controller.Controller;
 import ru.bgdanilov.temperature.controller.ControllerImpl;
 import ru.bgdanilov.temperature.model.*;
-import ru.bgdanilov.temperature.view.ConsoleView;
 import ru.bgdanilov.temperature.view.DesktopSingleFieldView;
 import ru.bgdanilov.temperature.view.DesktopView;
 import ru.bgdanilov.temperature.view.View;
@@ -23,11 +22,11 @@ public class TemperatureMain {
         Model model = new ModelImpl(temperatureScales);
         Controller controller = new ControllerImpl(model);
 
-        View userView = new DesktopView(controller);
-        // View userView = new ConsoleView(controller);
-        // View userView = new DesktopSingleFieldView(controller);
+        View view = new DesktopView(controller);
+        // View view = new ConsoleView(controller);
+        // View view = new DesktopSingleFieldView(controller);
 
-        userView.execute();
+        view.start();
 
         /*
          Слева интерфейсы, а справа классы, их реализующие,
@@ -35,7 +34,7 @@ public class TemperatureMain {
          Вместо:
          ModelImpl model = new ModelImpl(temperatureScales);
          ControllerImpl controller = new ControllerImpl(model);
-         DesktopView userView = new DesktopView(controller);
+         DesktopView view = new DesktopView(controller);
         */
     }
 }
