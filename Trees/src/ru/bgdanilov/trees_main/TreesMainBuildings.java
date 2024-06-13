@@ -15,12 +15,12 @@ public class TreesMainBuildings {
 
         TreeNode<Building> westHospital = new TreeNode<>(new Building("West Hospital", 113));
 
-        cityTree.setRoot(hotel);
-        cityTree.add(shop);
-        cityTree.add(cafe);
-        cityTree.add(hospital);
+//        cityTree.setRoot(hotel);
+//        cityTree.add(shop);
+//        cityTree.add(cafe);
+//        cityTree.add(hospital);
 
-        System.out.println(cityTree.contains(westHospital));
+       // System.out.println(cityTree.contains(westHospital));
         cityTree.printInDepth();
     }
 }
