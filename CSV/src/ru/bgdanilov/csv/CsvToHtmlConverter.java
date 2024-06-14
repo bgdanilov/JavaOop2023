@@ -8,14 +8,14 @@ import java.util.ArrayList;
 
 public class CsvToHtmlConverter {
     private final ArrayList<String> logs = new ArrayList<>();
-    private boolean isSuccess = false;
+    private boolean isSuccess;
 
     public ArrayList<String> getLogs() {
         return logs;
     }
 
-    public boolean getSuccess() {
-        return this.isSuccess;
+    public boolean isSuccess() {
+        return isSuccess;
     }
 
     // Конвертирование по переданным args[].
@@ -86,7 +86,7 @@ public class CsvToHtmlConverter {
         try (BufferedReader reader = new BufferedReader(new FileReader(csvFile));
              PrintWriter writer = new PrintWriter(htmlFile)) {
             writer.print("""
-                    <!doctype html>
+                    <!DOCTYPE html>
                     <html lang="ru">
                     <head>
                         <link rel="alternate" hreflang="en" href="http://en.example.com/" />

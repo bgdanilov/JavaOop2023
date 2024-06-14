@@ -5,24 +5,24 @@ import ru.bgdanilov.csv.CsvToHtmlConverterArgs;
 import ru.bgdanilov.csv.CsvToHtmlConverterArgsLoader;
 import ru.bgdanilov.csv.Utilities;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class CsvMainByArgs {
     public static void main(String[] args) {
-        CsvToHtmlConverterArgs converterArgs = new CsvToHtmlConverterArgs();
-        CsvToHtmlConverterArgsLoader loader = new CsvToHtmlConverterArgsLoader(args, converterArgs);
+        CsvToHtmlConverterArgsLoader loader = new CsvToHtmlConverterArgsLoader();
         CsvToHtmlConverter csvConverter = new CsvToHtmlConverter();
 
-        // try-catch тут нужен для исключений, которые может бросить loader.loadArguments();
-        // Если бы loader.loadArguments(); не бросал исключения, а писал в log, то:
-        // - ошибки бы копились, например, можно было бы выдать:
-        // "файл не существует" и "[-p]: не указан префикс выходного файла".
         try {
-            loader.loadArguments();
+            CsvToHtmlConverterArgs converterArgs = loader.loadArguments(args);
+
+            if (!converterArgs.getMessages().isEmpty()) {
+                Utilities.printMessages(converterArgs.getMessages());
+                return;
+            }
+
             csvConverter.convert(converterArgs);
 
-            if (csvConverter.getSuccess()) {
+            if (csvConverter.isSuccess()) {
                 System.out.println("Файл: " + converterArgs.getCsvFileName() + " успешно обработан.");
                 System.out.println("Результат: " + converterArgs.getHtmlFileName() + ".");
             } else {
