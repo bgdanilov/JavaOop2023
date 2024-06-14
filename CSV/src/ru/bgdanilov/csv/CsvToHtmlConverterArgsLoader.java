@@ -9,16 +9,18 @@ public class CsvToHtmlConverterArgsLoader {
         CsvToHtmlConverterArgs converterArgs = new CsvToHtmlConverterArgs();
 
         if (args.length == 0) { // аргументы не переданы;
-            converterArgs.addMessage("аргументы не переданы");
-            return converterArgs;
+            //converterArgs.addMessage("Аргументы не переданы.");
+            throw new NullPointerException("Аргументы не переданы.");
+            //return converterArgs;
         }
 
         // Ищем дубликаты команд-ключей.
         ArrayList<String> keysDuplicates = getKeysDuplicates(args);
 
         if (!keysDuplicates.isEmpty()) {
-            converterArgs.addMessage(keysDuplicates + ": команды повторяются.");
-            return converterArgs;
+            //converterArgs.addMessage(keysDuplicates + ": команды повторяются.");
+            throw new IOException(keysDuplicates + ": команды повторяются.");
+            //return converterArgs;
         }
 
         // Считаем количество переданных имен файлов (пока не начнутся ключи).
@@ -33,13 +35,15 @@ public class CsvToHtmlConverterArgsLoader {
         }
 
         if (fileNamesAmount == 0) {
-            converterArgs.addMessage("Не переданы имена файлов.");
-            return converterArgs;
+            //converterArgs.addMessage("Не переданы имена файлов.");
+            throw new IOException("Не переданы имена файлов.");
+            //return converterArgs;
         }
 
         if (fileNamesAmount > 2) { // написали перед командами больше двух имен файлов;
-            converterArgs.addMessage("Передано более двух имен файлов.");
-            return converterArgs;
+            //converterArgs.addMessage("Передано более двух имен файлов.");
+            throw new IOException("Передано более двух имен файлов.");
+            //return converterArgs;
         }
 
         int startIndex = 0;
@@ -73,7 +77,6 @@ public class CsvToHtmlConverterArgsLoader {
                             converterArgs.setSeparator(separator.charAt(0));
                         } else {
                             converterArgs.addMessage("[" + args[i] + " " + separator + "] разделитель должен состоять из одного символа.");
-                            //throw new IOException("[" + args[i] + " " + separator + "] разделитель должен состоять из одного символа.");
                         }
 
                         i++;
@@ -120,3 +123,14 @@ public class CsvToHtmlConverterArgsLoader {
         return settingsDuplicates;
     }
 }
+
+/* Описание класса.
+ * Основной рабочий метод loadArguments класса принимает args[], считывает массив аргументов,
+ * создает аргументы для Конвертера.
+ * В результате класс создает объект другого класса CsvToHtmlConverterArgs,
+ * в который записывает аргументы Конвертера, там они хранятся.
+ * В процессе считывания args[], бросаются исключения.
+ * Также, некоторые исключительные ситуации (связанные со считыванием ключей),
+ * накапливаются в поле warnings возвращаемого класса CsvToHtmlConverterArgs
+ * и бросаются одним исключением в конце процесса считывания args[].
+ */

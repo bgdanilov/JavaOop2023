@@ -14,7 +14,7 @@ public class CsvToHtmlConverter {
         File csvFile = new File(csvFileName);
 
         if (!csvFile.exists()) {
-            throw new FileNotFoundException("Файл: " + csvFileName + " не существует!");
+            throw new FileNotFoundException("Файл: " + csvFileName + " не существует.");
         }
 
         String htmlFileName = arguments.getHtmlFileName();
@@ -30,13 +30,17 @@ public class CsvToHtmlConverter {
     // Конвертирование непосредственно путем передачи только имени csv-файла и разделителя.
     // Принимает непосредственно имена файлов.
     public void convert(String csvFileName, char csvSeparator) throws IOException {
+        if (csvFileName == null) {
+            throw new NullPointerException("Исходный csv-файл null.");
+        }
+
         File csvFile = new File(csvFileName);
 
         if (!csvFile.exists()) {
-            throw new FileNotFoundException("Файл: " + csvFileName + " не существует!");
+            throw new FileNotFoundException("Файл: " + csvFileName + " не существует.");
         }
 
-        String htmlFileName = FileNameUtilities.composeFileNameWithNewExtension(csvFileName, ".html");
+        String htmlFileName = FileNameUtilities.composeFileNameWithNewExtension(csvFileName, "html");
         File htmlFile = new File(htmlFileName);
 
         convertFile(csvFile, htmlFile, csvSeparator);
@@ -48,10 +52,18 @@ public class CsvToHtmlConverter {
     // Конвертирование непосредственно путем передачи имени csv-файла, html-файла и разделителя.
     // Принимает непосредственно имена файлов.
     public void convert(String csvFileName, String htmlFileName, char csvSeparator) throws IOException {
+        if (csvFileName == null) {
+            throw new NullPointerException("Исходный csv-файл null.");
+        }
+
         File csvFile = new File(csvFileName);
 
         if (!csvFile.exists()) {
-            throw new FileNotFoundException("Файл: " + csvFileName + " не существует!");
+            throw new FileNotFoundException("Файл: " + csvFileName + " не существует.");
+        }
+
+        if (htmlFileName == null) {
+            throw new NullPointerException("Результирующий html-файл null.");
         }
 
         File htmlFile = new File(htmlFileName);

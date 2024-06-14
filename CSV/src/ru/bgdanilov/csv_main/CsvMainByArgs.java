@@ -14,7 +14,7 @@ public class CsvMainByArgs {
 
             CsvToHtmlConverter csvConverter = new CsvToHtmlConverter();
             csvConverter.convert(converterArgs);
-        } catch (IOException e) { // Поймает все исключения, в т.ч. и FileNotFound.
+        } catch (IOException | NullPointerException e) {
             System.out.println(e.getMessage());
         }
     }
