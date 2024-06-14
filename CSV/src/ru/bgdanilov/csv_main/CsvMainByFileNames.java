@@ -9,8 +9,9 @@ public class CsvMainByFileNames {
         try {
             CsvToHtmlConverter csvConverter = new CsvToHtmlConverter();
 
-            // Жаль, но тут программа споткнется, файл не существует и следующий уже рассматривать не будет.
-            csvConverter.convert("csv1.csv", ',');
+            // Жаль, но тут программа споткнется:
+            // если файл не существует - следующий уже рассматривать не будет.
+            csvConverter.convert("csv11.csv", ',');
             csvConverter.convert("csv2.csv", "mineNamedFile.html", ',');
         } catch (IOException | NullPointerException e) {
             System.out.println(e.getMessage());
