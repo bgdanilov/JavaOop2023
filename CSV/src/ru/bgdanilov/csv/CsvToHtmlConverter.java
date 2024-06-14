@@ -4,89 +4,83 @@
 package ru.bgdanilov.csv;
 
 import java.io.*;
-import java.util.ArrayList;
 
 public class CsvToHtmlConverter {
-    private final ArrayList<String> logs = new ArrayList<>();
-    private boolean isSuccess = false;
-
-    public ArrayList<String> getLogs() {
-        return logs;
-    }
-
-    public boolean getSuccess() {
-        return this.isSuccess;
-    }
 
     // Конвертирование по переданным args[].
     // Использует данные из args[], хранящиеся в объекте arguments класса CsvToHtmlConverterArgs.
-    public void convert(CsvToHtmlConverterArgs arguments) {
+    public void convert(CsvToHtmlConverterArgs arguments) throws IOException {
         String csvFileName = arguments.getCsvFileName();
-        String htmlFileName = arguments.getHtmlFileName();
+        File csvFile = new File(csvFileName);
 
-        try {
-            File csvFile = new File(csvFileName);
-            File htmlFile = new File(htmlFileName);
-
-            char csvSeparator = arguments.getSeparator();
-
-            convertFile(csvFile, htmlFile, csvSeparator);
-
-            isSuccess = true;
-            logs.add("Файл: " + csvFileName + " успешно обработан.");
-            logs.add("Результат: " + htmlFileName + ".");
-        } catch (IOException e) {
-            isSuccess = false;
-            logs.add("Файл: " + csvFileName + " не существует или ошибка его обработки.");
+        if (!csvFile.exists()) {
+            throw new FileNotFoundException("Файл: " + csvFileName + " не существует.");
         }
+
+        String htmlFileName = arguments.getHtmlFileName();
+        File htmlFile = new File(htmlFileName);
+
+        char csvSeparator = arguments.getSeparator();
+        convertFile(csvFile, htmlFile, csvSeparator);
+
+        System.out.println("Файл: " + csvFileName + " успешно обработан.");
+        System.out.println("Результат: " + htmlFileName + ".");
     }
 
     // Конвертирование непосредственно путем передачи только имени csv-файла и разделителя.
     // Принимает непосредственно имена файлов.
-    public void convert(String csvFileName, char csvSeparator) {
-        try {
-            File csvFile = new File(csvFileName);
-
-            String htmlFileName = FileNameUtilities.composeNewExtensionFileName(csvFileName, ".html");
-            File htmlFile = new File(htmlFileName);
-
-            convertFile(csvFile, htmlFile, csvSeparator);
-
-            isSuccess = true;
-            logs.add("Файл: " + csvFileName + " успешно обработан.");
-            logs.add("Результат: " + htmlFileName + ".");
-        } catch (IOException e) {
-            isSuccess = false;
-            logs.add("Файл: " + csvFileName + " не существует или ошибка его обработки.");
+    public void convert(String csvFileName, char csvSeparator) throws IOException {
+        if (csvFileName == null) {
+            throw new NullPointerException("Исходный csv-файл null.");
         }
+
+        File csvFile = new File(csvFileName);
+
+        if (!csvFile.exists()) {
+            throw new FileNotFoundException("Файл: " + csvFileName + " не существует.");
+        }
+
+        String htmlFileName = FileNameUtilities.composeFileNameWithNewExtension(csvFileName, "html");
+        File htmlFile = new File(htmlFileName);
+
+        convertFile(csvFile, htmlFile, csvSeparator);
+
+        System.out.println("Файл: " + csvFileName + " успешно обработан.");
+        System.out.println("Результат: " + htmlFileName + ".");
     }
 
     // Конвертирование непосредственно путем передачи имени csv-файла, html-файла и разделителя.
     // Принимает непосредственно имена файлов.
-    public void convert(String csvFileName, String htmlFileName, char csvSeparator) {
-        try {
-            File csvFile = new File(csvFileName);
-            File htmlFile = new File(htmlFileName);
-
-            convertFile(csvFile, htmlFile, csvSeparator);
-
-            isSuccess = true;
-            logs.add("Файл: " + csvFileName + " успешно обработан.");
-            logs.add("Результат: " + htmlFileName + ".");
-        } catch (IOException e) {
-            isSuccess = false;
-            logs.add("Файл: " + csvFileName + " не существует или ошибка его обработки.");
+    public void convert(String csvFileName, String htmlFileName, char csvSeparator) throws IOException {
+        if (csvFileName == null) {
+            throw new NullPointerException("Исходный csv-файл null.");
         }
+
+        File csvFile = new File(csvFileName);
+
+        if (!csvFile.exists()) {
+            throw new FileNotFoundException("Файл: " + csvFileName + " не существует.");
+        }
+
+        if (htmlFileName == null) {
+            throw new NullPointerException("Результирующий html-файл null.");
+        }
+
+        File htmlFile = new File(htmlFileName);
+
+        convertFile(csvFile, htmlFile, csvSeparator);
+
+        System.out.println("Файл: " + csvFileName + " успешно обработан.");
+        System.out.println("Результат: " + htmlFileName + ".");
     }
 
     // Конвертер csv в html.
     // Принимает на вход файлы и разделитель.
-    // Создает html-файл и возвращает true в случае успеха.
     private void convertFile(File csvFile, File htmlFile, char csvSeparator) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(csvFile));
              PrintWriter writer = new PrintWriter(htmlFile)) {
             writer.print("""
-                    <!doctype html>
+                    <!DOCTYPE html>
                     <html lang="ru">
                     <head>
                         <link rel="alternate" hreflang="en" href="http://en.example.com/" />

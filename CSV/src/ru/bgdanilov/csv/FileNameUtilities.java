@@ -3,23 +3,26 @@ package ru.bgdanilov.csv;
 public class FileNameUtilities {
     // 1. Получить расширение файла. Пусть будет, хоть и не используется.
     // Это же утилита, пригодится в другой раз.
-    public static String getFileNameExtension (String fileName) {
+    public static String getFileNameExtension(String fileName) {
         int dotIndex = fileName.lastIndexOf('.');
 
-        return (dotIndex == -1) ? "" : fileName.substring(dotIndex);
+        return (dotIndex == -1)
+                ? ""
+                : fileName.substring(dotIndex);
     }
 
     // 2. Получить только имя файла (без расширения).
-    public static String getFileNameOnly (String fileName) {
+    public static String getFileNameOnly(String fileName) {
         int dotIndex = fileName.lastIndexOf('.');
 
-        return (dotIndex == -1 || dotIndex <= fileName.length() - 1)
-                ? fileName : fileName.substring(0, dotIndex);
+        return (dotIndex == -1)
+                ? fileName
+                : fileName.substring(0, dotIndex);
     }
 
     // 3. Создает имя файла с переданным расширением вместо текущего, или добавляет его при отсутствии.
-    public static String composeNewExtensionFileName(String fileName, String newExtension) {
-        return getFileNameOnly(fileName) + newExtension;
+    public static String composeFileNameWithNewExtension(String fileName, String newExtension) {
+        return getFileNameOnly(fileName) + "." + newExtension;
     }
 
     public static String composeFileNameWithPrefix(String fileNamePrefix, String fileName) {
