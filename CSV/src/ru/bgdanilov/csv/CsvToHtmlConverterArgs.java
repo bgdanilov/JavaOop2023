@@ -9,7 +9,6 @@ public class CsvToHtmlConverterArgs {
     private char separator = ','; // -s символ-разделитель;
     private final String helpMessage;
     private final ArrayList<String> messages = new ArrayList<>();
-    private boolean isSuccess;
 
     public CsvToHtmlConverterArgs() {
         helpMessage = """
@@ -88,13 +87,5 @@ public class CsvToHtmlConverterArgs {
 
     public void addMessage(String message) {
         messages.add(message);
-    }
-
-    public boolean isSuccess() {
-        return isSuccess;
-    }
-
-    public void setSuccess(boolean success) {
-        isSuccess = success;
     }
 }

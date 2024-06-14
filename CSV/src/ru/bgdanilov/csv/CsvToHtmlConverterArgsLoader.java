@@ -11,7 +11,6 @@ public class CsvToHtmlConverterArgsLoader {
         if (args.length == 0) { // аргументы не переданы;
             converterArgs.addMessage("аргументы не переданы");
             return converterArgs;
-            //throw new IOException(converterArgs.getHelpMessage());
         }
 
         // Ищем дубликаты команд-ключей.
@@ -19,7 +18,7 @@ public class CsvToHtmlConverterArgsLoader {
 
         if (!keysDuplicates.isEmpty()) {
             converterArgs.addMessage(keysDuplicates + ": команды повторяются.");
-            //throw new IOException(keysDuplicates + ": команды повторяются.");
+            return converterArgs;
         }
 
         // Считаем количество переданных имен файлов (пока не начнутся ключи).
@@ -35,19 +34,19 @@ public class CsvToHtmlConverterArgsLoader {
 
         if (fileNamesAmount == 0) {
             converterArgs.addMessage("Не переданы имена файлов.");
-            //throw new IOException("Не переданы имена файлов.");
+            return converterArgs;
         }
 
         if (fileNamesAmount > 2) { // написали перед командами больше двух имен файлов;
             converterArgs.addMessage("Передано более двух имен файлов.");
-            //throw new IOException("Передано более двух имен файлов.");
+            return converterArgs;
         }
 
         int startIndex = 0;
 
         if (fileNamesAmount == 1) { // передан только csv-файл;
             converterArgs.setCsvFileName(args[0]);
-            converterArgs.setHtmlFileName(FileNameUtilities.composeNewExtensionFileName(converterArgs.getCsvFileName(), "html"));
+            converterArgs.setHtmlFileName(FileNameUtilities.composeFileNameWithNewExtension(converterArgs.getCsvFileName(), "html"));
 
             startIndex = 1;
         }
@@ -67,42 +66,40 @@ public class CsvToHtmlConverterArgsLoader {
                 case "-s" -> {
                     if (keyValueIndex == args.length || args[keyValueIndex].charAt(0) == '-') {
                         converterArgs.addMessage("[" + args[i] + "]: не указан символ-разделитель.");
-                        //throw new IOException("[" + args[i] + "]: не указан символ-разделитель.");
-                    }
-                    
-                    String separator = args[keyValueIndex];
-
-                    if (separator.length() == 1) {
-                        converterArgs.setSeparator(separator.charAt(0));
                     } else {
-                        converterArgs.addMessage("[" + args[i] + " " + separator + "] разделитель должен состоять из одного символа.");
-                        //throw new IOException("[" + args[i] + " " + separator + "] разделитель должен состоять из одного символа.");
+                        String separator = args[keyValueIndex];
+
+                        if (separator.length() == 1) {
+                            converterArgs.setSeparator(separator.charAt(0));
+                        } else {
+                            converterArgs.addMessage("[" + args[i] + " " + separator + "] разделитель должен состоять из одного символа.");
+                            //throw new IOException("[" + args[i] + " " + separator + "] разделитель должен состоять из одного символа.");
+                        }
+
+                        i++;
                     }
-
-                    i++;
-
                 }
                 case "-p" -> {
                     if (keyValueIndex == args.length || args[keyValueIndex].charAt(0) == '-') {
                         converterArgs.addMessage("[" + args[i] + "]: не указан префикс выходного файла.");
-                        //throw new IOException("[" + args[i] + "]: не указан префикс выходного файла.");
+                    } else {
+                        converterArgs.setHtmlFileNamePrefix(args[keyValueIndex]);
+                        converterArgs.setHtmlFileName(FileNameUtilities.composeFileNameWithPrefix(converterArgs.getHtmlFileNamePrefix(), converterArgs.getHtmlFileName()));
+                        i++;
                     }
-
-                    converterArgs.setHtmlFileNamePrefix(args[keyValueIndex]);
-                    converterArgs.setHtmlFileName(FileNameUtilities.composeFileNameWithPrefix(converterArgs.getHtmlFileNamePrefix(), converterArgs.getHtmlFileName()));
-                    i++;
                 }
                 case "-help" -> {
                     converterArgs.getMessages().clear();
                     converterArgs.addMessage(converterArgs.getHelpMessage());
-                    //throw new IOException(converterArgs.getHelpMessage());
                 }
 
-                default -> {
-                    converterArgs.addMessage("[" + args[i] + "] не является командой. Используйте команду -help для вызова справки.");
-                    //throw new IOException("[" + args[i] + "] не является командой. Используйте команду -help для вызова справки.");
-                }
+                default ->
+                        converterArgs.addMessage("[" + args[i] + "] не является командой. Используйте команду -help для вызова справки.");
             }
+        }
+
+        if (!converterArgs.getMessages().isEmpty()) {
+            throw new IOException(Utilities.composeMessageLine(converterArgs.getMessages()));
         }
 
         return converterArgs;
