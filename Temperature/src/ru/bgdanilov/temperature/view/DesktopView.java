@@ -56,7 +56,6 @@ public class DesktopView implements View {
             JButton resetButton = new JButton("Сброс");
 
             // Создаем менеджер расположения компонентов.
-
             UIManager.getDefaults().put("frame", new Insets(0, 0, 0, 0));
             UIManager.getDefaults().put("frame.tabsOverlapBorder", true);
             GridBagLayout gridBagLayout = new GridBagLayout();
@@ -68,26 +67,23 @@ public class DesktopView implements View {
             c.gridy = 0; // Координата по y.
             c.gridwidth = 1; // Количество занимаемых столбцов.
             c.gridheight = 1; // Количество занимаемых строк.
-            c.anchor = GridBagConstraints.NORTHWEST; // Выравнивание.
-            c.fill = GridBagConstraints.NONE; // Заполнение по доступному пространству.
+            c.anchor = GridBagConstraints.CENTER; // Выравнивание в ячейке.
+            c.fill = GridBagConstraints.VERTICAL; // Заполнение по доступному пространству.
             c.insets = new Insets(0, 0, 5, 0); // Margin.
             c.ipadx = 0; // Padding.
             c.ipady = 0; //  Padding.
-            c.weightx = 0; // Распределение доступной ширины на количество элементов
-            c.weighty = 0; // Распределение доступной высоты на количество элементов.
+            c.weightx = 1; // Распределение доступной ширины на количество элементов
+            c.weighty = 1; // Распределение доступной высоты на количество элементов.
 
             // inputTemperatureLabel.
-            c.gridwidth = 2;
-            c.anchor = GridBagConstraints.CENTER;
+            c.gridwidth = 2; // занимает два столбца;
             frame.add(inputTemperatureLabel, c);
-
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.NORTHWEST;
 
             // inputTemperatureField.
             c.gridx = 0;
             c.gridy = 1;
-            c.insets = new Insets(0, 0, 5, 5);
+            c.gridwidth = 1;
+            c.insets = new Insets(0, 0, 5, 10);
             frame.add(inputTemperatureField, c);
 
             // inputScaleComboBox.
@@ -100,17 +96,15 @@ public class DesktopView implements View {
             c.gridx = 0;
             c.gridy = 2;
             c.gridwidth = 2;
-            c.anchor = GridBagConstraints.CENTER;
             c.insets = new Insets(10, 0, 5, 0);
             frame.add(outputTemperatureLabel, c);
 
-            c.gridwidth = 1;
-            c.anchor = GridBagConstraints.NORTHWEST;
+            c.gridwidth = 1; // сброс outputTemperatureLabel grid width = 2;
 
             // outputTemperatureField
             c.gridx = 0;
             c.gridy = 3;
-            c.insets = new Insets(0, 0, 5, 5);
+            c.insets = new Insets(0, 0, 5, 10);
             frame.add(outputTemperatureField, c);
 
             // outputScaleComboBox.
@@ -123,7 +117,6 @@ public class DesktopView implements View {
             c.gridx = 0;
             c.gridy = 4;
             c.gridwidth = 2;
-            c.anchor = GridBagConstraints.CENTER;
             c.insets = new Insets(10, 0, 30, 0);
             frame.add(convertButton, c);
 
