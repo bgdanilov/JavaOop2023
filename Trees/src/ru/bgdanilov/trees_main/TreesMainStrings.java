@@ -6,6 +6,7 @@ import ru.bgdanilov.trees.TreeNode;
 public class TreesMainStrings {
     public static void main(String[] args) {
         // 1. Добавление в Дерево.
+        System.out.println("1. Добавление в Дерево.");
         BinaryTree<String> stringsTree = new BinaryTree<>(new TreeNode<>("Boris"));
         stringsTree.add("Alex");
         stringsTree.add("Yana");
@@ -16,6 +17,9 @@ public class TreesMainStrings {
         stringsTree.add("Cima");
         stringsTree.add("Zohan");
         stringsTree.add("Zaur");
+
+        System.out.println("Выведем корень:");
+        System.out.println(stringsTree.getRoot().getData());
         System.out.println("----");
 
         // 2. Поиск узла.
@@ -23,9 +27,15 @@ public class TreesMainStrings {
         System.out.println(stringsTree.contains("Zohan"));
         System.out.println("----");
 
+        // 3. Удаление первого вхождения узла по значению.
+        System.out.println("3. Удаление первого вхождения узла по значению.");
+        System.out.println("Не реализовано.");
+        System.out.println("----");
+
         // 4. Получение числа элементов.
         System.out.println("4. Получение числа элементов.");
         System.out.println("Число узлов равно: " + stringsTree.getNodesAmount());
+        System.out.println("----");
 
         // 5. Обходы в ширину и в глубину.
         System.out.println("5.1. Обход в ширину.");
