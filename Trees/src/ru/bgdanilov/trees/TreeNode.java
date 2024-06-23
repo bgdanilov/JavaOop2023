@@ -3,9 +3,7 @@ package ru.bgdanilov.trees;
 public class TreeNode<T extends Comparable<T>> {
     private TreeNode<T> left;
     private TreeNode<T> right;
-    private T data; // это любой объект, например Здание.
-
-    public TreeNode() {}
+    private final T data; // это любой объект, например Здание.
 
     public TreeNode(T data) {
         this.data = data;
@@ -29,9 +27,5 @@ public class TreeNode<T extends Comparable<T>> {
 
     public T getData() {
         return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
     }
 }

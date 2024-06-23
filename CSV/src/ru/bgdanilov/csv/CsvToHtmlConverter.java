@@ -6,7 +6,6 @@ package ru.bgdanilov.csv;
 import java.io.*;
 
 public class CsvToHtmlConverter {
-
     // Конвертирование по переданным args[].
     // Использует данные из args[], хранящиеся в объекте arguments класса CsvToHtmlConverterArgs.
     public void convert(CsvToHtmlConverterArgs arguments) throws IOException {

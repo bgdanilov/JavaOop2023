@@ -14,7 +14,7 @@ public class CsvMainByArgs {
 
             CsvToHtmlConverter csvConverter = new CsvToHtmlConverter();
             csvConverter.convert(converterArgs);
-        } catch (IOException | NullPointerException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
