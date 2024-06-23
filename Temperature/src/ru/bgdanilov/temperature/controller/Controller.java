@@ -7,5 +7,5 @@ import java.util.List;
 public interface Controller {
     List<Scale> getTemperatureScales();
 
-    double convertTemperature(double temperature, Scale inputTemperatureRange, Scale outputTemperatureRange);
+    double convertTemperature(double temperature, Scale inputTemperatureScale, Scale outputTemperatureScale);
 }

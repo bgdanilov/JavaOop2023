@@ -10,6 +10,6 @@ public record ModelImpl(List<Scale> temperatureScales) implements Model {
 
     @Override
     public double convertTemperature(double temperature, Scale inputTemperatureScale, Scale outputTemperatureScale) {
-        return outputTemperatureScale.covertFromCelsius(inputTemperatureScale.convertToCelsius(temperature));
+        return outputTemperatureScale.convertFromCelsius(inputTemperatureScale.convertToCelsius(temperature));
     }
 }

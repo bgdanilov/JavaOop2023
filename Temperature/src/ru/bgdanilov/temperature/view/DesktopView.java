@@ -14,6 +14,8 @@ import static javax.swing.JOptionPane.showMessageDialog;
 public class DesktopView implements View {
     private final Controller controller;
 
+    private static final int INPUT_SYMBOLS_MAX_AMOUNT = 18;
+
     public DesktopView(Controller controller) {
         this.controller = controller;
     }
@@ -24,7 +26,7 @@ public class DesktopView implements View {
             JFrame frame = new JFrame("Конвертер температур");
             frame.setResizable(false);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+            frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(15, 50, 15, 50));
 
             // В Mac иконка не появляется, а в Win появляется.
             Image icon = Toolkit.getDefaultToolkit().getImage("Temperature/iConvertIcon.png");
@@ -65,7 +67,7 @@ public class DesktopView implements View {
             // Исходные значения сетки.
             c.gridx = 0; // Координата по x.
             c.gridy = 0; // Координата по y.
-            c.gridwidth = 1; // Количество занимаемых столбцов.
+            // c.grid width = 1; // Количество занимаемых столбцов.
             c.gridheight = 1; // Количество занимаемых строк.
             c.anchor = GridBagConstraints.CENTER; // Выравнивание в ячейке.
             c.fill = GridBagConstraints.VERTICAL; // Заполнение по доступному пространству.
@@ -134,7 +136,7 @@ public class DesktopView implements View {
             inputTemperatureField.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyTyped(KeyEvent event) {
-                    if (inputTemperatureField.getText().length() >= INPUT_SYMBOLS_AMOUNT_MAX) {
+                    if (inputTemperatureField.getText().length() >= INPUT_SYMBOLS_MAX_AMOUNT) {
                         event.consume();
                     }
                 }
@@ -153,7 +155,7 @@ public class DesktopView implements View {
 
                     outputTemperatureField.setText(outputTemperatureMessage);
                 } catch (NumberFormatException exception) {
-                    showMessageDialog(frame, "Вы должны ввести число.", "Сообщение!", JOptionPane.WARNING_MESSAGE, null);
+                    showMessageDialog(frame, "Вы должны ввести число.", "Ошибка ввода данных!", JOptionPane.ERROR_MESSAGE, null);
                     inputTemperatureLabel.setText("Введите температуру:");
                 }
             });
