@@ -18,8 +18,8 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public double convertTemperature(double temperature, Scale inputTemperatureRange, Scale outputTemperatureRange) {
-        return model.convertTemperature(temperature, inputTemperatureRange, outputTemperatureRange);
+    public double convertTemperature(double temperature, Scale inputTemperatureScale, Scale outputTemperatureScale) {
+        return model.convertTemperature(temperature, inputTemperatureScale, outputTemperatureScale);
     }
 }
 

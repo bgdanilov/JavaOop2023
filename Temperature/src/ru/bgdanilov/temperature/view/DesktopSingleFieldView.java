@@ -16,14 +16,17 @@ public class DesktopSingleFieldView implements View {
     private boolean isPressed;
     private double inputTemperature;
 
+    private static final int INPUT_SYMBOLS_MAX_AMOUNT = 18;
+
     public DesktopSingleFieldView(Controller controller) {
         this.controller = controller;
     }
+
     @Override
     public void start() {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Конвертер температур");
-            frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+            frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(30, 100, 30, 100));
             frame.setResizable(false);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -102,7 +105,7 @@ public class DesktopSingleFieldView implements View {
             textField.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyTyped(KeyEvent event) {
-                    if (textField.getText().length() >= INPUT_SYMBOLS_AMOUNT_MAX) {
+                    if (textField.getText().length() >= INPUT_SYMBOLS_MAX_AMOUNT) {
                         event.consume();
                     }
                 }
