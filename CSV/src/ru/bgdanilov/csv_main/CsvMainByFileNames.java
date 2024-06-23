@@ -2,9 +2,6 @@ package ru.bgdanilov.csv_main;
 
 import ru.bgdanilov.csv.CsvToHtmlConverter;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 public class CsvMainByFileNames {
     public static void main(String[] args) {
         CsvToHtmlConverter csvConverter = new CsvToHtmlConverter();
