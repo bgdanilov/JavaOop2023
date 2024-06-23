@@ -7,7 +7,7 @@ public record FahrenheitScale(char key, String name) implements Scale {
     }
 
     @Override
-    public double covertFromCelsius(double temperature) {
+    public double convertFromCelsius(double temperature) {
         return temperature * 1.8 + 32.0;
     }
 
