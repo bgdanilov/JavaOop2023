@@ -1,14 +1,11 @@
 package ru.bgdanilov.csv;
 
-import java.util.ArrayList;
-
 public class CsvToHtmlConverterArgs {
     private String csvFileName; // имя файла с путем или без него;
     private String htmlFileName; // имя файла с путем или без него;
     private String htmlFileNamePrefix; // -p указание префикса имени выходного файла;
     private char separator = ','; // -s символ-разделитель;
     private final String helpMessage;
-    private final ArrayList<String> messages = new ArrayList<>();
 
     public CsvToHtmlConverterArgs() {
         helpMessage = """
@@ -79,13 +76,5 @@ public class CsvToHtmlConverterArgs {
 
     public String getHelpMessage() {
         return helpMessage;
-    }
-
-    public ArrayList<String> getMessages() {
-        return messages;
-    }
-
-    public void addMessage(String message) {
-        messages.add(message);
     }
 }

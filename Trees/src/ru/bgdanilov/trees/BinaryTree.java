@@ -23,6 +23,11 @@ public class BinaryTree<T extends Comparable<T>> {
 
     // 1. Вставка узла.
     public void add(T data) {
+        if (root == null) {
+            setRoot(new TreeNode<>(data));
+            return;
+        }
+
         TreeNode<T> currentNode = root;
 
         while (true) {
@@ -49,7 +54,7 @@ public class BinaryTree<T extends Comparable<T>> {
     public boolean contains(T data) {
         final boolean[] result = {false};
 
-        traversalInDepth(treeNode -> {
+        allInDepth(treeNode -> {
             if (treeNode.getData().equals(data)) {
                 result[0] = true;
             }
@@ -59,13 +64,14 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     // 3. Удаление первого вхождения узла по значению.
+    // Не реализовано.
 
 
     // 4. Получение числа элементов.
     public int getNodesAmount() {
         final int[] nodesAmount = {0};
         // Реализуем нагрузку в виде подсчета узлов.
-        traversalInDepth(treeNode -> nodesAmount[0]++);
+        allInDepth(treeNode -> nodesAmount[0]++);
 
         return nodesAmount[0];
     }
@@ -73,10 +79,10 @@ public class BinaryTree<T extends Comparable<T>> {
     // 5. Обходы.
     // 5.1. В глубину - это Стек, в Ширину - это Очередь.
     public void printInDepth() {
-        traversalInDepth(treeNode -> System.out.println(treeNode.getData()));
+        allInDepth(treeNode -> System.out.println(treeNode.getData()));
     }
 
-    private void traversalInDepth(Consumer<TreeNode<T>> consumer) {
+    private void allInDepth(Consumer<TreeNode<T>> consumer) {
         Stack<TreeNode<T>> treeNodeStack = new Stack<>();
         treeNodeStack.push(root);
 
@@ -96,10 +102,10 @@ public class BinaryTree<T extends Comparable<T>> {
 
     // 5.2. В Ширину - это Очередь.
     public void printInWide() {
-        traversalInWide(treeNode -> System.out.println(treeNode.getData()));
+        allInWide(treeNode -> System.out.println(treeNode.getData()));
     }
 
-    private void traversalInWide(Consumer<TreeNode<T>> consumer) {
+    private void allInWide(Consumer<TreeNode<T>> consumer) {
         Deque<TreeNode<T>> treeNodeQueue = new ArrayDeque<>();
         treeNodeQueue.add(root);
 
@@ -117,122 +123,8 @@ public class BinaryTree<T extends Comparable<T>> {
         }
     }
 
-    // 6. Печать дерева в консоль.
-
-
     // Раз мы не можем передать в функцию другую функцию как аргумент
     // - только объекты можем передать.
     // Тогда передадим экземпляр printLoad функционального интерфейса Consumer,
     // переопределив его единственный метод.
-
-    /* Еще не доделано.
-    public void delete(TreeNode<T> node) {
-        TreeNode<T> parentNode = root;
-        TreeNode<T> currentNode = root;
-
-        TreeNode<T> deletedNode;
-        TreeNode<T> deletedNodeParent;
-        TreeNode<T> minLeftNode;
-        TreeNode<T> minLeftNodeParent;
-
-        boolean currentNodeIsLeft = true;
-
-        while (true) {
-            if (node.getData().compareTo(currentNode.getData()) == 0) {
-                // 1. Лист. Нет детей.
-                if (currentNode.getLeft() == null && currentNode.getRight() == null) {
-                    // Найденный узел правый или левый ребенок?
-                    if (currentNodeIsLeft) {
-                        parentNode.setLeft(null);
-                    } else {
-                        parentNode.setRight(null);
-                    }
-
-                    return;
-                }
-
-                // 2. Только один ребенок.
-                if ((currentNode.getLeft() != null && currentNode.getRight() == null)
-                        || currentNode.getLeft() == null && currentNode.getRight() != null) {
-                    if (parentNode.getLeft() == currentNode) { // найденный узел - левый ребенок родителя;
-                        parentNode.setLeft(currentNode.getLeft() != null ? currentNode.getLeft() : currentNode.getRight());
-                    }
-
-                    if (parentNode.getRight() == currentNode) { // найденный узел - правый ребенок родителя;
-                        parentNode.setRight(currentNode.getLeft() != null ? currentNode.getLeft() : currentNode.getRight());
-                    }
-                }
-
-                // 3. Два ребенка.
-                // Найти в правом поддереве минимальный элемент и переместить его на место удаляемого узла.
-                if (currentNode.getLeft() != null && currentNode.getRight() != null) {
-
-                }
-            }
-
-            // Поиск узла.
-            // Идем влево (узел меньше текущего) или вправо.
-            if (node.getData().compareTo(currentNode.getData()) < 0) {
-                if (currentNode.getLeft() != null) {
-                    parentNode = currentNode;
-                    currentNode = currentNode.getLeft();
-                    currentNodeIsLeft = true;
-                } else {
-                    return;
-                }
-            } else {
-                if (currentNode.getRight() != null) {
-                    parentNode = currentNode;
-                    currentNode = currentNode.getRight();
-                    currentNodeIsLeft = false;
-                } else {
-                    return;
-                }
-            }
-        }
-    }
-*/
-
-    /* Это эксперимент.
- TODO вставить └ символ. Не корректно работает если удалить Аллу.
-    @Override
-    public String toString() {
-        Stack<TreeNode<T>> treeNodeStack = new Stack<>();
-        treeNodeStack.add(root);
-
-        Stack<String> spacersStack = new Stack<>();
-        StringBuilder spacerBuilder = new StringBuilder();
-        spacersStack.add(spacerBuilder.toString());
-
-        StringBuilder printTreeBuilder = new StringBuilder();
-
-        String lineSeparator = System.lineSeparator();
-
-        while (treeNodeStack.size() != 0) {
-            TreeNode<T> currentNode = treeNodeStack.pop(); // берем верх и удаляем.
-            printTreeBuilder
-                    .append(spacersStack.pop())
-                    .append(currentNode.getData().toString())
-                    .append(lineSeparator);
-
-            if (currentNode.getRight() != null || currentNode.getLeft() != null) {
-                spacerBuilder.append("-");
-            } else {
-                spacerBuilder.delete(0, 1);
-            }
-
-            if (currentNode.getRight() != null) {
-                treeNodeStack.add(currentNode.getRight());
-                spacersStack.add(spacerBuilder.toString());
-            }
-
-            if (currentNode.getLeft() != null) {
-                treeNodeStack.add(currentNode.getLeft());
-                spacersStack.add(spacerBuilder.toString());
-            }
-        }
-
-        return printTreeBuilder.toString();
-    }
-*/
 }

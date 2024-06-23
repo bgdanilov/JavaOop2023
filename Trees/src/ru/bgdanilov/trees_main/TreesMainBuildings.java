@@ -2,25 +2,48 @@ package ru.bgdanilov.trees_main;
 
 import ru.bgdanilov.trees.BinaryTree;
 import ru.bgdanilov.trees.Building;
-import ru.bgdanilov.trees.TreeNode;
 
 public class TreesMainBuildings {
     public static void main(String[] args) {
         BinaryTree<Building> cityTree = new BinaryTree<>(); // дерево;
 
-        TreeNode<Building> hotel = new TreeNode<>(new Building("Hilton INN",11)); // узел дерева типа здание;
-        TreeNode<Building> shop = new TreeNode<>(new Building("FIT Service", 4));
-        TreeNode<Building> cafe = new TreeNode<>(new Building("Best Coffee", 1));
-        TreeNode<Building> hospital = new TreeNode<>(new Building("Central Hospital", 113));
+        Building home = new Building("apt", 2);
+        Building hotel = new Building("hotel", 20);
+        Building service = new Building("service", 3);
+        Building theatre = new Building("theatre", 1);
 
-        TreeNode<Building> westHospital = new TreeNode<>(new Building("West Hospital", 113));
+        // 1. Добавление в Дерево.
+        System.out.println("1. Добавление в Дерево.");
+        cityTree.add(home);
+        cityTree.add(hotel);
+        cityTree.add(service);
+        cityTree.add(theatre);
 
-//        cityTree.setRoot(hotel);
-//        cityTree.add(shop);
-//        cityTree.add(cafe);
-//        cityTree.add(hospital);
+        System.out.println("Выведем корень:");
+        System.out.println(cityTree.getRoot().getData());
+        System.out.println("----");
 
-       // System.out.println(cityTree.contains(westHospital));
+        // 2. Поиск узла.
+        System.out.println("2. Есть ли home?");
+        System.out.println(cityTree.contains(home));
+        System.out.println("----");
+
+        // 3. Удаление первого вхождения узла по значению.
+        System.out.println("3. Удаление первого вхождения узла по значению.");
+        System.out.println("Не реализовано.");
+        System.out.println("----");
+
+        // 4. Получение числа элементов.
+        System.out.println("4. Получение числа элементов.");
+        System.out.println("Число узлов равно: " + cityTree.getNodesAmount());
+
+        // 5. Обходы в ширину и в глубину.
+        System.out.println("5.1. Обход в ширину.");
+        cityTree.printInWide();
+        System.out.println("----");
+
+        System.out.println("5.2. Обход в глубину.");
         cityTree.printInDepth();
+        System.out.println("----");
     }
 }
