@@ -132,7 +132,7 @@ public class DesktopSingleFieldView implements View {
                     textField.setEditable(false);
                     isPressed = false;
                 } catch (NumberFormatException exception) {
-                    showMessageDialog(frame, "Вы должны ввести число.", "Сообщение!", JOptionPane.ERROR_MESSAGE);
+                    showMessageDialog(frame, "Вы должны ввести число.", "Ошибка ввода данных!", JOptionPane.ERROR_MESSAGE);
                     header.setText("Введите температуру:");
                     textField.setEditable(true);
                 }
